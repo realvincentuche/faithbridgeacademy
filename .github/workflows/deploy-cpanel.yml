@@ -1,0 +1,36 @@
+name: Deploy theme to Namecheap
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'wp-content/themes/faithbridgeacademy/**'
+      - '.github/workflows/deploy-cpanel.yml'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: PHP syntax check (fail before touching prod)
+        run: |
+          for f in $(find wp-content/themes/faithbridgeacademy -name '*.php'); do
+            php -l "$f" || exit 1
+          done
+
+      - name: FTP deploy theme folder
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          local-dir: ./wp-content/themes/faithbridgeacademy/
+          server-dir: ./wp-content/themes/faithbridgeacademy/
+          dangerous-clean-slate: false
+          exclude: |
+            **/.git*
+            **/.DS_Store
+            **/node_modules/**

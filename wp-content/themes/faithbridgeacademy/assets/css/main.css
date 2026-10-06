@@ -1,0 +1,207 @@
+/* Faith Bridge Academy — base styles. Bumped via FBA_VERSION. */
+
+:root {
+	--fba-navy: #1a2a4a;
+	--fba-gold: #c9a227;
+	--fba-cream: #faf7f0;
+	--fba-ink: #22304a;
+	--fba-muted: #5d6b85;
+	--fba-line: #e6dfd0;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	font-family: Georgia, "Times New Roman", serif;
+	color: var(--fba-ink);
+	background: var(--fba-cream);
+	line-height: 1.6;
+}
+
+.fba-wrap {
+	max-width: 1100px;
+	margin: 0 auto;
+	padding: 0 1.5rem;
+}
+
+.fba-skip-link {
+	position: absolute;
+	left: -9999px;
+	top: 0;
+	background: var(--fba-navy);
+	color: #fff;
+	padding: 0.5rem 1rem;
+	z-index: 100;
+}
+
+.fba-skip-link:focus {
+	left: 0;
+}
+
+/* Header. */
+.fba-header {
+	background: var(--fba-navy);
+	color: #fff;
+	padding: 1rem 0;
+}
+
+.fba-header-inner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+}
+
+.fba-brand {
+	color: #fff;
+	text-decoration: none;
+	font-weight: 700;
+	font-size: 1.25rem;
+	letter-spacing: 0.02em;
+}
+
+.fba-nav .menu {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	gap: 1.25rem;
+}
+
+.fba-nav a {
+	color: #fff;
+	text-decoration: none;
+}
+
+.fba-nav a:hover {
+	text-decoration: underline;
+}
+
+/* Coming soon hero. */
+.fba-coming-soon {
+	background: var(--fba-navy);
+	color: #fff;
+	text-align: center;
+	padding: 6rem 0 5rem;
+}
+
+.fba-coming-soon-inner {
+	max-width: 720px;
+}
+
+.fba-kicker {
+	display: inline-block;
+	text-transform: uppercase;
+	letter-spacing: 0.2em;
+	font-size: 0.8rem;
+	color: var(--fba-gold);
+	border: 1px solid var(--fba-gold);
+	border-radius: 999px;
+	padding: 0.35rem 1.1rem;
+	margin: 0 0 1.5rem;
+}
+
+.fba-coming-soon-title {
+	font-size: clamp(2.25rem, 6vw, 3.75rem);
+	line-height: 1.1;
+	margin: 0 0 1.25rem;
+}
+
+.fba-coming-soon-text {
+	font-size: 1.125rem;
+	color: #d7deeb;
+	margin: 0;
+}
+
+/* Content areas. */
+.fba-content {
+	padding: 3rem 0;
+}
+
+.fba-prose {
+	max-width: 720px;
+}
+
+.fba-dynamic {
+	padding: 2rem 0 3rem;
+}
+
+.fba-dynamic-inner {
+	max-width: 720px;
+}
+
+.fba-post {
+	border-bottom: 1px solid var(--fba-line);
+	padding: 1.5rem 0;
+}
+
+.fba-post-title {
+	margin: 0 0 0.25rem;
+}
+
+.fba-post-title a {
+	color: var(--fba-navy);
+	text-decoration: none;
+}
+
+.fba-post-title a:hover {
+	text-decoration: underline;
+}
+
+.fba-post-meta {
+	color: var(--fba-muted);
+	font-size: 0.9rem;
+	margin: 0 0 0.75rem;
+}
+
+.fba-pagination {
+	margin-top: 2rem;
+}
+
+/* Footer. */
+.fba-footer {
+	background: var(--fba-navy);
+	color: #cdd6e4;
+	padding: 2rem 0;
+	font-size: 0.95rem;
+}
+
+.fba-footer-inner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	flex-wrap: wrap;
+}
+
+.fba-footer p {
+	margin: 0;
+}
+
+.fba-footer .menu {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	gap: 1rem;
+}
+
+.fba-footer a {
+	color: #fff;
+	text-decoration: none;
+}
+
+.fba-footer a:hover {
+	text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+	.fba-coming-soon {
+		padding: 4rem 0 3.5rem;
+	}
+}

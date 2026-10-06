@@ -1,0 +1,36 @@
+# Faith Bridge Academy — git tracks the THEME + deploy workflow only.
+# WordPress core, uploads and local DB stay out of the repo.
+
+# --- WordPress core (local Herd copy, never push) ---
+/index.php
+/xmlrpc.php
+/license.txt
+/readme.html
+/wp-*.php
+!/wp-content/
+/wp-admin/
+/wp-includes/
+
+# --- wp-content: ignore everything except our theme ---
+/wp-content/*
+!/wp-content/themes/
+/wp-content/themes/*
+!/wp-content/themes/faithbridgeacademy/
+
+# --- Local-only: config, SQLite DB, uploads ---
+/wp-config.php
+/wp-content/database/
+/wp-content/uploads/
+/wp-content/upgrade/
+/wp-content/debug.log
+/.ht.sqlite
+
+# --- Throwaway local helper scripts ---
+/mm-*.php
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
