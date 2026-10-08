@@ -196,7 +196,7 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 .fba-slide.active { opacity: 1; visibility: visible; z-index: 1; }
 .fba-slide-content { position: relative; z-index: 2; width: 100%; padding-top: calc(var(--fba-header-h) + 3rem); padding-bottom: 7rem; }
 .fba-align-center .fba-hero-title, .fba-align-center .fba-hero-text { margin-left: auto; margin-right: auto; }
-.fba-hero-title, .fba-hero-text { max-width: 62ch; }
+.fba-hero-title, .fba-hero-text { max-width: 50ch; }
 .fba-align-right .fba-hero-title, .fba-align-right .fba-hero-text { margin-left: auto; }
 .fba-align-center .fba-slide-content { margin: 0 auto; text-align: center; }
 .fba-align-center .fba-hero-actions { justify-content: center; }
