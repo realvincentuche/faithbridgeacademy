@@ -51,7 +51,7 @@ $testimonials = get_posts(
 			<?php wp_nonce_field( 'fba_subscribe', 'fba_subscribe_nonce' ); ?>
 			<label class="fba-sr-only" for="fbaNewsletterEmail"><?php esc_html_e( 'Email address', 'faithbridgeacademy' ); ?></label>
 			<input id="fbaNewsletterEmail" type="email" name="fba_email" placeholder="<?php esc_attr_e( 'Enter your email', 'faithbridgeacademy' ); ?>" required>
-			<button class="fba-btn fba-btn-gold" type="submit"><?php esc_html_e( 'Subscribe', 'faithbridgeacademy' ); ?></button>
+			<button class="fba-btn fba-btn-green" type="submit"><?php esc_html_e( 'Subscribe', 'faithbridgeacademy' ); ?></button>
 		</form>
 		<?php endif; ?>
 	</div>

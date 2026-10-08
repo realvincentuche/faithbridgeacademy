@@ -46,7 +46,7 @@
 			?>
 		</nav>
 		<div class="fba-header-actions">
-			<a class="fba-btn fba-btn-gold fba-btn-sm" href="<?php echo esc_url( home_url( '/apply/' ) ); ?>"><?php esc_html_e( 'Apply Now', 'faithbridgeacademy' ); ?> <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+			<a class="fba-btn fba-btn-green fba-btn-sm" href="<?php echo esc_url( home_url( '/apply/' ) ); ?>"><?php esc_html_e( 'Apply Now', 'faithbridgeacademy' ); ?> <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
 			<button class="fba-burger" id="fbaBurger" aria-label="<?php esc_attr_e( 'Open menu', 'faithbridgeacademy' ); ?>" aria-expanded="false" aria-controls="fbaDrawer">
 				<span></span><span></span><span></span>
 			</button>
@@ -72,7 +72,7 @@
 		?>
 	</nav>
 	<div class="fba-drawer-cta">
-		<a class="fba-btn fba-btn-gold" href="<?php echo esc_url( home_url( '/apply/' ) ); ?>"><?php esc_html_e( 'Apply Now', 'faithbridgeacademy' ); ?> <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+		<a class="fba-btn fba-btn-green" href="<?php echo esc_url( home_url( '/apply/' ) ); ?>"><?php esc_html_e( 'Apply Now', 'faithbridgeacademy' ); ?> <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
 		<p><a href="<?php echo esc_url( fba_get_option( 'whatsapp' ) ); ?>"><?php echo esc_html( fba_get_option( 'phone' ) ); ?></a></p>
 	</div>
 </aside>

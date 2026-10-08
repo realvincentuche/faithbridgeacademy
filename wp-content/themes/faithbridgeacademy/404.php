@@ -22,7 +22,7 @@ get_template_part(
 <div class="fba-content">
 	<div class="fba-wrap fba-prose">
 		<p>
-			<a class="fba-btn fba-btn-gold" href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php esc_html_e( 'Back to Home', 'faithbridgeacademy' ); ?> <span aria-hidden="true">&rarr;</span></a>
+			<a class="fba-btn fba-btn-green" href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php esc_html_e( 'Back to Home', 'faithbridgeacademy' ); ?> <span aria-hidden="true">&rarr;</span></a>
 			<a class="fba-btn fba-btn-navy" href="<?php echo esc_url( home_url( '/programmes/' ) ); ?>"><?php esc_html_e( 'Explore Programmes', 'faithbridgeacademy' ); ?></a>
 		</p>
 	</div>
