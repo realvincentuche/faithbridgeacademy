@@ -48,6 +48,51 @@
 		}
 	} );
 
+	/* Desktop dropdown touch: first tap opens, second follows the parent link. */
+	var dropParents = document.querySelectorAll( '#fbaNav .menu-item-has-children > a' );
+	var touchMenu = window.matchMedia && window.matchMedia( '(hover: none)' ).matches;
+	dropParents.forEach( function ( link ) {
+		link.addEventListener( 'click', function ( e ) {
+			var li = link.parentElement;
+			if ( touchMenu && ! li.classList.contains( 'open' ) ) {
+				e.preventDefault();
+				closeDrops( li );
+				li.classList.add( 'open' );
+				link.setAttribute( 'aria-expanded', 'true' );
+			}
+		} );
+	} );
+	function closeDrops( except ) {
+		document.querySelectorAll( '#fbaNav .menu-item-has-children.open' ).forEach( function ( o ) {
+			if ( o !== except ) {
+				o.classList.remove( 'open' );
+				var oa = o.querySelector( ':scope > a' );
+				if ( oa ) {
+					oa.setAttribute( 'aria-expanded', 'false' );
+				}
+			}
+		} );
+	}
+
+	/* Drawer accordions for submenu parents. */
+	document.querySelectorAll( '#fbaDrawer .menu-item-has-children' ).forEach( function ( li ) {
+		var link = li.querySelector( ':scope > a' );
+		var btn = document.createElement( 'button' );
+		btn.setAttribute( 'type', 'button' );
+		btn.className = 'fba-drawer-toggle';
+		btn.setAttribute( 'aria-label', 'Toggle submenu' );
+		btn.setAttribute( 'aria-expanded', 'false' );
+		btn.textContent = '+';
+		btn.addEventListener( 'click', function () {
+			var open = li.classList.toggle( 'open' );
+			btn.setAttribute( 'aria-expanded', open ? 'true' : 'false' );
+			if ( link ) {
+				link.setAttribute( 'aria-expanded', open ? 'true' : 'false' );
+			}
+		} );
+		li.appendChild( btn );
+	} );
+
 	/* Hero slider. */
 	var slider = document.getElementById( 'fbaSlider' );
 	if ( slider ) {

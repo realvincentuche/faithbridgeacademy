@@ -141,19 +141,53 @@ p { margin: 0 0 1rem; }
 .fba-drawer-logo { height: 64px; width: auto; }
 
 .fba-nav { margin-left: auto; }
-.fba-nav .menu { list-style: none; margin: 0; padding: 0; display: flex; gap: 1.6rem; }
-.fba-nav a { color: #fff; text-decoration: none; font-weight: 600; font-size: 0.95rem; opacity: 0.92; }
-.fba-nav a:hover { opacity: 1; color: var(--fba-gold); }
-.fba-nav .menu-item-has-children { position: relative; }
-.fba-nav .sub-menu {
-	display: none; position: absolute; top: 100%; left: 0; min-width: 220px;
-	background: #fff; border-radius: 12px; padding: 0.5rem; box-shadow: var(--fba-shadow);
-	list-style: none; margin: 0.5rem 0 0;
+.fba-nav .menu { list-style: none; margin: 0; padding: 0; display: flex; gap: 0.4rem; align-items: center; }
+.fba-nav > .menu > li > a {
+	display: inline-flex; align-items: center; gap: 0.35rem;
+	color: #fff; text-decoration: none; font-weight: 600; font-size: 0.93rem;
+	padding: 0.65rem 0.85rem; border-radius: 999px; opacity: 0.94;
+	transition: background 0.2s, color 0.2s;
 }
-.fba-nav .menu-item-has-children:hover .sub-menu,
-.fba-nav .menu-item-has-children:focus-within .sub-menu { display: block; }
-.fba-nav .sub-menu a { color: var(--fba-navy); display: block; padding: 0.55rem 0.8rem; border-radius: 8px; }
-.fba-nav .sub-menu a:hover { background: var(--fba-cream-soft); color: var(--fba-navy); }
+.fba-nav > .menu > li > a:hover,
+.fba-nav .current-menu-item > a,
+.fba-nav .current-menu-ancestor > a { color: var(--fba-gold); }
+.fba-nav > .menu > li > a:hover { background: rgba(255, 255, 255, 0.1); }
+.fba-nav .menu-item-has-children { position: relative; }
+.fba-nav .menu-item-has-children > a { padding-right: 1.6rem; }
+.fba-nav .menu-item-has-children > a::after {
+	content: ""; position: absolute; right: 0.85rem; top: 50%;
+	width: 7px; height: 7px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor;
+	transform: translateY(-70%) rotate(45deg); transition: transform 0.2s ease;
+}
+.fba-nav .menu-item-has-children:hover > a::after,
+.fba-nav .menu-item-has-children:focus-within > a::after,
+.fba-nav .menu-item-has-children.open > a::after { transform: translateY(-30%) rotate(225deg); }
+.fba-nav .sub-menu {
+	position: absolute; top: calc(100% + 10px); left: 50%;
+	display: grid; gap: 3px; min-width: 280px;
+	margin: 0; padding: 0.6rem; list-style: none;
+	background: #fff; border: 1px solid var(--fba-line); border-radius: 16px;
+	box-shadow: var(--fba-shadow); counter-reset: fba-drop;
+	opacity: 0; visibility: hidden; transform: translate(-50%, 10px);
+	transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s;
+	z-index: 200;
+}
+.fba-nav .sub-menu::before { content: ""; position: absolute; top: -12px; left: 0; right: 0; height: 12px; }
+.fba-nav .menu-item-has-children:hover > .sub-menu,
+.fba-nav .menu-item-has-children:focus-within > .sub-menu,
+.fba-nav .menu-item-has-children.open > .sub-menu { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
+.fba-nav .sub-menu a {
+	display: flex; align-items: center; gap: 0.7rem;
+	color: var(--fba-navy); text-decoration: none; font-weight: 600; font-size: 0.92rem;
+	padding: 0.65rem 0.8rem; border-radius: 10px; counter-increment: fba-drop;
+}
+.fba-nav .sub-menu a::before {
+	content: "0" counter(fba-drop); font-family: var(--fba-font-display);
+	font-size: 0.75rem; color: #a9a499;
+}
+.fba-nav .sub-menu a:hover { background: var(--fba-cream-soft); }
+.fba-nav .sub-menu a:hover::before { color: var(--fba-gold-deep); }
+.fba-nav .sub-menu .current-menu-item > a { background: var(--fba-cream-soft); }
 
 .fba-header-actions { display: flex; align-items: center; gap: 0.8rem; }
 .fba-burger { display: none; background: none; border: 0; cursor: pointer; padding: 0.5rem; }
@@ -174,12 +208,30 @@ body.fba-drawer-open .fba-drawer { transform: none; }
 body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 .fba-drawer-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.2rem; }
 .fba-drawer-close { background: none; border: 0; color: #fff; font-size: 2rem; cursor: pointer; line-height: 1; }
-.fba-drawer .menu { list-style: none; margin: 0 0 1.5rem; padding: 0; }
-.fba-drawer .menu a { color: #fff; text-decoration: none; font-weight: 600; display: block; padding: 0.6rem 0; border-bottom: 1px solid rgba(255, 255, 255, 0.12); }
-.fba-drawer .sub-menu { list-style: none; margin: 0; padding: 0 0 0 1rem; }
-.fba-drawer .sub-menu a { font-weight: 400; font-size: 0.92rem; opacity: 0.85; }
-.fba-drawer-cta p { margin-top: 1rem; }
-.fba-drawer-cta a { color: var(--fba-gold); }
+.fba-drawer nav ul { list-style: none; margin: 0 0 1.5rem; padding: 0; display: grid; }
+.fba-drawer nav li { border-top: 1px solid rgba(255, 255, 255, 0.12); }
+.fba-drawer nav li:last-child { border-bottom: 1px solid rgba(255, 255, 255, 0.12); }
+.fba-drawer nav a { color: #fff; text-decoration: none; font-weight: 600; display: block; padding: 0.7rem 0; }
+.fba-drawer nav a:hover { color: var(--fba-gold); }
+.fba-drawer nav .current-menu-item > a,
+.fba-drawer nav .current-menu-ancestor > a { color: var(--fba-gold); }
+.fba-drawer .menu-item-has-children { position: relative; }
+.fba-drawer-toggle {
+	position: absolute; right: 0; top: 0.3rem; width: 36px; height: 36px;
+	border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50%;
+	background: transparent; color: #fff; font-size: 1.1rem; cursor: pointer; line-height: 1;
+	transition: transform 0.25s ease, background 0.2s;
+}
+.fba-drawer .open > .fba-drawer-toggle { transform: rotate(45deg); background: var(--fba-gold); border-color: var(--fba-gold); color: var(--fba-deep); }
+.fba-drawer .sub-menu { list-style: none; margin: 0; padding: 0 0 0.4rem 1rem; display: none; }
+.fba-drawer .open > .sub-menu { display: block; }
+.fba-drawer .sub-menu li { border: 0; }
+.fba-drawer .sub-menu li:last-child { border: 0; }
+.fba-drawer .sub-menu a { font-weight: 400; font-size: 0.92rem; opacity: 0.85; padding: 0.45rem 0; }
+.fba-drawer-cta .fba-btn { display: flex; width: 100%; justify-content: center; }
+.fba-drawer-cta .fba-btn-gold { color: var(--fba-deep); }
+.fba-drawer-cta p { margin-top: 1rem; text-align: center; }
+.fba-drawer-cta p a { color: var(--fba-gold); }
 
 /* ---------- Hero slider ---------- */
 .fba-hero { position: relative; min-height: 100svh; display: flex; align-items: stretch; background: var(--fba-deep); overflow: clip; }

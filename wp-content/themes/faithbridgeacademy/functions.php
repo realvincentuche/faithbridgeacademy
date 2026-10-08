@@ -367,20 +367,28 @@ function fba_settings_page() {
 
 /**
  * Fallback primary menu (keeps local == live identical before menus exist).
+ * Mirrors the recommended wp-admin menu structure, dropdowns included.
  */
 function fba_menu_fallback() {
-	$items = array(
-		home_url( '/' )             => __( 'Home', 'faithbridgeacademy' ),
-		home_url( '/programmes/' ) => __( 'Programmes', 'faithbridgeacademy' ),
-		home_url( '/bible-club/' ) => __( 'Bible Club', 'faithbridgeacademy' ),
-		home_url( '/about/' )      => __( 'About', 'faithbridgeacademy' ),
-		home_url( '/blog/' )       => __( 'Blog', 'faithbridgeacademy' ),
-		home_url( '/contact/' )    => __( 'Contact', 'faithbridgeacademy' ),
-	);
 	echo '<ul class="menu">';
-	foreach ( $items as $url => $label ) {
-		echo '<li><a href="' . esc_url( $url ) . '">' . esc_html( $label ) . '</a></li>';
-	}
+	echo '<li><a href="' . esc_url( home_url( '/' ) ) . '">' . esc_html__( 'Home', 'faithbridgeacademy' ) . '</a></li>';
+	echo '<li class="menu-item-has-children"><a href="' . esc_url( home_url( '/programmes/' ) ) . '" aria-haspopup="true" aria-expanded="false">' . esc_html__( 'Programmes', 'faithbridgeacademy' ) . '</a>';
+	echo '<ul class="sub-menu">';
+	echo '<li><a href="' . esc_url( home_url( '/programmes/' ) ) . '">' . esc_html__( 'All Programmes', 'faithbridgeacademy' ) . '</a></li>';
+	echo '<li><a href="' . esc_url( home_url( '/programmes/' ) ) . '">' . esc_html__( 'Bible Study', 'faithbridgeacademy' ) . '</a></li>';
+	echo '<li><a href="' . esc_url( home_url( '/programmes/' ) ) . '">' . esc_html__( 'Languages', 'faithbridgeacademy' ) . '</a></li>';
+	echo '<li><a href="' . esc_url( home_url( '/programmes/' ) ) . '">' . esc_html__( 'Sciences & Others', 'faithbridgeacademy' ) . '</a></li>';
+	echo '</ul></li>';
+	echo '<li class="menu-item-has-children"><a href="' . esc_url( home_url( '/apply/' ) ) . '" aria-haspopup="true" aria-expanded="false">' . esc_html__( 'Admissions', 'faithbridgeacademy' ) . '</a>';
+	echo '<ul class="sub-menu">';
+	echo '<li><a href="' . esc_url( home_url( '/apply/' ) ) . '">' . esc_html__( 'How to Apply', 'faithbridgeacademy' ) . '</a></li>';
+	echo '<li><a href="' . esc_url( home_url( '/fees/' ) ) . '">' . esc_html__( 'Fees & Sessions', 'faithbridgeacademy' ) . '</a></li>';
+	echo '<li><a href="' . esc_url( home_url( '/faq/' ) ) . '">' . esc_html__( 'FAQs', 'faithbridgeacademy' ) . '</a></li>';
+	echo '</ul></li>';
+	echo '<li><a href="' . esc_url( home_url( '/bible-club/' ) ) . '">' . esc_html__( 'Bible Club', 'faithbridgeacademy' ) . '</a></li>';
+	echo '<li><a href="' . esc_url( home_url( '/about/' ) ) . '">' . esc_html__( 'About', 'faithbridgeacademy' ) . '</a></li>';
+	echo '<li><a href="' . esc_url( home_url( '/blog/' ) ) . '">' . esc_html__( 'Blog', 'faithbridgeacademy' ) . '</a></li>';
+	echo '<li><a href="' . esc_url( home_url( '/contact/' ) ) . '">' . esc_html__( 'Contact', 'faithbridgeacademy' ) . '</a></li>';
 	echo '</ul>';
 }
 
