@@ -158,11 +158,12 @@ p { margin: 0 0 1rem; }
 .fba-nav > .menu > .current-menu-item > a,
 .fba-nav > .menu > .current-menu-ancestor > a { color: var(--fba-gold-deep); }
 .fba-nav .menu-item-has-children { position: relative; }
-.fba-nav .menu-item-has-children > a { padding-right: 1.6rem; }
+.fba-nav .menu-item-has-children > a { position: relative; padding-right: 1.9rem; }
 .fba-nav .menu-item-has-children > a::after {
-	content: ""; position: absolute; right: 0.85rem; top: 50%;
+	content: ""; position: absolute; right: 0.9rem; top: 50%;
 	width: 7px; height: 7px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor;
 	transform: translateY(-70%) rotate(45deg); transition: transform 0.2s ease;
+	pointer-events: none;
 }
 .fba-nav .menu-item-has-children:hover > a::after,
 .fba-nav .menu-item-has-children:focus-within > a::after,
@@ -219,6 +220,7 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 .fba-drawer nav li { border-top: 1px solid rgba(255, 255, 255, 0.12); }
 .fba-drawer nav li:last-child { border-bottom: 1px solid rgba(255, 255, 255, 0.12); }
 .fba-drawer nav a { color: #fff; text-decoration: none; font-weight: 600; display: block; padding: 0.7rem 0; }
+.fba-drawer .menu-item-has-children > a { padding-right: 3rem; }
 .fba-drawer nav a:hover { color: var(--fba-gold); }
 .fba-drawer nav .current-menu-item > a,
 .fba-drawer nav .current-menu-ancestor > a { color: var(--fba-gold); }
