@@ -493,6 +493,7 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 @media (max-width: 1024px) {
 	.fba-nav { display: none; }
 	.fba-burger { display: block; }
+	.fba-header-actions { margin-left: auto; }
 	.fba-header-actions .fba-btn { display: none; }
 	.fba-program-grid { grid-template-columns: repeat(3, 1fr); }
 	.fba-why-grid, .fba-homefeel-grid { grid-template-columns: 1fr; gap: 2.5rem; }
