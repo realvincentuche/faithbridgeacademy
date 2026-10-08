@@ -48,7 +48,14 @@ add_action( 'after_setup_theme', 'fba_setup' );
 function fba_assets() {
 	wp_enqueue_style(
 		'fba-fonts',
-		'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700;800&display=swap',
+		'https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Figtree:wght@400;500;600;700;800&display=swap',
+		array(),
+		FBA_VERSION
+	);
+
+	wp_enqueue_style(
+		'fba-phosphor',
+		get_template_directory_uri() . '/assets/css/phosphor-icon-regular.css',
 		array(),
 		FBA_VERSION
 	);
@@ -63,7 +70,7 @@ function fba_assets() {
 	wp_enqueue_style(
 		'fba-main',
 		get_template_directory_uri() . '/assets/css/main.css',
-		array( 'fba-style', 'fba-fonts' ),
+		array( 'fba-style', 'fba-fonts', 'fba-phosphor' ),
 		FBA_VERSION
 	);
 

@@ -33,7 +33,6 @@
 				<img class="fba-brand-logo fba-brand-logo-light" src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/logo-white.png' ); ?>" alt="<?php esc_attr_e( 'FaithBridge Academy', 'faithbridgeacademy' ); ?>">
 				<img class="fba-brand-logo fba-brand-logo-dark" src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/logo.png' ); ?>" alt="<?php esc_attr_e( 'FaithBridge Academy', 'faithbridgeacademy' ); ?>">
 			<?php endif; ?>
-			<span class="fba-brand-text">FaithBridge<small><?php esc_html_e( 'Academy', 'faithbridgeacademy' ); ?></small></span>
 		</a>
 		<nav class="fba-nav" id="fbaNav" aria-label="<?php esc_attr_e( 'Primary', 'faithbridgeacademy' ); ?>">
 			<?php
@@ -58,7 +57,7 @@
 <div class="fba-drawer-overlay" id="fbaDrawerOverlay" aria-hidden="true"></div>
 <aside class="fba-drawer" id="fbaDrawer" role="dialog" aria-modal="true" aria-label="<?php esc_attr_e( 'Site menu', 'faithbridgeacademy' ); ?>">
 	<div class="fba-drawer-head">
-		<span class="fba-brand-text">FaithBridge<small><?php esc_html_e( 'Academy', 'faithbridgeacademy' ); ?></small></span>
+		<img class="fba-drawer-logo" src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/logo-white.png' ); ?>" alt="<?php esc_attr_e( 'FaithBridge Academy', 'faithbridgeacademy' ); ?>">
 		<button class="fba-drawer-close" id="fbaDrawerClose" aria-label="<?php esc_attr_e( 'Close menu', 'faithbridgeacademy' ); ?>">&times;</button>
 	</div>
 	<nav aria-label="<?php esc_attr_e( 'Mobile', 'faithbridgeacademy' ); ?>">

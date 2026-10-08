@@ -39,8 +39,9 @@ $testimonials = get_posts(
 <section class="fba-newsletter" aria-label="<?php esc_attr_e( 'Newsletter', 'faithbridgeacademy' ); ?>">
 	<div class="fba-wrap fba-newsletter-inner reveal">
 		<div class="fba-newsletter-copy">
-			<h2><?php esc_html_e( 'Stay Connected', 'faithbridgeacademy' ); ?></h2>
-			<p><?php esc_html_e( 'Subscribe for session updates, faith resources, and inspiring stories.', 'faithbridgeacademy' ); ?></p>
+			<p class="fba-kicker fba-kicker-light"><?php esc_html_e( 'Newsletter', 'faithbridgeacademy' ); ?></p>
+			<h2><?php esc_html_e( 'Stay ', 'faithbridgeacademy' ); ?><em><?php esc_html_e( 'Connected', 'faithbridgeacademy' ); ?></em></h2>
+			<p><?php esc_html_e( 'Session openings, memory verses, parenting wisdom and academy stories — once a month, no noise.', 'faithbridgeacademy' ); ?></p>
 		</div>
 		<?php if ( isset( $_GET['subscribed'] ) && 'done' === $_GET['subscribed'] ) : ?>
 			<p class="fba-newsletter-done" role="status"><?php esc_html_e( 'Thank you — you are subscribed.', 'faithbridgeacademy' ); ?></p>
@@ -61,9 +62,16 @@ $testimonials = get_posts(
 		<div class="fba-footer-col fba-footer-brand">
 			<a class="fba-brand" href="<?php echo esc_url( home_url( '/' ) ); ?>">
 				<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/logo-white.png' ); ?>" alt="<?php esc_attr_e( 'FaithBridge Academy', 'faithbridgeacademy' ); ?>">
-				<span class="fba-brand-text">FaithBridge<small><?php esc_html_e( 'Academy', 'faithbridgeacademy' ); ?></small></span>
 			</a>
 			<p><?php echo esc_html( fba_get_option( 'footer_tagline' ) ); ?></p>
+			<ul class="fba-socials" aria-label="<?php esc_attr_e( 'Social media', 'faithbridgeacademy' ); ?>">
+				<li><a href="<?php echo esc_url( fba_get_option( 'social_instagram' ) ); ?>" aria-label="Instagram"><i class="ph ph-instagram-logo" aria-hidden="true"></i></a></li>
+				<li><a href="<?php echo esc_url( fba_get_option( 'social_facebook' ) ); ?>" aria-label="Facebook"><i class="ph ph-facebook-logo" aria-hidden="true"></i></a></li>
+				<li><a href="<?php echo esc_url( fba_get_option( 'social_youtube' ) ); ?>" aria-label="YouTube"><i class="ph ph-play-circle" aria-hidden="true"></i></a></li>
+				<li><a href="<?php echo esc_url( fba_get_option( 'social_linkedin' ) ); ?>" aria-label="LinkedIn"><i class="ph ph-linkedin-logo" aria-hidden="true"></i></a></li>
+				<li><a href="<?php echo esc_url( fba_get_option( 'social_x' ) ); ?>" aria-label="X"><i class="ph ph-globe" aria-hidden="true"></i></a></li>
+				<li><a href="<?php echo esc_url( fba_get_option( 'whatsapp' ) ); ?>" aria-label="WhatsApp"><i class="ph ph-phone" aria-hidden="true"></i></a></li>
+			</ul>
 		</div>
 		<div class="fba-footer-col">
 			<h3><?php esc_html_e( 'Explore', 'faithbridgeacademy' ); ?></h3>
@@ -95,6 +103,7 @@ $testimonials = get_posts(
 			</ul>
 		</div>
 	</div>
+	<div class="fba-wrap"><p class="fba-footer-giant" aria-hidden="true">faithbridge</p></div>
 	<div class="fba-footer-bottom">
 		<div class="fba-wrap fba-footer-bottom-inner">
 			<p>&copy; <?php echo esc_html( gmdate( 'Y' ) ); ?> <?php esc_html_e( 'FaithBridge Academy. All rights reserved.', 'faithbridgeacademy' ); ?></p>
@@ -113,7 +122,9 @@ $testimonials = get_posts(
 	</div>
 </footer>
 
-<a class="fba-mobile-cta" href="<?php echo esc_url( home_url( '/apply/' ) ); ?>"><?php esc_html_e( 'Apply Now', 'faithbridgeacademy' ); ?> <span aria-hidden="true">&rarr;</span></a>
+<a class="fba-mobile-cta" href="<?php echo esc_url( home_url( '/apply/' ) ); ?>"><?php esc_html_e( 'Apply Now', 'faithbridgeacademy' ); ?> <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+
+<button class="fba-totop" id="fbaToTop" aria-label="<?php esc_attr_e( 'Back to top', 'faithbridgeacademy' ); ?>"><i class="ph ph-arrow-up" aria-hidden="true"></i></button>
 
 <?php wp_footer(); ?>
 </body>

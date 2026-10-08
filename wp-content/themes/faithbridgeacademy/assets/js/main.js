@@ -2,15 +2,25 @@
 (function () {
 	'use strict';
 
-	/* Sticky header state. */
+	/* Sticky header + back-to-top. */
 	var header = document.getElementById( 'fbaHeader' );
+	var totop = document.getElementById( 'fbaToTop' );
 	function onScroll() {
+		var y = window.scrollY || 0;
 		if ( header ) {
-			header.classList.toggle( 'scrolled', window.scrollY > 40 );
+			header.classList.toggle( 'scrolled', y > 40 );
+		}
+		if ( totop ) {
+			totop.classList.toggle( 'show', y > 700 );
 		}
 	}
 	window.addEventListener( 'scroll', onScroll, { passive: true } );
 	onScroll();
+	if ( totop ) {
+		totop.addEventListener( 'click', function () {
+			window.scrollTo( { top: 0, behavior: 'smooth' } );
+		} );
+	}
 
 	/* Mobile drawer. */
 	var burger = document.getElementById( 'fbaBurger' );
@@ -42,12 +52,27 @@
 	var slider = document.getElementById( 'fbaSlider' );
 	if ( slider ) {
 		var slides = slider.querySelectorAll( '.fba-slide' );
-		var dots = slider.querySelectorAll( '.fba-slider-dots button' );
-		var prev = slider.querySelector( '.fba-slider-prev' );
-		var next = slider.querySelector( '.fba-slider-next' );
+		var dotsWrap = document.getElementById( 'fbaSliderDots' );
+		var dots = [];
 		var current = 0;
 		var timer = null;
 		var reduceMotion = window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches;
+
+		slides.forEach( function ( s, idx ) {
+			var b = document.createElement( 'button' );
+			b.setAttribute( 'role', 'tab' );
+			b.setAttribute( 'aria-selected', idx === 0 ? 'true' : 'false' );
+			b.setAttribute( 'aria-label', 'Slide ' + ( idx + 1 ) );
+			if ( idx === 0 ) {
+				b.classList.add( 'active' );
+			}
+			b.addEventListener( 'click', function () {
+				go( idx );
+				play();
+			} );
+			dotsWrap.appendChild( b );
+			dots.push( b );
+		} );
 
 		function go( i ) {
 			current = ( i + slides.length ) % slides.length;
@@ -73,7 +98,7 @@
 				return;
 			}
 			stop();
-			timer = window.setInterval( function () { go( current + 1 ); }, 7000 );
+			timer = window.setInterval( function () { go( current + 1 ); }, 10000 );
 		}
 
 		function stop() {
@@ -83,18 +108,6 @@
 			}
 		}
 
-		dots.forEach( function ( d ) {
-			d.addEventListener( 'click', function () {
-				go( parseInt( d.getAttribute( 'data-slide' ), 10 ) );
-				play();
-			} );
-		} );
-		if ( prev ) {
-			prev.addEventListener( 'click', function () { go( current - 1 ); play(); } );
-		}
-		if ( next ) {
-			next.addEventListener( 'click', function () { go( current + 1 ); play(); } );
-		}
 		slider.addEventListener( 'mouseenter', stop );
 		slider.addEventListener( 'mouseleave', play );
 		play();

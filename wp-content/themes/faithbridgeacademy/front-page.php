@@ -7,53 +7,93 @@
 
 get_header();
 $uri = get_template_directory_uri();
+
+$kses = array(
+	'br'   => array(),
+	'span' => array( 'class' => array() ),
+);
+
+$slides = array(
+	array(
+		'align' => 'center',
+		'img'   => $uri . '/assets/images/hero-1.jpg',
+		'eye'   => __( 'Welcome to FaithBridge Academy', 'faithbridgeacademy' ),
+		'title' => __( 'Intentional Faith.<br>Structured Learning. <span class="hl">Confident Children.</span>', 'faithbridgeacademy' ),
+		'text'  => __( 'A purpose-driven academy nurturing the whole child — spirit, mind and character — through faith-based programmes and personal academic support, in partnership with parents.', 'faithbridgeacademy' ),
+		'cta1'  => array( __( 'Explore Programmes', 'faithbridgeacademy' ), home_url( '/programmes/' ) ),
+		'cta2'  => array( __( 'Apply Now', 'faithbridgeacademy' ), home_url( '/apply/' ) ),
+	),
+	array(
+		'align' => 'left',
+		'img'   => $uri . '/assets/images/bible-study.jpg',
+		'eye'   => __( 'Our flagship programme', 'faithbridgeacademy' ),
+		'title' => __( 'Bible Study:<br><span class="hl">Rooted in Christ.</span>', 'faithbridgeacademy' ),
+		'text'  => __( 'Biblical foundation, character formation, Scripture memory and practical faith — taught live on Google Meet, with recordings for every enrolled student.', 'faithbridgeacademy' ),
+		'cta1'  => array( __( 'Discover Bible Study', 'faithbridgeacademy' ), home_url( '/programmes/' ) ),
+		'cta2'  => array( __( 'View Fees', 'faithbridgeacademy' ), home_url( '/fees/' ) ),
+	),
+	array(
+		'align' => 'right',
+		'img'   => $uri . '/assets/images/online-class.jpg',
+		'eye'   => __( 'Admissions open', 'faithbridgeacademy' ),
+		'title' => __( 'Give Your Child<br>a <span class="hl">Stronger Foundation.</span>', 'faithbridgeacademy' ),
+		'text'  => __( 'Live Google Meet classes hold Tuesdays and Saturdays at 5:00 PM Nigeria Time. Group and one-on-one study styles available.', 'faithbridgeacademy' ),
+		'cta1'  => array( __( 'Apply Now', 'faithbridgeacademy' ), home_url( '/apply/' ) ),
+		'cta2'  => array( __( 'Talk to Us', 'faithbridgeacademy' ), home_url( '/contact/' ) ),
+	),
+	array(
+		'align' => 'left',
+		'img'   => $uri . '/assets/images/why-2.jpg',
+		'eye'   => __( 'Languages & academics', 'faithbridgeacademy' ),
+		'title' => __( 'English, Maths, French<br><span class="hl">& 14 More Paths.</span>', 'faithbridgeacademy' ),
+		'text'  => __( 'From Igbo, Yoruba and Hausa to Physics, ICT and Literature — 17 programmes, one intentional method, every quarter.', 'faithbridgeacademy' ),
+		'cta1'  => array( __( 'View Programmes', 'faithbridgeacademy' ), home_url( '/programmes/' ) ),
+		'cta2'  => array( __( 'View Fees', 'faithbridgeacademy' ), home_url( '/fees/' ) ),
+	),
+	array(
+		'align' => 'right',
+		'img'   => $uri . '/assets/images/hero-3.jpg',
+		'eye'   => __( 'Small groups · One-on-one', 'faithbridgeacademy' ),
+		'title' => __( 'Every Child <span class="hl">Known,</span> Guided, Celebrated.', 'faithbridgeacademy' ),
+		'text'  => __( 'Fifteen learners or fewer per group class, caring facilitators, and parents carried along every step of the journey.', 'faithbridgeacademy' ),
+		'cta1'  => array( __( 'How It Works', 'faithbridgeacademy' ), home_url( '/about/' ) ),
+		'cta2'  => array( __( 'Apply Now', 'faithbridgeacademy' ), home_url( '/apply/' ) ),
+	),
+	array(
+		'align' => 'left',
+		'img'   => $uri . '/assets/images/life-band.jpg',
+		'eye'   => __( 'Bible Club · Monthly', 'faithbridgeacademy' ),
+		'title' => __( 'A Family of Faith<br><span class="hl">Beyond Classrooms.</span>', 'faithbridgeacademy' ),
+		'text'  => __( 'Monthly gatherings, worship, Scripture memory and service — where children belong, participate and grow in community.', 'faithbridgeacademy' ),
+		'cta1'  => array( __( 'Join the Bible Club', 'faithbridgeacademy' ), home_url( '/bible-club/' ) ),
+		'cta2'  => array( __( 'Apply Now', 'faithbridgeacademy' ), home_url( '/apply/' ) ),
+	),
+);
 ?>
 
 <section class="fba-hero" id="fbaSlider" role="region" aria-roledescription="carousel" aria-label="<?php esc_attr_e( 'Highlights', 'faithbridgeacademy' ); ?>">
 	<div class="fba-slides">
-		<div class="fba-slide active" role="group" aria-roledescription="slide" aria-label="1 of 3" style="background-image:url('<?php echo esc_url( $uri . '/assets/images/hero-1.jpg' ); ?>')">
+		<?php foreach ( $slides as $i => $s ) : ?>
+		<div class="fba-slide fba-align-<?php echo esc_attr( $s['align'] ); ?><?php echo 0 === $i ? ' active' : ''; ?>" role="group" aria-roledescription="slide" aria-label="<?php echo esc_attr( sprintf( __( '%1$d of %2$d', 'faithbridgeacademy' ), $i + 1, count( $slides ) ) ); ?>" aria-hidden="<?php echo 0 === $i ? 'false' : 'true'; ?>"<?php echo 0 === $i ? '' : ' inert'; ?> style="background-image:url('<?php echo esc_url( $s['img'] ); ?>')">
 			<div class="fba-wrap fba-slide-content">
-				<p class="fba-hero-kicker"><?php esc_html_e( 'Intentional Faith. Structured Learning. Confident Children.', 'faithbridgeacademy' ); ?></p>
-				<h1 class="fba-hero-title"><?php esc_html_e( 'Raising Children Who Know God, Love God, and Live for Him.', 'faithbridgeacademy' ); ?></h1>
-				<p class="fba-hero-text"><?php esc_html_e( 'FaithBridge Academy nurtures the whole child — spirit, mind and character — through faith-based programmes and personal academic support, in partnership with parents.', 'faithbridgeacademy' ); ?></p>
+				<p class="fba-hero-eyebrow"><?php echo esc_html( $s['eye'] ); ?></p>
+				<?php if ( 0 === $i ) : ?>
+				<h1 class="fba-hero-title"><?php echo wp_kses( $s['title'], $kses ); ?></h1>
+				<?php else : ?>
+				<h2 class="fba-hero-title"><?php echo wp_kses( $s['title'], $kses ); ?></h2>
+				<?php endif; ?>
+				<p class="fba-hero-text"><?php echo esc_html( $s['text'] ); ?></p>
 				<p class="fba-hero-actions">
-					<a class="fba-btn fba-btn-gold" href="<?php echo esc_url( home_url( '/programmes/' ) ); ?>"><?php echo esc_html( fba_get_option( 'hero_cta_primary' ) ); ?> <span aria-hidden="true">&rarr;</span></a>
-					<a class="fba-btn fba-btn-outline-light" href="<?php echo esc_url( home_url( '/apply/' ) ); ?>"><?php echo esc_html( fba_get_option( 'hero_cta_secondary' ) ); ?></a>
+					<a class="fba-btn fba-btn-gold" href="<?php echo esc_url( $s['cta1'][1] ); ?>"><?php echo esc_html( $s['cta1'][0] ); ?> <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+					<a class="fba-btn fba-btn-outline-light" href="<?php echo esc_url( $s['cta2'][1] ); ?>"><?php echo esc_html( $s['cta2'][0] ); ?></a>
 				</p>
 			</div>
 		</div>
-		<div class="fba-slide" role="group" aria-roledescription="slide" aria-label="2 of 3" aria-hidden="true" inert style="background-image:url('<?php echo esc_url( $uri . '/assets/images/bible-study.jpg' ); ?>')">
-			<div class="fba-wrap fba-slide-content">
-				<p class="fba-hero-kicker"><?php esc_html_e( 'Flagship programme', 'faithbridgeacademy' ); ?></p>
-				<h2 class="fba-hero-title"><?php esc_html_e( 'Bible Study: Rooted in Christ.', 'faithbridgeacademy' ); ?></h2>
-				<p class="fba-hero-text"><?php esc_html_e( 'Biblical foundation, character formation, Scripture memory and practical faith — taught live on Google Meet, with recordings for every enrolled student.', 'faithbridgeacademy' ); ?></p>
-				<p class="fba-hero-actions">
-					<a class="fba-btn fba-btn-gold" href="<?php echo esc_url( home_url( '/programmes/' ) ); ?>"><?php esc_html_e( 'Discover Bible Study', 'faithbridgeacademy' ); ?> <span aria-hidden="true">&rarr;</span></a>
-					<a class="fba-btn fba-btn-outline-light" href="<?php echo esc_url( home_url( '/fees/' ) ); ?>"><?php esc_html_e( 'View Fees', 'faithbridgeacademy' ); ?></a>
-				</p>
-			</div>
-		</div>
-		<div class="fba-slide" role="group" aria-roledescription="slide" aria-label="3 of 3" aria-hidden="true" inert style="background-image:url('<?php echo esc_url( $uri . '/assets/images/online-class.jpg' ); ?>')">
-			<div class="fba-wrap fba-slide-content">
-				<p class="fba-hero-kicker"><?php echo esc_html( fba_get_option( 'session_label' ) . ' · ' . fba_get_option( 'session_period' ) ); ?></p>
-				<h2 class="fba-hero-title"><?php esc_html_e( 'Admissions Are Open. Start Intentionally.', 'faithbridgeacademy' ); ?></h2>
-				<p class="fba-hero-text"><?php echo esc_html( sprintf( __( 'Live %1$s classes hold %2$s at %3$s. Group and one-on-one study styles available.', 'faithbridgeacademy' ), fba_get_option( 'platform' ), fba_get_option( 'class_days' ), fba_get_option( 'class_time' ) ) ); ?></p>
-				<p class="fba-hero-actions">
-					<a class="fba-btn fba-btn-gold" href="<?php echo esc_url( home_url( '/apply/' ) ); ?>"><?php esc_html_e( 'Apply Now', 'faithbridgeacademy' ); ?> <span aria-hidden="true">&rarr;</span></a>
-					<a class="fba-btn fba-btn-outline-light" href="<?php echo esc_url( home_url( '/contact/' ) ); ?>"><?php esc_html_e( 'Talk to Us', 'faithbridgeacademy' ); ?></a>
-				</p>
-			</div>
-		</div>
+		<?php endforeach; ?>
 	</div>
 	<div class="fba-wrap fba-slider-ui">
-		<div class="fba-slider-dots" role="tablist" aria-label="<?php esc_attr_e( 'Slides', 'faithbridgeacademy' ); ?>">
-			<button class="active" role="tab" aria-selected="true" aria-label="<?php esc_attr_e( 'Slide 1', 'faithbridgeacademy' ); ?>" data-slide="0"></button>
-			<button role="tab" aria-selected="false" aria-label="<?php esc_attr_e( 'Slide 2', 'faithbridgeacademy' ); ?>" data-slide="1"></button>
-			<button role="tab" aria-selected="false" aria-label="<?php esc_attr_e( 'Slide 3', 'faithbridgeacademy' ); ?>" data-slide="2"></button>
-		</div>
+		<div class="fba-slider-dots" id="fbaSliderDots" role="tablist" aria-label="<?php esc_attr_e( 'Slides', 'faithbridgeacademy' ); ?>"></div>
 	</div>
-	<button class="fba-slider-arrow fba-slider-prev" aria-label="<?php esc_attr_e( 'Previous slide', 'faithbridgeacademy' ); ?>">&larr;</button>
-	<button class="fba-slider-arrow fba-slider-next" aria-label="<?php esc_attr_e( 'Next slide', 'faithbridgeacademy' ); ?>">&rarr;</button>
 </section>
 
 <section class="fba-stats" aria-label="<?php esc_attr_e( 'FaithBridge at a glance', 'faithbridgeacademy' ); ?>">
@@ -85,21 +125,21 @@ $uri = get_template_directory_uri();
 			<p class="fba-lead"><?php esc_html_e( 'We bring together faith, learning and character so children develop as whole individuals — spirit, mind and character.', 'faithbridgeacademy' ); ?></p>
 			<ul class="fba-why-list">
 				<li>
-					<span class="fba-why-icon" aria-hidden="true">&#10013;</span>
+					<span class="fba-why-icon" aria-hidden="true"><i class="ph ph-cross"></i></span>
 					<div>
 						<strong><?php esc_html_e( 'Faith-Rooted Teaching', 'faithbridgeacademy' ); ?></strong>
 						<span><?php esc_html_e( 'Every lesson is intentionally built around Christian faith, biblical truth and values.', 'faithbridgeacademy' ); ?></span>
 					</div>
 				</li>
 				<li>
-					<span class="fba-why-icon" aria-hidden="true">&#10022;</span>
+					<span class="fba-why-icon" aria-hidden="true"><i class="ph ph-heart"></i></span>
 					<div>
 						<strong><?php esc_html_e( 'Whole-Child Development', 'faithbridgeacademy' ); ?></strong>
 						<span><?php esc_html_e( 'Spiritual, intellectual, moral and personal growth — never academics alone.', 'faithbridgeacademy' ); ?></span>
 					</div>
 				</li>
 				<li>
-					<span class="fba-why-icon" aria-hidden="true">&#9673;</span>
+					<span class="fba-why-icon" aria-hidden="true"><i class="ph ph-chalkboard-teacher"></i></span>
 					<div>
 						<strong><?php esc_html_e( 'Intentional, Child-Centred Classes', 'faithbridgeacademy' ); ?></strong>
 						<span><?php esc_html_e( 'Structured curriculum, small groups of 15 or fewer, and one-on-one options — online and personal.', 'faithbridgeacademy' ); ?></span>
@@ -122,34 +162,34 @@ $uri = get_template_directory_uri();
 				<p class="fba-kicker"><?php esc_html_e( 'Popular programmes', 'faithbridgeacademy' ); ?></p>
 				<h2 class="fba-section-title"><?php esc_html_e( 'One Academy, Many Paths to Grow', 'faithbridgeacademy' ); ?></h2>
 			</div>
-			<a class="fba-link-arrow" href="<?php echo esc_url( home_url( '/programmes/' ) ); ?>"><?php esc_html_e( 'View All Programmes', 'faithbridgeacademy' ); ?> <span aria-hidden="true">&rarr;</span></a>
+			<a class="fba-link-arrow" href="<?php echo esc_url( home_url( '/programmes/' ) ); ?>"><?php esc_html_e( 'View All Programmes', 'faithbridgeacademy' ); ?> <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
 		</div>
 		<div class="fba-program-grid">
 			<a class="fba-program-card fba-program-featured reveal" href="<?php echo esc_url( home_url( '/programmes/' ) ); ?>">
 				<span class="fba-program-tag"><?php esc_html_e( 'Flagship', 'faithbridgeacademy' ); ?></span>
-				<span class="fba-program-icon" aria-hidden="true">&#10013;</span>
+				<span class="fba-program-icon" aria-hidden="true"><i class="ph ph-book-open"></i></span>
 				<strong><?php esc_html_e( 'Bible Study', 'faithbridgeacademy' ); ?></strong>
-				<span><?php esc_html_e( 'Know God, love God, live for Him.', 'faithbridgeacademy' ); ?></span>
+				<span><?php esc_html_e( 'Know God deeply, love Him sincerely, and live out your faith with confidence every day.', 'faithbridgeacademy' ); ?></span>
 			</a>
 			<a class="fba-program-card reveal" href="<?php echo esc_url( home_url( '/programmes/' ) ); ?>">
-				<span class="fba-program-icon" aria-hidden="true">Aa</span>
+				<span class="fba-program-icon" aria-hidden="true"><i class="ph ph-quotes"></i></span>
 				<strong><?php esc_html_e( 'English', 'faithbridgeacademy' ); ?></strong>
-				<span><?php esc_html_e( 'Read, write and speak with confidence.', 'faithbridgeacademy' ); ?></span>
+				<span><?php esc_html_e( 'Read widely, write clearly and speak with poise in every room you enter.', 'faithbridgeacademy' ); ?></span>
 			</a>
 			<a class="fba-program-card reveal" href="<?php echo esc_url( home_url( '/programmes/' ) ); ?>">
-				<span class="fba-program-icon" aria-hidden="true">&pi;</span>
+				<span class="fba-program-icon" aria-hidden="true"><i class="ph ph-star"></i></span>
 				<strong><?php esc_html_e( 'Mathematics', 'faithbridgeacademy' ); ?></strong>
-				<span><?php esc_html_e( 'Strong foundations, fearless problem-solving.', 'faithbridgeacademy' ); ?></span>
+				<span><?php esc_html_e( 'Strong foundations and fearless problem-solving, from basics to brilliance.', 'faithbridgeacademy' ); ?></span>
 			</a>
 			<a class="fba-program-card reveal" href="<?php echo esc_url( home_url( '/programmes/' ) ); ?>">
-				<span class="fba-program-icon" aria-hidden="true">Fr</span>
+				<span class="fba-program-icon" aria-hidden="true"><i class="ph ph-globe-stand"></i></span>
 				<strong><?php esc_html_e( 'French', 'faithbridgeacademy' ); ?></strong>
-				<span><?php esc_html_e( 'A second language, learned joyfully.', 'faithbridgeacademy' ); ?></span>
+				<span><?php esc_html_e( 'A second language learned joyfully — speak, sing and shine en français.', 'faithbridgeacademy' ); ?></span>
 			</a>
 			<a class="fba-program-card reveal" href="<?php echo esc_url( home_url( '/programmes/' ) ); ?>">
-				<span class="fba-program-icon" aria-hidden="true">&#9881;</span>
+				<span class="fba-program-icon" aria-hidden="true"><i class="ph ph-graduation-cap"></i></span>
 				<strong><?php esc_html_e( 'Sciences & More', 'faithbridgeacademy' ); ?></strong>
-				<span><?php esc_html_e( 'Physics, Chemistry, Biology, ICT and beyond.', 'faithbridgeacademy' ); ?></span>
+				<span><?php esc_html_e( 'Physics, Chemistry, Biology, ICT, Government — thirteen paths and counting.', 'faithbridgeacademy' ); ?></span>
 			</a>
 		</div>
 	</div>
@@ -157,13 +197,15 @@ $uri = get_template_directory_uri();
 
 <section class="fba-life" aria-label="<?php esc_attr_e( 'Faith and community life', 'faithbridgeacademy' ); ?>" style="background-image:url('<?php echo esc_url( $uri . '/assets/images/life-band.jpg' ); ?>')">
 	<div class="fba-life-overlay" aria-hidden="true"></div>
-	<div class="fba-wrap fba-life-inner reveal">
-		<p class="fba-kicker fba-kicker-light"><?php esc_html_e( 'Faith & community life', 'faithbridgeacademy' ); ?></p>
-		<h2><?php esc_html_e( 'Beyond Classrooms: A Family of Faith', 'faithbridgeacademy' ); ?></h2>
-		<p><?php esc_html_e( 'Monthly Bible Club gatherings, Scripture memory, worship and service — where children belong, participate and grow in community.', 'faithbridgeacademy' ); ?></p>
-		<p class="fba-life-actions">
-			<a class="fba-btn fba-btn-gold" href="<?php echo esc_url( home_url( '/bible-club/' ) ); ?>"><?php esc_html_e( 'Discover More', 'faithbridgeacademy' ); ?> <span aria-hidden="true">&rarr;</span></a>
-		</p>
+	<div class="fba-wrap">
+		<div class="fba-life-inner reveal">
+			<p class="fba-kicker fba-kicker-light"><?php esc_html_e( 'Faith & community life', 'faithbridgeacademy' ); ?></p>
+			<h2><?php esc_html_e( 'Beyond Classrooms: A Family of Faith', 'faithbridgeacademy' ); ?></h2>
+			<p><?php esc_html_e( 'Monthly Bible Club gatherings, Scripture memory, worship and service — where children belong, participate and grow in community.', 'faithbridgeacademy' ); ?></p>
+			<p class="fba-life-actions">
+				<a class="fba-btn fba-btn-gold" href="<?php echo esc_url( home_url( '/bible-club/' ) ); ?>"><?php esc_html_e( 'Discover More', 'faithbridgeacademy' ); ?> <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+			</p>
+		</div>
 	</div>
 </section>
 
@@ -174,7 +216,7 @@ $uri = get_template_directory_uri();
 				<p class="fba-kicker"><?php esc_html_e( 'News & updates', 'faithbridgeacademy' ); ?></p>
 				<h2 class="fba-section-title"><?php esc_html_e( 'Stories From the Academy', 'faithbridgeacademy' ); ?></h2>
 			</div>
-			<a class="fba-link-arrow" href="<?php echo esc_url( home_url( '/blog/' ) ); ?>"><?php esc_html_e( 'View All News', 'faithbridgeacademy' ); ?> <span aria-hidden="true">&rarr;</span></a>
+			<a class="fba-link-arrow" href="<?php echo esc_url( home_url( '/blog/' ) ); ?>"><?php esc_html_e( 'View All News', 'faithbridgeacademy' ); ?> <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
 		</div>
 		<div class="fba-news-grid">
 			<?php
@@ -199,7 +241,7 @@ $uri = get_template_directory_uri();
 						<div class="fba-news-body">
 							<p class="fba-news-date"><?php echo esc_html( get_the_date() ); ?></p>
 							<h3><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
-							<a class="fba-link-arrow" href="<?php the_permalink(); ?>"><?php esc_html_e( 'Read More', 'faithbridgeacademy' ); ?> <span aria-hidden="true">&rarr;</span></a>
+							<a class="fba-link-arrow" href="<?php the_permalink(); ?>"><?php esc_html_e( 'Read More', 'faithbridgeacademy' ); ?> <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
 						</div>
 					</article>
 					<?php
@@ -218,7 +260,7 @@ $uri = get_template_directory_uri();
 						<div class="fba-news-body">
 							<p class="fba-news-date"><?php esc_html_e( 'FaithBridge Academy', 'faithbridgeacademy' ); ?></p>
 							<h3><?php echo esc_html( $f[1] ); ?></h3>
-							<a class="fba-link-arrow" href="<?php echo esc_url( home_url( '/blog/' ) ); ?>"><?php esc_html_e( 'Read More', 'faithbridgeacademy' ); ?> <span aria-hidden="true">&rarr;</span></a>
+							<a class="fba-link-arrow" href="<?php echo esc_url( home_url( '/blog/' ) ); ?>"><?php esc_html_e( 'Read More', 'faithbridgeacademy' ); ?> <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
 						</div>
 					</article>
 					<?php
@@ -230,51 +272,72 @@ $uri = get_template_directory_uri();
 </section>
 
 <section class="fba-panel" aria-label="<?php esc_attr_e( 'Sessions and quick links', 'faithbridgeacademy' ); ?>">
-	<div class="fba-wrap fba-panel-grid">
-		<div class="reveal">
-			<p class="fba-kicker fba-kicker-light"><?php esc_html_e( 'Session calendar', 'faithbridgeacademy' ); ?></p>
-			<h2><?php esc_html_e( 'Four Sessions, Every Year', 'faithbridgeacademy' ); ?></h2>
-			<p class="fba-panel-sub"><?php esc_html_e( 'Pick the quarter that suits your family. Applications open for the current and upcoming sessions.', 'faithbridgeacademy' ); ?></p>
-			<ul class="fba-session-list">
-				<?php
-				$quarters = array( '1' => 'Jan–Mar', '2' => 'Apr–Jun', '3' => 'Jul–Sep', '4' => 'Oct–Dec' );
-				$current  = (string) fba_get_option( 'session_quarter' );
-				foreach ( $quarters as $q => $label ) :
-					$active = ( $q === $current ) ? ' fba-session-current' : '';
-					?>
-					<li class="fba-session-item<?php echo esc_attr( $active ); ?>">
-						<span class="fba-session-q"><?php echo esc_html( 'Q' . $q ); ?><small><?php echo esc_html( $label ); ?></small></span>
-						<span class="fba-session-name">
-							<?php echo esc_html( sprintf( __( 'Session %s', 'faithbridgeacademy' ), $q ) ); ?>
-							<?php if ( $q === $current ) : ?>
-								<em><?php echo esc_html( __( 'Now enrolling · ', 'faithbridgeacademy' ) . fba_get_option( 'session_period' ) ); ?></em>
-							<?php endif; ?>
-						</span>
-					</li>
-				<?php endforeach; ?>
-			</ul>
+	<div class="fba-wrap">
+		<div class="fba-section-head reveal">
+			<div>
+				<p class="fba-kicker fba-kicker-light"><?php esc_html_e( 'Session calendar', 'faithbridgeacademy' ); ?></p>
+				<h2 class="fba-section-title fba-title-light"><?php esc_html_e( 'Four Sessions, Every Year', 'faithbridgeacademy' ); ?></h2>
+				<p class="fba-panel-sub"><?php esc_html_e( 'Pick the quarter that suits your family. Applications open for the current and upcoming sessions.', 'faithbridgeacademy' ); ?></p>
+			</div>
 		</div>
-		<div class="reveal">
-			<h2><?php esc_html_e( 'Quick Links', 'faithbridgeacademy' ); ?></h2>
-			<ul class="fba-quicklinks">
-				<li><a href="<?php echo esc_url( home_url( '/apply/' ) ); ?>"><?php esc_html_e( 'Admissions & Application', 'faithbridgeacademy' ); ?> <span aria-hidden="true">&rarr;</span></a></li>
-				<li><a href="<?php echo esc_url( home_url( '/fees/' ) ); ?>"><?php esc_html_e( 'Fees & Sessions', 'faithbridgeacademy' ); ?> <span aria-hidden="true">&rarr;</span></a></li>
-				<li><a href="<?php echo esc_url( home_url( '/programmes/' ) ); ?>"><?php esc_html_e( 'All Programmes', 'faithbridgeacademy' ); ?> <span aria-hidden="true">&rarr;</span></a></li>
-				<li><a href="<?php echo esc_url( home_url( '/resources/' ) ); ?>"><?php esc_html_e( 'Learning Resources', 'faithbridgeacademy' ); ?> <span aria-hidden="true">&rarr;</span></a></li>
-				<li><a href="<?php echo esc_url( home_url( '/bible-club/' ) ); ?>"><?php esc_html_e( 'Bible Club', 'faithbridgeacademy' ); ?> <span aria-hidden="true">&rarr;</span></a></li>
-				<li><a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>"><?php esc_html_e( 'Contact Us', 'faithbridgeacademy' ); ?> <span aria-hidden="true">&rarr;</span></a></li>
-			</ul>
+		<div class="fba-quarter-grid">
+			<?php
+			$quarters = array(
+				'1' => array( 'Jan–Mar', __( 'Fresh beginnings', 'faithbridgeacademy' ) ),
+				'2' => array( 'Apr–Jun', __( 'Growth season', 'faithbridgeacademy' ) ),
+				'3' => array( 'Jul–Sep', __( 'Deepening roots', 'faithbridgeacademy' ) ),
+				'4' => array( 'Oct–Dec', __( 'Fruitful finish', 'faithbridgeacademy' ) ),
+			);
+			$current  = (string) fba_get_option( 'session_quarter' );
+			foreach ( $quarters as $q => $meta ) :
+				$is_current = ( $q === $current );
+				?>
+				<article class="fba-quarter-card<?php echo $is_current ? ' fba-quarter-current' : ''; ?> reveal">
+					<?php if ( $is_current ) : ?>
+						<span class="fba-quarter-badge"><i class="ph ph-sparkle" aria-hidden="true"></i> <?php esc_html_e( 'Now enrolling', 'faithbridgeacademy' ); ?></span>
+					<?php endif; ?>
+					<span class="fba-quarter-num" aria-hidden="true"><?php echo esc_html( 'Q' . $q ); ?></span>
+					<h3><?php echo esc_html( sprintf( __( 'Session %s', 'faithbridgeacademy' ), $q ) ); ?></h3>
+					<p class="fba-quarter-months"><?php echo esc_html( $meta[0] ); ?></p>
+					<p class="fba-quarter-theme"><?php echo esc_html( $meta[1] ); ?></p>
+					<?php if ( $is_current ) : ?>
+						<p class="fba-quarter-period"><?php echo esc_html( fba_get_option( 'session_period' ) ); ?></p>
+					<?php endif; ?>
+					<a class="fba-link-arrow fba-link-gold" href="<?php echo esc_url( home_url( '/apply/' ) ); ?>"><?php esc_html_e( 'Apply', 'faithbridgeacademy' ); ?> <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+				</article>
+			<?php endforeach; ?>
 		</div>
+		<ul class="fba-quicklinks reveal">
+			<li><a href="<?php echo esc_url( home_url( '/apply/' ) ); ?>"><i class="ph ph-graduation-cap" aria-hidden="true"></i> <?php esc_html_e( 'Admissions & Application', 'faithbridgeacademy' ); ?> <i class="ph ph-arrow-right" aria-hidden="true"></i></a></li>
+			<li><a href="<?php echo esc_url( home_url( '/fees/' ) ); ?>"><i class="ph ph-star" aria-hidden="true"></i> <?php esc_html_e( 'Fees & Sessions', 'faithbridgeacademy' ); ?> <i class="ph ph-arrow-right" aria-hidden="true"></i></a></li>
+			<li><a href="<?php echo esc_url( home_url( '/programmes/' ) ); ?>"><i class="ph ph-book-open" aria-hidden="true"></i> <?php esc_html_e( 'All Programmes', 'faithbridgeacademy' ); ?> <i class="ph ph-arrow-right" aria-hidden="true"></i></a></li>
+			<li><a href="<?php echo esc_url( home_url( '/resources/' ) ); ?>"><i class="ph ph-globe-stand" aria-hidden="true"></i> <?php esc_html_e( 'Learning Resources', 'faithbridgeacademy' ); ?> <i class="ph ph-arrow-right" aria-hidden="true"></i></a></li>
+			<li><a href="<?php echo esc_url( home_url( '/bible-club/' ) ); ?>"><i class="ph ph-hands-praying" aria-hidden="true"></i> <?php esc_html_e( 'Bible Club', 'faithbridgeacademy' ); ?> <i class="ph ph-arrow-right" aria-hidden="true"></i></a></li>
+			<li><a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>"><i class="ph ph-envelope-simple" aria-hidden="true"></i> <?php esc_html_e( 'Contact Us', 'faithbridgeacademy' ); ?> <i class="ph ph-arrow-right" aria-hidden="true"></i></a></li>
+		</ul>
 	</div>
 </section>
 
-<section class="fba-cta-band" aria-label="<?php esc_attr_e( 'Call to action', 'faithbridgeacademy' ); ?>">
-	<div class="fba-wrap fba-cta-inner reveal">
-		<div>
-			<h2><?php esc_html_e( 'Give Your Child a Stronger Foundation.', 'faithbridgeacademy' ); ?></h2>
-			<p><?php esc_html_e( 'Faith, values, knowledge and character are built over time. Start intentionally.', 'faithbridgeacademy' ); ?></p>
+<section class="fba-section fba-cta-zone" aria-label="<?php esc_attr_e( 'Call to action', 'faithbridgeacademy' ); ?>">
+	<div class="fba-wrap">
+		<div class="fba-cta-panel reveal">
+			<span class="fba-cta-ring" aria-hidden="true"></span>
+			<div class="fba-cta-copy">
+				<p class="fba-kicker fba-kicker-light"><?php esc_html_e( 'Begin the journey', 'faithbridgeacademy' ); ?></p>
+				<h2><?php esc_html_e( 'Give Your Child a Stronger Foundation.', 'faithbridgeacademy' ); ?></h2>
+				<p><?php esc_html_e( 'Faith, values, knowledge and character are built over time. Start intentionally — applications take minutes.', 'faithbridgeacademy' ); ?></p>
+				<p class="fba-cta-actions">
+					<a class="fba-btn fba-btn-gold" href="<?php echo esc_url( home_url( '/apply/' ) ); ?>"><?php esc_html_e( 'Apply Now', 'faithbridgeacademy' ); ?> <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+					<a class="fba-btn fba-btn-outline-light" href="<?php echo esc_url( home_url( '/programmes/' ) ); ?>"><?php esc_html_e( 'Explore Programmes', 'faithbridgeacademy' ); ?></a>
+				</p>
+			</div>
+			<aside class="fba-cta-session">
+				<p class="fba-cta-session-label"><i class="ph ph-calendar-check" aria-hidden="true"></i> <?php esc_html_e( 'Now enrolling', 'faithbridgeacademy' ); ?></p>
+				<p class="fba-cta-session-title"><?php echo esc_html( fba_get_option( 'session_label' ) ); ?></p>
+				<p class="fba-cta-session-period"><?php echo esc_html( fba_get_option( 'session_period' ) ); ?></p>
+				<p class="fba-cta-session-days"><?php echo esc_html( fba_get_option( 'class_days' ) . ' · ' . fba_get_option( 'class_time' ) ); ?></p>
+			</aside>
 		</div>
-		<a class="fba-btn fba-btn-navy" href="<?php echo esc_url( home_url( '/apply/' ) ); ?>"><?php esc_html_e( 'Apply Now', 'faithbridgeacademy' ); ?> <span aria-hidden="true">&rarr;</span></a>
 	</div>
 </section>
 
@@ -292,7 +355,7 @@ $uri = get_template_directory_uri();
 				<li><?php esc_html_e( 'Parents carried along every step', 'faithbridgeacademy' ); ?></li>
 				<li><?php esc_html_e( 'Safe, faith-filled online environment', 'faithbridgeacademy' ); ?></li>
 			</ul>
-			<p><a class="fba-btn fba-btn-navy" href="<?php echo esc_url( home_url( '/about/' ) ); ?>"><?php esc_html_e( 'How It Works', 'faithbridgeacademy' ); ?> <span aria-hidden="true">&rarr;</span></a></p>
+			<p><a class="fba-btn fba-btn-navy" href="<?php echo esc_url( home_url( '/about/' ) ); ?>"><?php esc_html_e( 'How It Works', 'faithbridgeacademy' ); ?> <i class="ph ph-arrow-right" aria-hidden="true"></i></a></p>
 		</div>
 	</div>
 </section>
