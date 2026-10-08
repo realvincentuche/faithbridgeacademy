@@ -149,8 +149,8 @@ p { margin: 0 0 1rem; }
 	transition: background 0.2s, color 0.2s;
 }
 .fba-nav > .menu > li > a:hover,
-.fba-nav .current-menu-item > a,
-.fba-nav .current-menu-ancestor > a { color: var(--fba-gold); }
+.fba-nav > .menu > .current-menu-item > a,
+.fba-nav > .menu > .current-menu-ancestor > a { color: var(--fba-gold); }
 .fba-nav > .menu > li > a:hover { background: rgba(255, 255, 255, 0.1); }
 .fba-nav .menu-item-has-children { position: relative; }
 .fba-nav .menu-item-has-children > a { padding-right: 1.6rem; }
@@ -183,11 +183,12 @@ p { margin: 0 0 1rem; }
 }
 .fba-nav .sub-menu a::before {
 	content: "0" counter(fba-drop); font-family: var(--fba-font-display);
-	font-size: 0.75rem; color: #a9a499;
+	font-size: 0.75rem; color: #a9a499; flex-shrink: 0; width: 1.6rem;
 }
 .fba-nav .sub-menu a:hover { background: var(--fba-cream-soft); }
 .fba-nav .sub-menu a:hover::before { color: var(--fba-gold-deep); }
-.fba-nav .sub-menu .current-menu-item > a { background: var(--fba-cream-soft); }
+.fba-nav .sub-menu .current-menu-item > a { background: var(--fba-navy); color: #fff; }
+.fba-nav .sub-menu .current-menu-item > a::before { color: var(--fba-gold); }
 
 .fba-header-actions { display: flex; align-items: center; gap: 0.8rem; }
 .fba-burger { display: none; background: none; border: 0; cursor: pointer; padding: 0.5rem; }
