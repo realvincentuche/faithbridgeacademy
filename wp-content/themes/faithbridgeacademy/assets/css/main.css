@@ -552,6 +552,7 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 1024px) {
+	.fba-header { left: 0.75rem; right: 0.75rem; }
 	.fba-nav { display: none; }
 	.fba-burger { display: block; }
 	.fba-header-actions { margin-left: auto; }
