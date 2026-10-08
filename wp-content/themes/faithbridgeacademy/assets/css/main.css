@@ -72,7 +72,7 @@ p { margin: 0 0 1rem; }
 /* ---------- Buttons ---------- */
 .fba-btn {
 	display: inline-flex; align-items: center; gap: 0.5rem;
-	padding: 0.85rem 1.7rem; border-radius: 999px;
+	padding: 0.85rem 1.7rem; border-radius: 10px;
 	font-weight: 700; font-size: 0.98rem; text-decoration: none;
 	border: 2px solid transparent; cursor: pointer;
 	transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
@@ -125,33 +125,38 @@ p { margin: 0 0 1rem; }
 .fba-alert-link { color: var(--fba-gold); font-weight: 700; text-decoration: none; white-space: nowrap; }
 @keyframes fba-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
 
-/* ---------- Header (floating) ---------- */
+/* ---------- Header (floating white card, mockup style) ---------- */
 .fba-header {
-	position: fixed; inset: 0 0 auto 0; z-index: 100;
-	transition: background 0.3s ease, box-shadow 0.3s ease;
+	position: fixed; top: 12px; left: 0; right: 0; z-index: 100;
+	background: transparent;
 }
-.fba-has-slider .fba-header { background: linear-gradient(to bottom, rgba(7, 29, 68, 0.72), transparent); }
-.fba-has-banner .fba-header,
-.fba-header.scrolled { background: rgba(10, 42, 94, 0.96); box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.45); backdrop-filter: blur(6px); }
-.fba-header-inner { display: flex; align-items: center; gap: 1.5rem; min-height: var(--fba-header-h); }
+.fba-header-inner {
+	display: flex; align-items: center; gap: 1.25rem;
+	min-height: var(--fba-header-h);
+	background: #fff; border-radius: 14px;
+	box-shadow: 0 18px 45px -18px rgba(10, 42, 94, 0.28);
+	padding-top: 0.5rem; padding-bottom: 0.5rem;
+	transition: box-shadow 0.3s ease;
+}
+.fba-header.scrolled .fba-header-inner { box-shadow: 0 24px 55px -18px rgba(10, 42, 94, 0.4); }
 
 .fba-brand { display: inline-flex; align-items: center; text-decoration: none; }
-.fba-brand img { height: 56px; width: auto; }
-.fba-brand-logo-dark { display: none; }
+.fba-brand img { height: 52px; width: auto; }
+.fba-brand-logo-light { display: none; }
+.fba-brand-logo-dark { display: block; }
 .fba-drawer-logo { height: 64px; width: auto; }
 
 .fba-nav { margin-left: auto; }
-.fba-nav .menu { list-style: none; margin: 0; padding: 0; display: flex; gap: 0.4rem; align-items: center; }
+.fba-nav .menu { list-style: none; margin: 0; padding: 0; display: flex; gap: 0.2rem; align-items: center; }
 .fba-nav > .menu > li > a {
 	display: inline-flex; align-items: center; gap: 0.35rem;
-	color: #fff; text-decoration: none; font-weight: 600; font-size: 0.93rem;
-	padding: 0.65rem 0.85rem; border-radius: 999px; opacity: 0.94;
+	color: var(--fba-navy); text-decoration: none; font-weight: 600; font-size: 0.93rem;
+	padding: 0.65rem 0.8rem; border-radius: 8px;
 	transition: background 0.2s, color 0.2s;
 }
-.fba-nav > .menu > li > a:hover,
+.fba-nav > .menu > li > a:hover { background: var(--fba-cream-soft); color: var(--fba-navy); }
 .fba-nav > .menu > .current-menu-item > a,
-.fba-nav > .menu > .current-menu-ancestor > a { color: var(--fba-gold); }
-.fba-nav > .menu > li > a:hover { background: rgba(255, 255, 255, 0.1); }
+.fba-nav > .menu > .current-menu-ancestor > a { color: var(--fba-gold-deep); }
 .fba-nav .menu-item-has-children { position: relative; }
 .fba-nav .menu-item-has-children > a { padding-right: 1.6rem; }
 .fba-nav .menu-item-has-children > a::after {
@@ -190,9 +195,10 @@ p { margin: 0 0 1rem; }
 .fba-nav .sub-menu .current-menu-item > a { background: var(--fba-navy); color: #fff; }
 .fba-nav .sub-menu .current-menu-item > a::before { color: var(--fba-gold); }
 
-.fba-header-actions { display: flex; align-items: center; gap: 0.8rem; }
-.fba-burger { display: none; background: none; border: 0; cursor: pointer; padding: 0.5rem; }
-.fba-burger span { display: block; width: 24px; height: 2.5px; background: #fff; margin: 5px 0; border-radius: 2px; }
+.fba-header-actions { display: flex; align-items: center; gap: 0.7rem; margin-left: 0.5rem; }
+.fba-burger { display: block; background: none; border: 0; cursor: pointer; padding: 0.55rem; border-radius: 8px; }
+.fba-burger:hover { background: var(--fba-cream-soft); }
+.fba-burger span { display: block; width: 24px; height: 2.5px; background: var(--fba-navy); margin: 5px 0; border-radius: 2px; }
 
 /* Mobile drawer */
 .fba-drawer-overlay {
@@ -484,12 +490,12 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 .fba-newsletter-copy h2 { color: #fff; font-size: clamp(1.7rem, 3.2vw, 2.4rem); margin-bottom: 0.4rem; }
 .fba-newsletter-copy h2 em { font-style: italic; color: var(--fba-gold); }
 .fba-newsletter-copy p { margin: 0; color: #b9c4d8; max-width: 44ch; }
-.fba-newsletter-form { display: flex; gap: 0; background: #fff; border-radius: 999px; padding: 0.35rem; box-shadow: 0 18px 40px -16px rgba(0, 0, 0, 0.5); }
+.fba-newsletter-form { display: flex; gap: 0; background: #fff; border-radius: 12px; padding: 0.35rem; box-shadow: 0 18px 40px -16px rgba(0, 0, 0, 0.5); }
 .fba-newsletter-form input {
 	flex: 1; border: 0; outline: 0; padding: 0.7rem 1.2rem; font-size: 0.95rem;
 	background: transparent; color: var(--fba-ink); min-width: 0;
 }
-.fba-newsletter-done { background: rgba(242, 183, 5, 0.15); border: 1px solid var(--fba-gold); color: var(--fba-gold); padding: 0.8rem 1.4rem; border-radius: 999px; margin: 0; }
+.fba-newsletter-done { background: rgba(242, 183, 5, 0.15); border: 1px solid var(--fba-gold); color: var(--fba-gold); padding: 0.8rem 1.4rem; border-radius: 12px; margin: 0; }
 
 /* ---------- Footer ---------- */
 .fba-footer { background: var(--fba-deep); color: #cdd6e4; padding: 4rem 0 0; font-size: 0.94rem; border-top: 3px solid var(--fba-gold); }
@@ -523,7 +529,7 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 .fba-mobile-cta {
 	display: none; position: fixed; left: 1rem; right: 1rem; bottom: 1rem; z-index: 90;
 	background: var(--fba-gold); color: var(--fba-deep); font-weight: 800; text-align: center;
-	padding: 0.9rem; border-radius: 999px; text-decoration: none; box-shadow: var(--fba-shadow);
+	padding: 0.9rem; border-radius: 12px; text-decoration: none; box-shadow: var(--fba-shadow);
 }
 
 /* Back to top */
