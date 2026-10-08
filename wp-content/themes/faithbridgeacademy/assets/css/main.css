@@ -194,21 +194,17 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 	background: linear-gradient(100deg, rgba(7, 29, 68, 0.88) 20%, rgba(7, 29, 68, 0.55) 55%, rgba(7, 29, 68, 0.25) 100%);
 }
 .fba-slide.active { opacity: 1; visibility: visible; z-index: 1; }
-.fba-slide-content { position: relative; z-index: 2; max-width: 640px; padding-top: calc(var(--fba-header-h) + 3rem); padding-bottom: 7rem; }
+.fba-slide-content { position: relative; z-index: 2; padding-top: calc(var(--fba-header-h) + 3rem); padding-bottom: 7rem; }
+.fba-align-center .fba-hero-title, .fba-align-center .fba-hero-text { margin-left: auto; margin-right: auto; }
+.fba-hero-title, .fba-hero-text { max-width: 62ch; }
+.fba-align-right .fba-hero-title, .fba-align-right .fba-hero-text { margin-left: auto; }
 .fba-align-center .fba-slide-content { margin: 0 auto; text-align: center; }
 .fba-align-center .fba-hero-actions { justify-content: center; }
 .fba-align-left .fba-slide-content { margin-right: auto; text-align: left; }
 .fba-align-right .fba-slide-content { margin-left: auto; text-align: right; }
 .fba-align-right .fba-hero-actions { justify-content: flex-end; }
-.fba-hero-eyebrow {
-	color: var(--fba-gold); font-size: 0.82rem; font-weight: 800;
-	letter-spacing: 0.22em; text-transform: uppercase; margin: 0 0 1rem;
-}
 .fba-hero-title { color: #fff; font-size: clamp(1.9rem, 4.4vw, 3.2rem); }
-.fba-hero-title .hl {
-	display: inline-block; background: var(--fba-gold); color: var(--fba-deep);
-	padding: 0.02em 0.32em; border-radius: 0.28em; transform: rotate(-1.4deg);
-}
+.fba-hero-title .hl { color: var(--fba-gold); }
 .fba-hero-text { color: #d7deeb; font-size: 1.02rem; }
 .fba-align-center .fba-hero-text { margin-left: auto; margin-right: auto; max-width: 52ch; }
 .fba-hero-actions { display: flex; gap: 0.9rem; flex-wrap: wrap; margin-top: 1.8rem; }
@@ -235,7 +231,7 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 }
 .fba-stat { text-align: center; color: #fff; padding: 0.4rem 0.5rem; }
 .fba-stat + .fba-stat { border-left: 1px solid rgba(255, 255, 255, 0.14); }
-.fba-stat-num { display: block; font-family: var(--fba-font-display); font-size: 3.1rem; line-height: 1; color: var(--fba-gold); }
+.fba-stat-num { display: block; font-family: var(--fba-font-display); font-size: 4.2rem; line-height: 1; color: var(--fba-gold); }
 .fba-stat-label { display: block; font-size: 0.92rem; font-weight: 600; opacity: 0.88; margin-top: 0.5rem; }
 
 /* ---------- Why ---------- */
@@ -512,7 +508,7 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 	.fba-section { padding: 3.5rem 0; }
 	.fba-stats-grid { grid-template-columns: repeat(2, 1fr); gap: 1.4rem 1rem; padding: 1.6rem 1rem; }
 	.fba-stat:nth-child(3) { border-left: 0; }
-	.fba-stat-num { font-size: 2.4rem; }
+	.fba-stat-num { font-size: 3rem; }
 	.fba-stat-label { font-size: 0.82rem; }
 	.fba-program-grid { grid-template-columns: 1fr 1fr; }
 	.fba-program-card strong { font-size: 1.1rem; }

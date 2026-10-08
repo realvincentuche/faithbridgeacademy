@@ -17,7 +17,7 @@ $slides = array(
 	array(
 		'align' => 'center',
 		'img'   => $uri . '/assets/images/hero-1.jpg',
-		'eye'   => __( 'Welcome to FaithBridge Academy', 'faithbridgeacademy' ),
+		'eye'   => '',
 		'title' => __( 'Intentional Faith.<br>Structured Learning. <span class="hl">Confident Children.</span>', 'faithbridgeacademy' ),
 		'text'  => __( 'A purpose-driven academy nurturing the whole child — spirit, mind and character — through faith-based programmes and personal academic support, in partnership with parents.', 'faithbridgeacademy' ),
 		'cta1'  => array( __( 'Explore Programmes', 'faithbridgeacademy' ), home_url( '/programmes/' ) ),
@@ -26,7 +26,7 @@ $slides = array(
 	array(
 		'align' => 'left',
 		'img'   => $uri . '/assets/images/bible-study.jpg',
-		'eye'   => __( 'Our flagship programme', 'faithbridgeacademy' ),
+		'eye'   => '',
 		'title' => __( 'Bible Study:<br><span class="hl">Rooted in Christ.</span>', 'faithbridgeacademy' ),
 		'text'  => __( 'Biblical foundation, character formation, Scripture memory and practical faith — taught live on Google Meet, with recordings for every enrolled student.', 'faithbridgeacademy' ),
 		'cta1'  => array( __( 'Discover Bible Study', 'faithbridgeacademy' ), home_url( '/programmes/' ) ),
@@ -35,7 +35,7 @@ $slides = array(
 	array(
 		'align' => 'right',
 		'img'   => $uri . '/assets/images/online-class.jpg',
-		'eye'   => __( 'Admissions open', 'faithbridgeacademy' ),
+		'eye'   => '',
 		'title' => __( 'Give Your Child<br>a <span class="hl">Stronger Foundation.</span>', 'faithbridgeacademy' ),
 		'text'  => __( 'Live Google Meet classes hold Tuesdays and Saturdays at 5:00 PM Nigeria Time. Group and one-on-one study styles available.', 'faithbridgeacademy' ),
 		'cta1'  => array( __( 'Apply Now', 'faithbridgeacademy' ), home_url( '/apply/' ) ),
@@ -44,7 +44,7 @@ $slides = array(
 	array(
 		'align' => 'left',
 		'img'   => $uri . '/assets/images/why-2.jpg',
-		'eye'   => __( 'Languages & academics', 'faithbridgeacademy' ),
+		'eye'   => '',
 		'title' => __( 'English, Maths, French<br><span class="hl">& 14 More Paths.</span>', 'faithbridgeacademy' ),
 		'text'  => __( 'From Igbo, Yoruba and Hausa to Physics, ICT and Literature — 17 programmes, one intentional method, every quarter.', 'faithbridgeacademy' ),
 		'cta1'  => array( __( 'View Programmes', 'faithbridgeacademy' ), home_url( '/programmes/' ) ),
@@ -53,7 +53,7 @@ $slides = array(
 	array(
 		'align' => 'right',
 		'img'   => $uri . '/assets/images/hero-3.jpg',
-		'eye'   => __( 'Small groups · One-on-one', 'faithbridgeacademy' ),
+		'eye'   => '',
 		'title' => __( 'Every Child <span class="hl">Known,</span> Guided, Celebrated.', 'faithbridgeacademy' ),
 		'text'  => __( 'Fifteen learners or fewer per group class, caring facilitators, and parents carried along every step of the journey.', 'faithbridgeacademy' ),
 		'cta1'  => array( __( 'How It Works', 'faithbridgeacademy' ), home_url( '/about/' ) ),
@@ -62,7 +62,7 @@ $slides = array(
 	array(
 		'align' => 'left',
 		'img'   => $uri . '/assets/images/life-band.jpg',
-		'eye'   => __( 'Bible Club · Monthly', 'faithbridgeacademy' ),
+		'eye'   => '',
 		'title' => __( 'A Family of Faith<br><span class="hl">Beyond Classrooms.</span>', 'faithbridgeacademy' ),
 		'text'  => __( 'Monthly gatherings, worship, Scripture memory and service — where children belong, participate and grow in community.', 'faithbridgeacademy' ),
 		'cta1'  => array( __( 'Join the Bible Club', 'faithbridgeacademy' ), home_url( '/bible-club/' ) ),
@@ -76,7 +76,6 @@ $slides = array(
 		<?php foreach ( $slides as $i => $s ) : ?>
 		<div class="fba-slide fba-align-<?php echo esc_attr( $s['align'] ); ?><?php echo 0 === $i ? ' active' : ''; ?>" role="group" aria-roledescription="slide" aria-label="<?php echo esc_attr( sprintf( __( '%1$d of %2$d', 'faithbridgeacademy' ), $i + 1, count( $slides ) ) ); ?>" aria-hidden="<?php echo 0 === $i ? 'false' : 'true'; ?>"<?php echo 0 === $i ? '' : ' inert'; ?> style="background-image:url('<?php echo esc_url( $s['img'] ); ?>')">
 			<div class="fba-wrap fba-slide-content">
-				<p class="fba-hero-eyebrow"><?php echo esc_html( $s['eye'] ); ?></p>
 				<?php if ( 0 === $i ) : ?>
 				<h1 class="fba-hero-title"><?php echo wp_kses( $s['title'], $kses ); ?></h1>
 				<?php else : ?>
