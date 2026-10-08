@@ -157,17 +157,17 @@ p { margin: 0 0 1rem; }
 .fba-nav > .menu > li > a:hover { background: var(--fba-cream-soft); color: var(--fba-navy); }
 .fba-nav > .menu > .current-menu-item > a,
 .fba-nav > .menu > .current-menu-ancestor > a { color: var(--fba-gold-deep); }
-.fba-nav .menu-item-has-children { position: relative; }
-.fba-nav .menu-item-has-children > a { position: relative; padding-right: 1.9rem; }
-.fba-nav .menu-item-has-children > a::after {
+.fba-nav > .menu > li.menu-item-has-children { position: relative; }
+.fba-nav > .menu > li.menu-item-has-children > a { position: relative; padding-right: 1.9rem; }
+.fba-nav > .menu > li.menu-item-has-children > a::after {
 	content: ""; position: absolute; right: 0.9rem; top: 50%;
 	width: 7px; height: 7px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor;
 	transform: translateY(-70%) rotate(45deg); transition: transform 0.2s ease;
 	pointer-events: none;
 }
-.fba-nav .menu-item-has-children:hover > a::after,
-.fba-nav .menu-item-has-children:focus-within > a::after,
-.fba-nav .menu-item-has-children.open > a::after { transform: translateY(-30%) rotate(225deg); }
+.fba-nav > .menu > li.menu-item-has-children:hover > a::after,
+.fba-nav > .menu > li.menu-item-has-children:focus-within > a::after,
+.fba-nav > .menu > li.menu-item-has-children.open > a::after { transform: translateY(-30%) rotate(225deg); }
 .fba-nav .sub-menu {
 	position: absolute; top: calc(100% + 10px); left: 50%;
 	display: grid; gap: 3px; min-width: 280px;
@@ -179,9 +179,9 @@ p { margin: 0 0 1rem; }
 	z-index: 200;
 }
 .fba-nav .sub-menu::before { content: ""; position: absolute; top: -12px; left: 0; right: 0; height: 12px; }
-.fba-nav .menu-item-has-children:hover > .sub-menu,
-.fba-nav .menu-item-has-children:focus-within > .sub-menu,
-.fba-nav .menu-item-has-children.open > .sub-menu { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
+.fba-nav > .menu > li.menu-item-has-children:hover > .sub-menu,
+.fba-nav > .menu > li.menu-item-has-children:focus-within > .sub-menu,
+.fba-nav > .menu > li.menu-item-has-children.open > .sub-menu { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
 .fba-nav .sub-menu a {
 	display: flex; align-items: center; gap: 0.7rem;
 	color: var(--fba-navy); text-decoration: none; font-weight: 600; font-size: 0.92rem;
