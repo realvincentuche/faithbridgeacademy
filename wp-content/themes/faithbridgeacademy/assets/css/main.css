@@ -97,11 +97,6 @@ p { margin: 0 0 1rem; }
 }
 .fba-kicker-light { color: var(--fba-green); }
 .fba-section-title { font-size: clamp(1.9rem, 3.6vw, 2.7rem); }
-.fba-section-title::after {
-	content: ""; display: block; width: 64px; height: 5px; border-radius: 3px;
-	background: linear-gradient(90deg, var(--fba-green), var(--fba-green-deep));
-	margin-top: 0.9rem; transform: rotate(-1.2deg);
-}
 .fba-title-light { color: #fff; }
 .fba-link-green { color: var(--fba-green); }
 .fba-link-green:hover { color: #d8d40a; }
