@@ -278,7 +278,8 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 }
 .fba-stat { display: flex; align-items: center; justify-content: center; gap: 0.85rem; text-align: left; color: #fff; padding: 0.4rem 0.5rem; }
 .fba-stat + .fba-stat { border-left: 1px solid rgba(255, 255, 255, 0.14); }
-.fba-stat-icon { flex-shrink: 0; font-size: 3.1rem; font-weight: 300; line-height: 1; color: rgba(255, 255, 255, 0.68); }
+.fba-stat-icon { flex-shrink: 0; line-height: 1; color: rgba(255, 255, 255, 0.68); }
+.fba-stat-icon svg { width: 3.1rem; height: 3.1rem; display: block; }
 .fba-stat-copy { display: flex; flex-direction: column; }
 .fba-stat-num { display: block; font-family: var(--fba-font-display); font-weight: 700; letter-spacing: -0.02em; font-size: 2.6rem; line-height: 1; color: var(--fba-green); }
 .fba-stat-label { display: block; font-size: 0.92rem; font-weight: 600; opacity: 0.88; margin-top: 0.35rem; }
@@ -313,10 +314,9 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 .fba-program-card:hover { transform: translateY(-6px); box-shadow: var(--fba-shadow-sm); border-color: var(--fba-green); }
 .fba-program-card strong { color: var(--fba-navy); font-size: 1.3rem; font-family: var(--fba-font-display); font-weight: 700; letter-spacing: -0.01em; }
 .fba-program-card span:last-child { font-size: 1rem; color: var(--fba-muted); }
-.fba-program-icon {
-	width: 62px; height: 62px; border-radius: 16px; background: var(--fba-navy); color: var(--fba-green);
-	display: grid; place-items: center; font-size: 1.6rem;
-}
+.fba-program-icon { display: block; color: var(--fba-green-deep); line-height: 1; }
+.fba-program-icon svg { width: 3rem; height: 3rem; display: block; margin: 0 auto; }
+.fba-program-featured .fba-program-icon { color: var(--fba-green); }
 .fba-program-featured { background: var(--fba-navy); border-color: var(--fba-navy); color: #d7deeb; }
 .fba-program-featured strong { color: #fff; }
 .fba-program-featured span:last-child { color: #b9c4d8; }
@@ -560,7 +560,7 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 	.fba-stats-grid { grid-template-columns: repeat(2, 1fr); gap: 1.4rem 1rem; padding: 1.6rem 1rem; }
 	.fba-stat:nth-child(3) { border-left: 0; }
 	.fba-stat { justify-content: flex-start; }
-	.fba-stat-icon { font-size: 2.2rem; }
+	.fba-stat-icon svg { width: 2.2rem; height: 2.2rem; }
 	.fba-stat-num { font-size: 2.1rem; }
 	.fba-stat-label { font-size: 0.82rem; }
 	.fba-program-grid { grid-template-columns: 1fr 1fr; }

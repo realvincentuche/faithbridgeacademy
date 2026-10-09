@@ -95,28 +95,28 @@ $slides = array(
 <section class="fba-stats" aria-label="<?php esc_attr_e( 'FaithBridge at a glance', 'faithbridgeacademy' ); ?>">
 	<div class="fba-wrap fba-stats-grid">
 		<div class="fba-stat reveal">
-			<span class="fba-stat-icon" aria-hidden="true"><i class="ph ph-book-open"></i></span>
+			<span class="fba-stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>
 			<span class="fba-stat-copy">
 				<span class="fba-stat-num" data-count="17">0</span>
 				<span class="fba-stat-label"><?php esc_html_e( 'Programmes Offered', 'faithbridgeacademy' ); ?></span>
 			</span>
 		</div>
 		<div class="fba-stat reveal">
-			<span class="fba-stat-icon" aria-hidden="true"><i class="ph ph-calendar-check"></i></span>
+			<span class="fba-stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="m9 16 2 2 4-4"/></svg></span>
 			<span class="fba-stat-copy">
 				<span class="fba-stat-num" data-count="4" data-suffix="">0</span>
 				<span class="fba-stat-label"><?php esc_html_e( 'Sessions Every Year', 'faithbridgeacademy' ); ?></span>
 			</span>
 		</div>
 		<div class="fba-stat reveal">
-			<span class="fba-stat-icon" aria-hidden="true"><i class="ph ph-users-three"></i></span>
+			<span class="fba-stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
 			<span class="fba-stat-copy">
 				<span class="fba-stat-num" data-count="15">0</span>
 				<span class="fba-stat-label"><?php esc_html_e( 'Max Per Group Class', 'faithbridgeacademy' ); ?></span>
 			</span>
 		</div>
 		<div class="fba-stat reveal">
-			<span class="fba-stat-icon" aria-hidden="true"><i class="ph ph-video-camera"></i></span>
+			<span class="fba-stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></span>
 			<span class="fba-stat-copy">
 				<span class="fba-stat-num" data-count="100" data-suffix="%">0</span>
 				<span class="fba-stat-label"><?php esc_html_e( 'Live Online on Google Meet', 'faithbridgeacademy' ); ?></span>
@@ -175,27 +175,27 @@ $slides = array(
 		<div class="fba-program-grid">
 			<a class="fba-program-card fba-program-featured reveal" href="<?php echo esc_url( home_url( '/programmes/' ) ); ?>">
 				<span class="fba-program-tag"><?php esc_html_e( 'Flagship', 'faithbridgeacademy' ); ?></span>
-				<span class="fba-program-icon" aria-hidden="true"><i class="ph ph-book-open"></i></span>
+				<span class="fba-program-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>
 				<strong><?php esc_html_e( 'Bible Study', 'faithbridgeacademy' ); ?></strong>
 				<span><?php esc_html_e( 'Know God deeply, love Him sincerely, and live out your faith with confidence every day.', 'faithbridgeacademy' ); ?></span>
 			</a>
 			<a class="fba-program-card reveal" href="<?php echo esc_url( home_url( '/programmes/' ) ); ?>">
-				<span class="fba-program-icon" aria-hidden="true"><i class="ph ph-quotes"></i></span>
+				<span class="fba-program-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg></span>
 				<strong><?php esc_html_e( 'English', 'faithbridgeacademy' ); ?></strong>
 				<span><?php esc_html_e( 'Read widely, write clearly and speak with poise in every room you enter.', 'faithbridgeacademy' ); ?></span>
 			</a>
 			<a class="fba-program-card reveal" href="<?php echo esc_url( home_url( '/programmes/' ) ); ?>">
-				<span class="fba-program-icon" aria-hidden="true"><i class="ph ph-star"></i></span>
+				<span class="fba-program-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg></span>
 				<strong><?php esc_html_e( 'Mathematics', 'faithbridgeacademy' ); ?></strong>
 				<span><?php esc_html_e( 'Strong foundations and fearless problem-solving, from basics to brilliance.', 'faithbridgeacademy' ); ?></span>
 			</a>
 			<a class="fba-program-card reveal" href="<?php echo esc_url( home_url( '/programmes/' ) ); ?>">
-				<span class="fba-program-icon" aria-hidden="true"><i class="ph ph-globe-stand"></i></span>
+				<span class="fba-program-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
 				<strong><?php esc_html_e( 'French', 'faithbridgeacademy' ); ?></strong>
 				<span><?php esc_html_e( 'A second language learned joyfully — speak, sing and shine en français.', 'faithbridgeacademy' ); ?></span>
 			</a>
 			<a class="fba-program-card reveal" href="<?php echo esc_url( home_url( '/programmes/' ) ); ?>">
-				<span class="fba-program-icon" aria-hidden="true"><i class="ph ph-graduation-cap"></i></span>
+				<span class="fba-program-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg></span>
 				<strong><?php esc_html_e( 'Sciences & More', 'faithbridgeacademy' ); ?></strong>
 				<span><?php esc_html_e( 'Physics, Chemistry, Biology, ICT, Government — thirteen paths and counting.', 'faithbridgeacademy' ); ?></span>
 			</a>
