@@ -252,7 +252,7 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 }
 .fba-slide::before {
 	content: ""; position: absolute; inset: 0;
-	background: linear-gradient(100deg, rgba(7, 29, 68, 0.88) 20%, rgba(7, 29, 68, 0.55) 55%, rgba(7, 29, 68, 0.25) 100%);
+	background: rgba(0, 0, 0, 0.45);
 }
 .fba-slide.active { opacity: 1; visibility: visible; z-index: 1; }
 .fba-slide-content { position: relative; z-index: 2; width: 100%; padding-top: calc(var(--fba-header-h) + 3rem); padding-bottom: 7rem; }
@@ -275,13 +275,8 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 .fba-slide.active .fba-slide-content > *:nth-child(3) { transition-delay: 0.24s; }
 .fba-slide.active .fba-slide-content > *:nth-child(4) { transition-delay: 0.36s; }
 
-.fba-slider-ui { position: absolute; left: 0; right: 0; bottom: 6.5rem; z-index: 3; display: flex; justify-content: flex-end; }
-.fba-slider-dots { display: flex; gap: 0.55rem; }
-.fba-slider-dots button {
-	width: 34px; height: 5px; border-radius: 3px; border: 0; cursor: pointer;
-	background: rgba(255, 255, 255, 0.35); transition: background 0.3s, width 0.3s;
-}
-.fba-slider-dots button.active { background: var(--fba-green); width: 52px; }
+.fba-hero:focus { outline: none; }
+.fba-hero:focus-visible { outline: 2px solid var(--fba-green); outline-offset: -2px; }
 
 /* ---------- Stats ---------- */
 .fba-stats { position: relative; z-index: 5; margin-top: -4.5rem; }
@@ -582,7 +577,6 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 	.fba-news-grid, .fba-voices-grid, .fba-quicklinks, .fba-quarter-grid { grid-template-columns: 1fr; }
 	.fba-footer-grid { grid-template-columns: 1fr; }
 	.fba-section-head { flex-direction: column; align-items: flex-start; }
-	.fba-slider-ui { bottom: 5.5rem; }
 	.fba-slide-content { padding-bottom: 9rem; max-width: 100%; }
 	.fba-align-left .fba-slide-content, .fba-align-right .fba-slide-content { text-align: left; margin: 0; }
 	.fba-align-right .fba-hero-actions { justify-content: flex-start; }

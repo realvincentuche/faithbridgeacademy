@@ -71,7 +71,7 @@ $slides = array(
 );
 ?>
 
-<section class="fba-hero" id="fbaSlider" role="region" aria-roledescription="carousel" aria-label="<?php esc_attr_e( 'Highlights', 'faithbridgeacademy' ); ?>">
+<section class="fba-hero" id="fbaSlider" role="region" aria-roledescription="carousel" aria-label="<?php esc_attr_e( 'Highlights', 'faithbridgeacademy' ); ?>" tabindex="0">
 	<div class="fba-slides">
 		<?php foreach ( $slides as $i => $s ) : ?>
 		<div class="fba-slide fba-align-<?php echo esc_attr( $s['align'] ); ?><?php echo 0 === $i ? ' active' : ''; ?>" role="group" aria-roledescription="slide" aria-label="<?php echo esc_attr( sprintf( __( '%1$d of %2$d', 'faithbridgeacademy' ), $i + 1, count( $slides ) ) ); ?>" aria-hidden="<?php echo 0 === $i ? 'false' : 'true'; ?>"<?php echo 0 === $i ? '' : ' inert'; ?> style="background-image:url('<?php echo esc_url( $s['img'] ); ?>')">
@@ -89,9 +89,6 @@ $slides = array(
 			</div>
 		</div>
 		<?php endforeach; ?>
-	</div>
-	<div class="fba-wrap fba-slider-ui">
-		<div class="fba-slider-dots" id="fbaSliderDots" role="tablist" aria-label="<?php esc_attr_e( 'Slides', 'faithbridgeacademy' ); ?>"></div>
 	</div>
 </section>
 

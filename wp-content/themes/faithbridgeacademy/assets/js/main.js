@@ -93,31 +93,13 @@
 		li.appendChild( btn );
 	} );
 
-	/* Hero slider. */
+	/* Hero slider: autoplay + swipe (touch) + keyboard arrows. */
 	var slider = document.getElementById( 'fbaSlider' );
 	if ( slider ) {
 		var slides = slider.querySelectorAll( '.fba-slide' );
-		var dotsWrap = document.getElementById( 'fbaSliderDots' );
-		var dots = [];
 		var current = 0;
 		var timer = null;
 		var reduceMotion = window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches;
-
-		slides.forEach( function ( s, idx ) {
-			var b = document.createElement( 'button' );
-			b.setAttribute( 'role', 'tab' );
-			b.setAttribute( 'aria-selected', idx === 0 ? 'true' : 'false' );
-			b.setAttribute( 'aria-label', 'Slide ' + ( idx + 1 ) );
-			if ( idx === 0 ) {
-				b.classList.add( 'active' );
-			}
-			b.addEventListener( 'click', function () {
-				go( idx );
-				play();
-			} );
-			dotsWrap.appendChild( b );
-			dots.push( b );
-		} );
 
 		function go( i ) {
 			current = ( i + slides.length ) % slides.length;
@@ -130,11 +112,6 @@
 				} else {
 					s.setAttribute( 'inert', '' );
 				}
-			} );
-			dots.forEach( function ( d, idx ) {
-				var on = idx === current;
-				d.classList.toggle( 'active', on );
-				d.setAttribute( 'aria-selected', on ? 'true' : 'false' );
 			} );
 		}
 
@@ -153,8 +130,51 @@
 			}
 		}
 
+		function step( dir ) {
+			go( current + dir );
+			play();
+		}
+
 		slider.addEventListener( 'mouseenter', stop );
 		slider.addEventListener( 'mouseleave', play );
+
+		/* Touch swipe. */
+		var touchX = null;
+		slider.addEventListener( 'touchstart', function ( e ) {
+			if ( e.changedTouches && e.changedTouches.length ) {
+				touchX = e.changedTouches[0].clientX;
+			}
+		}, { passive: true } );
+		slider.addEventListener( 'touchend', function ( e ) {
+			if ( null === touchX || ! e.changedTouches || ! e.changedTouches.length ) {
+				return;
+			}
+			var dx = e.changedTouches[0].clientX - touchX;
+			touchX = null;
+			if ( Math.abs( dx ) < 40 ) {
+				return;
+			}
+			step( dx < 0 ? 1 : -1 );
+		}, { passive: true } );
+		slider.addEventListener( 'touchcancel', function () { touchX = null; }, { passive: true } );
+
+		/* Keyboard arrows when the hero is on screen (desktop). */
+		document.addEventListener( 'keydown', function ( e ) {
+			if ( 'ArrowRight' !== e.key && 'ArrowLeft' !== e.key ) {
+				return;
+			}
+			var tag = e.target && e.target.tagName ? e.target.tagName.toLowerCase() : '';
+			if ( 'input' === tag || 'textarea' === tag || 'select' === tag || ( e.target && e.target.isContentEditable ) ) {
+				return;
+			}
+			var r = slider.getBoundingClientRect();
+			if ( r.bottom < 0 || r.top > window.innerHeight ) {
+				return;
+			}
+			e.preventDefault();
+			step( 'ArrowRight' === e.key ? 1 : -1 );
+		} );
+
 		play();
 	}
 
