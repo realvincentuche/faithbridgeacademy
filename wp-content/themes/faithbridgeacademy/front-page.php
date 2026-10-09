@@ -175,27 +175,22 @@ $slides = array(
 				<span class="fba-program-tag"><?php esc_html_e( 'Flagship', 'faithbridgeacademy' ); ?></span>
 				<span class="fba-program-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>
 				<strong><?php esc_html_e( 'Bible Study', 'faithbridgeacademy' ); ?></strong>
-				<span><?php esc_html_e( 'Know God deeply, love Him sincerely, and live out your faith with confidence every day.', 'faithbridgeacademy' ); ?></span>
 			</a>
 			<a class="fba-program-card reveal" href="<?php echo esc_url( home_url( '/programmes/' ) ); ?>">
 				<span class="fba-program-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg></span>
 				<strong><?php esc_html_e( 'English', 'faithbridgeacademy' ); ?></strong>
-				<span><?php esc_html_e( 'Read widely, write clearly and speak with poise in every room you enter.', 'faithbridgeacademy' ); ?></span>
 			</a>
 			<a class="fba-program-card reveal" href="<?php echo esc_url( home_url( '/programmes/' ) ); ?>">
 				<span class="fba-program-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg></span>
 				<strong><?php esc_html_e( 'Mathematics', 'faithbridgeacademy' ); ?></strong>
-				<span><?php esc_html_e( 'Strong foundations and fearless problem-solving, from basics to brilliance.', 'faithbridgeacademy' ); ?></span>
 			</a>
 			<a class="fba-program-card reveal" href="<?php echo esc_url( home_url( '/programmes/' ) ); ?>">
 				<span class="fba-program-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
 				<strong><?php esc_html_e( 'French', 'faithbridgeacademy' ); ?></strong>
-				<span><?php esc_html_e( 'A second language learned joyfully — speak, sing and shine en français.', 'faithbridgeacademy' ); ?></span>
 			</a>
 			<a class="fba-program-card reveal" href="<?php echo esc_url( home_url( '/programmes/' ) ); ?>">
 				<span class="fba-program-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg></span>
 				<strong><?php esc_html_e( 'Sciences & More', 'faithbridgeacademy' ); ?></strong>
-				<span><?php esc_html_e( 'Physics, Chemistry, Biology, ICT, Government — thirteen paths and counting.', 'faithbridgeacademy' ); ?></span>
 			</a>
 		</div>
 	</div>
