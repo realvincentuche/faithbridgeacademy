@@ -125,7 +125,7 @@ $slides = array(
 	</div>
 </section>
 
-<section class="fba-section fba-why" aria-label="<?php esc_attr_e( 'Why FaithBridge', 'faithbridgeacademy' ); ?>">
+<section class="fba-section fba-why-programs" aria-label="<?php esc_attr_e( 'Why FaithBridge and popular programmes', 'faithbridgeacademy' ); ?>">
 	<div class="fba-wrap fba-why-grid">
 		<div class="reveal">
 			<p class="fba-kicker"><?php esc_html_e( 'Why FaithBridge Academy?', 'faithbridgeacademy' ); ?></p>
@@ -161,14 +161,12 @@ $slides = array(
 			<img class="fba-why-small fba-why-small-b" src="<?php echo esc_url( $uri . '/assets/images/hero-3.jpg' ); ?>" alt="<?php esc_attr_e( 'Study and Scripture', 'faithbridgeacademy' ); ?>" loading="lazy">
 		</div>
 	</div>
-</section>
 
-<section class="fba-section fba-programs" aria-label="<?php esc_attr_e( 'Popular programmes', 'faithbridgeacademy' ); ?>">
-	<div class="fba-wrap">
+	<div class="fba-wrap fba-programs-inner">
 		<div class="fba-section-head reveal">
 			<div>
-				<p class="fba-kicker"><?php esc_html_e( 'Popular programmes', 'faithbridgeacademy' ); ?></p>
-				<h2 class="fba-section-title"><?php esc_html_e( 'One Academy, Many Paths to Grow', 'faithbridgeacademy' ); ?></h2>
+				<h2 class="fba-section-title"><?php esc_html_e( 'Popular Programmes', 'faithbridgeacademy' ); ?></h2>
+				<p class="fba-section-desc"><?php esc_html_e( 'Explore our top-rated programmes designed to shape your future.', 'faithbridgeacademy' ); ?></p>
 			</div>
 			<a class="fba-link-arrow" href="<?php echo esc_url( home_url( '/programmes/' ) ); ?>"><?php esc_html_e( 'View All Programmes', 'faithbridgeacademy' ); ?> <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
 		</div>
