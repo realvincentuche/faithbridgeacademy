@@ -98,20 +98,32 @@ $slides = array(
 <section class="fba-stats" aria-label="<?php esc_attr_e( 'FaithBridge at a glance', 'faithbridgeacademy' ); ?>">
 	<div class="fba-wrap fba-stats-grid">
 		<div class="fba-stat reveal">
-			<span class="fba-stat-num" data-count="17">0</span>
-			<span class="fba-stat-label"><?php esc_html_e( 'Programmes Offered', 'faithbridgeacademy' ); ?></span>
+			<span class="fba-stat-icon" aria-hidden="true"><i class="ph ph-book-open"></i></span>
+			<span class="fba-stat-copy">
+				<span class="fba-stat-num" data-count="17">0</span>
+				<span class="fba-stat-label"><?php esc_html_e( 'Programmes Offered', 'faithbridgeacademy' ); ?></span>
+			</span>
 		</div>
 		<div class="fba-stat reveal">
-			<span class="fba-stat-num" data-count="4" data-suffix="">0</span>
-			<span class="fba-stat-label"><?php esc_html_e( 'Sessions Every Year', 'faithbridgeacademy' ); ?></span>
+			<span class="fba-stat-icon" aria-hidden="true"><i class="ph ph-calendar-check"></i></span>
+			<span class="fba-stat-copy">
+				<span class="fba-stat-num" data-count="4" data-suffix="">0</span>
+				<span class="fba-stat-label"><?php esc_html_e( 'Sessions Every Year', 'faithbridgeacademy' ); ?></span>
+			</span>
 		</div>
 		<div class="fba-stat reveal">
-			<span class="fba-stat-num" data-count="15">0</span>
-			<span class="fba-stat-label"><?php esc_html_e( 'Max Per Group Class', 'faithbridgeacademy' ); ?></span>
+			<span class="fba-stat-icon" aria-hidden="true"><i class="ph ph-users-three"></i></span>
+			<span class="fba-stat-copy">
+				<span class="fba-stat-num" data-count="15">0</span>
+				<span class="fba-stat-label"><?php esc_html_e( 'Max Per Group Class', 'faithbridgeacademy' ); ?></span>
+			</span>
 		</div>
 		<div class="fba-stat reveal">
-			<span class="fba-stat-num" data-count="100" data-suffix="%">0</span>
-			<span class="fba-stat-label"><?php esc_html_e( 'Live Online on Google Meet', 'faithbridgeacademy' ); ?></span>
+			<span class="fba-stat-icon" aria-hidden="true"><i class="ph ph-video-camera"></i></span>
+			<span class="fba-stat-copy">
+				<span class="fba-stat-num" data-count="100" data-suffix="%">0</span>
+				<span class="fba-stat-label"><?php esc_html_e( 'Live Online on Google Meet', 'faithbridgeacademy' ); ?></span>
+			</span>
 		</div>
 	</div>
 </section>
