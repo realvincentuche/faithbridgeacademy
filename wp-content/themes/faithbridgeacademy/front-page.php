@@ -200,7 +200,6 @@ $slides = array(
 	<div class="fba-life-overlay" aria-hidden="true"></div>
 	<div class="fba-wrap">
 		<div class="fba-life-inner reveal">
-			<p class="fba-kicker fba-kicker-light"><?php esc_html_e( 'Faith & community life', 'faithbridgeacademy' ); ?></p>
 			<h2><?php esc_html_e( 'Beyond Classrooms: A Family of Faith', 'faithbridgeacademy' ); ?></h2>
 			<p><?php esc_html_e( 'Monthly Bible Club gatherings, Scripture memory, worship and service — where children belong, participate and grow in community.', 'faithbridgeacademy' ); ?></p>
 			<p class="fba-life-actions">
