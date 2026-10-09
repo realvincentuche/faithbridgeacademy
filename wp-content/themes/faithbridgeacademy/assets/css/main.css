@@ -90,14 +90,10 @@ p { margin: 0 0 1rem; }
 .fba-link-arrow:hover { color: var(--fba-green-deep); }
 
 .fba-kicker {
-	display: inline-flex; align-items: center; gap: 0.6rem;
+	display: block;
 	text-transform: uppercase; letter-spacing: 0.18em;
 	font-size: 0.75rem; font-weight: 800; color: var(--fba-green-deep);
 	margin: 0 0 0.8rem;
-}
-.fba-kicker::before {
-	content: ""; width: 26px; height: 3px; border-radius: 2px;
-	background: var(--fba-green);
 }
 .fba-kicker-light { color: var(--fba-green); }
 .fba-section-title { font-size: clamp(1.9rem, 3.6vw, 2.7rem); }
