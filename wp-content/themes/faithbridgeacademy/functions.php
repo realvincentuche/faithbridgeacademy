@@ -48,7 +48,7 @@ add_action( 'after_setup_theme', 'fba_setup' );
 function fba_assets() {
 	wp_enqueue_style(
 		'fba-fonts',
-		'https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Figtree:wght@400;500;600;700;800&display=swap',
+		'https://fonts.googleapis.com/css2?family=Raleway:wght@600;700;800&family=Figtree:wght@400;500;600;700;800&display=swap',
 		array(),
 		FBA_VERSION
 	);

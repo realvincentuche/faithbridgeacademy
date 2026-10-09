@@ -1,7 +1,7 @@
 /* ============================================================
    FaithBridge Academy — main stylesheet
    Navy #0A2A5E · Green #C0BA02 (logo olive) · Cream olive tints
-   Display: DM Serif Display · Body: Figtree
+   Display: Raleway · Body: Figtree
    ============================================================ */
 
 :root {
@@ -20,7 +20,7 @@
 	--fba-radius: 14px;
 	--fba-shadow: 0 18px 45px -18px rgba(10, 42, 94, 0.28);
 	--fba-shadow-sm: 0 10px 28px -14px rgba(10, 42, 94, 0.22);
-	--fba-font-display: "DM Serif Display", Georgia, "Times New Roman", serif;
+	--fba-font-display: "Raleway", "Figtree", -apple-system, "Segoe UI", sans-serif;
 	--fba-font-body: "Figtree", -apple-system, "Segoe UI", Roboto, sans-serif;
 	--fba-header-h: 76px;
 }
@@ -46,8 +46,8 @@ h1, h2, h3, h4 {
 	line-height: 1.12;
 	color: var(--fba-navy);
 	margin: 0 0 0.75rem;
-	font-weight: 400;
-	letter-spacing: 0.01em;
+	font-weight: 700;
+	letter-spacing: -0.015em;
 }
 
 .ph { font-size: 1.1em; vertical-align: -0.12em; }
@@ -264,7 +264,7 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 .fba-align-left .fba-slide-content { margin-right: auto; text-align: left; }
 .fba-align-right .fba-slide-content { margin-left: auto; text-align: right; }
 .fba-align-right .fba-hero-actions { justify-content: flex-end; }
-.fba-hero-title { color: #fff; font-size: clamp(1.9rem, 4.4vw, 3.2rem); }
+.fba-hero-title { color: #fff; font-size: clamp(1.9rem, 4.4vw, 3.2rem); font-weight: 700; letter-spacing: -0.025em; }
 .fba-hero-title .hl { color: var(--fba-green); }
 .fba-hero-text { color: #d7deeb; font-size: 1.02rem; }
 .fba-align-center .fba-hero-text { margin-left: auto; margin-right: auto; max-width: 52ch; }
@@ -294,7 +294,7 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 .fba-stat + .fba-stat { border-left: 1px solid rgba(255, 255, 255, 0.14); }
 .fba-stat-icon { flex-shrink: 0; font-size: 3.1rem; font-weight: 300; line-height: 1; color: rgba(255, 255, 255, 0.68); }
 .fba-stat-copy { display: flex; flex-direction: column; }
-.fba-stat-num { display: block; font-family: var(--fba-font-display); font-size: 2.6rem; line-height: 1; color: var(--fba-green); }
+.fba-stat-num { display: block; font-family: var(--fba-font-display); font-weight: 700; letter-spacing: -0.02em; font-size: 2.6rem; line-height: 1; color: var(--fba-green); }
 .fba-stat-label { display: block; font-size: 0.92rem; font-weight: 600; opacity: 0.88; margin-top: 0.35rem; }
 
 /* ---------- Why ---------- */
@@ -325,7 +325,7 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 	position: relative;
 }
 .fba-program-card:hover { transform: translateY(-6px); box-shadow: var(--fba-shadow-sm); border-color: var(--fba-green); }
-.fba-program-card strong { color: var(--fba-navy); font-size: 1.3rem; font-family: var(--fba-font-display); font-weight: 400; }
+.fba-program-card strong { color: var(--fba-navy); font-size: 1.3rem; font-family: var(--fba-font-display); font-weight: 700; letter-spacing: -0.01em; }
 .fba-program-card span:last-child { font-size: 1rem; color: var(--fba-muted); }
 .fba-program-icon {
 	width: 62px; height: 62px; border-radius: 16px; background: var(--fba-navy); color: var(--fba-green);
@@ -437,7 +437,7 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 	box-shadow: 0 20px 40px -18px rgba(192, 186, 2, 0.55);
 }
 .fba-cta-session-label { display: flex; align-items: center; gap: 0.45rem; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; margin: 0 0 0.5rem; }
-.fba-cta-session-title { font-family: var(--fba-font-display); font-size: 1.7rem; margin: 0; }
+.fba-cta-session-title { font-family: var(--fba-font-display); font-weight: 700; letter-spacing: -0.02em; font-size: 1.7rem; margin: 0; }
 .fba-cta-session-period { font-weight: 700; margin: 0.2rem 0; }
 .fba-cta-session-days { font-size: 0.88rem; margin: 0; opacity: 0.85; }
 
