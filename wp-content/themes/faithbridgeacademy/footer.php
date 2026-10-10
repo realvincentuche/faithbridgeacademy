@@ -101,7 +101,6 @@ $testimonials = get_posts(
 			</ul>
 		</div>
 	</div>
-	<div class="fba-wrap"><p class="fba-footer-giant" aria-hidden="true">FAITHBRIDGE ACADEMY</p></div>
 	<div class="fba-footer-bottom">
 		<div class="fba-wrap fba-footer-bottom-inner">
 			<p>&copy; <?php echo esc_html( gmdate( 'Y' ) ); ?> <?php esc_html_e( 'FaithBridge Academy. All rights reserved.', 'faithbridgeacademy' ); ?></p>

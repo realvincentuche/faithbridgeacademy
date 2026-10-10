@@ -178,6 +178,53 @@
 		play();
 	}
 
+	/* Life band video popup. */
+	var playBtn = document.getElementById( 'fbaPlayBtn' );
+	var videoModal = document.getElementById( 'fbaVideoModal' );
+	var videoClose = document.getElementById( 'fbaVideoClose' );
+	var videoFrame = document.getElementById( 'fbaVideoFrame' );
+	var videoUrl = 'https://www.youtube.com/embed/_NXIpq2LkL0?autoplay=1&rel=0';
+	function openVideo() {
+		if ( ! videoModal || ! videoFrame ) {
+			return;
+		}
+		videoFrame.setAttribute( 'src', videoUrl );
+		videoModal.removeAttribute( 'hidden' );
+		document.body.style.overflow = 'hidden';
+		if ( videoClose ) {
+			videoClose.focus();
+		}
+	}
+	function closeVideo() {
+		if ( ! videoModal || ! videoFrame ) {
+			return;
+		}
+		videoFrame.setAttribute( 'src', '' );
+		videoModal.setAttribute( 'hidden', '' );
+		document.body.style.overflow = '';
+		if ( playBtn ) {
+			playBtn.focus();
+		}
+	}
+	if ( playBtn ) {
+		playBtn.addEventListener( 'click', openVideo );
+	}
+	if ( videoClose ) {
+		videoClose.addEventListener( 'click', closeVideo );
+	}
+	if ( videoModal ) {
+		videoModal.addEventListener( 'click', function ( e ) {
+			if ( e.target === videoModal ) {
+				closeVideo();
+			}
+		} );
+	}
+	document.addEventListener( 'keydown', function ( e ) {
+		if ( 'Escape' === e.key && videoModal && ! videoModal.hasAttribute( 'hidden' ) ) {
+			closeVideo();
+		}
+	} );
+
 	/* Reveal on scroll. */
 	var revealEls = document.querySelectorAll( '.reveal' );
 	if ( 'IntersectionObserver' in window ) {

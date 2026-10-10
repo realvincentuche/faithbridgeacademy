@@ -16,55 +16,55 @@ $kses = array(
 $slides = array(
 	array(
 		'align' => 'center',
-		'img'   => $uri . '/assets/images/hero-1.jpg',
+		'img'   => $uri . '/assets/images/slide-1.jpg',
 		'eye'   => '',
-		'title' => __( 'Intentional Faith.<br><span class="hl">Confident Children.</span>', 'faithbridgeacademy' ),
-		'text'  => __( 'Nurturing the whole child — spirit, mind and character — in partnership with parents.', 'faithbridgeacademy' ),
+		'title' => __( 'Intentional Faith, Strong Minds.<br><span class="hl">Confident Children for Life.</span>', 'faithbridgeacademy' ),
+		'text'  => __( 'Nurturing the whole child — spirit, mind<br>and character — in partnership with parents.', 'faithbridgeacademy' ),
 		'cta1'  => array( __( 'Explore Programmes', 'faithbridgeacademy' ), home_url( '/programmes/' ) ),
 		'cta2'  => array( __( 'Apply Now', 'faithbridgeacademy' ), home_url( '/apply/' ) ),
 	),
 	array(
-		'align' => 'left',
-		'img'   => $uri . '/assets/images/bible-study.jpg',
+		'align' => 'center',
+		'img'   => $uri . '/assets/images/slide-2.jpg',
 		'eye'   => '',
-		'title' => __( 'Bible Study:<br><span class="hl">Rooted in Christ.</span>', 'faithbridgeacademy' ),
-		'text'  => __( 'Scripture, character and practical faith — live on Google Meet, with recordings.', 'faithbridgeacademy' ),
+		'title' => __( 'Bible Study That Shapes Character.<br><span class="hl">Rooted Deeply in Christ.</span>', 'faithbridgeacademy' ),
+		'text'  => __( 'Scripture, memory verses and practical faith —<br>taught live on Google Meet, with recordings.', 'faithbridgeacademy' ),
 		'cta1'  => array( __( 'Discover Bible Study', 'faithbridgeacademy' ), home_url( '/programmes/' ) ),
 		'cta2'  => array( __( 'View Fees', 'faithbridgeacademy' ), home_url( '/fees/' ) ),
 	),
 	array(
-		'align' => 'right',
-		'img'   => $uri . '/assets/images/online-class.jpg',
+		'align' => 'center',
+		'img'   => $uri . '/assets/images/slide-3.jpg',
 		'eye'   => '',
-		'title' => __( 'A Stronger<br><span class="hl">Foundation.</span>', 'faithbridgeacademy' ),
-		'text'  => __( 'Live classes Tuesdays and Saturdays, 5 PM Nigeria Time. Group and one-on-one.', 'faithbridgeacademy' ),
+		'title' => __( 'A Stronger Academic Foundation.<br><span class="hl">Built Quarter by Quarter.</span>', 'faithbridgeacademy' ),
+		'text'  => __( 'Live classes Tuesdays and Saturdays, 5 PM —<br>small groups of fifteen, plus one-on-one.', 'faithbridgeacademy' ),
 		'cta1'  => array( __( 'Apply Now', 'faithbridgeacademy' ), home_url( '/apply/' ) ),
 		'cta2'  => array( __( 'Talk to Us', 'faithbridgeacademy' ), home_url( '/contact/' ) ),
 	),
 	array(
-		'align' => 'left',
-		'img'   => $uri . '/assets/images/why-2.jpg',
+		'align' => 'center',
+		'img'   => $uri . '/assets/images/slide-4.jpg',
 		'eye'   => '',
-		'title' => __( 'Seventeen Paths.<br><span class="hl">One Method.</span>', 'faithbridgeacademy' ),
-		'text'  => __( 'Languages, sciences and more — one intentional method, every quarter.', 'faithbridgeacademy' ),
+		'title' => __( 'Seventeen Programmes, One Method.<br><span class="hl">Every Child Thrives Here.</span>', 'faithbridgeacademy' ),
+		'text'  => __( 'Bible Study, languages, sciences and more —<br>one intentional method, every single session.', 'faithbridgeacademy' ),
 		'cta1'  => array( __( 'View Programmes', 'faithbridgeacademy' ), home_url( '/programmes/' ) ),
 		'cta2'  => array( __( 'View Fees', 'faithbridgeacademy' ), home_url( '/fees/' ) ),
 	),
 	array(
-		'align' => 'right',
-		'img'   => $uri . '/assets/images/hero-3.jpg',
+		'align' => 'center',
+		'img'   => $uri . '/assets/images/slide-5.jpg',
 		'eye'   => '',
-		'title' => __( 'Every Child<br><span class="hl">Known & Celebrated.</span>', 'faithbridgeacademy' ),
-		'text'  => __( 'Small groups, caring facilitators, parents carried along every step.', 'faithbridgeacademy' ),
+		'title' => __( 'Every Child Known and Celebrated.<br><span class="hl">Every Parent Carried Along.</span>', 'faithbridgeacademy' ),
+		'text'  => __( 'Caring facilitators who know your child by name,<br>with updates parents can genuinely trust.', 'faithbridgeacademy' ),
 		'cta1'  => array( __( 'How It Works', 'faithbridgeacademy' ), home_url( '/about/' ) ),
 		'cta2'  => array( __( 'Apply Now', 'faithbridgeacademy' ), home_url( '/apply/' ) ),
 	),
 	array(
-		'align' => 'left',
-		'img'   => $uri . '/assets/images/life-band.jpg',
+		'align' => 'center',
+		'img'   => $uri . '/assets/images/slide-6.jpg',
 		'eye'   => '',
-		'title' => __( 'A Family<br><span class="hl">of Faith.</span>', 'faithbridgeacademy' ),
-		'text'  => __( 'Monthly Bible Club — where children belong, participate and grow.', 'faithbridgeacademy' ),
+		'title' => __( 'A Family of Faith Beyond Classrooms.<br><span class="hl">Belong, Participate, Grow.</span>', 'faithbridgeacademy' ),
+		'text'  => __( 'Monthly Bible Club — worship, Scripture, service;<br>where lasting friendships and faith take root.', 'faithbridgeacademy' ),
 		'cta1'  => array( __( 'Join the Bible Club', 'faithbridgeacademy' ), home_url( '/bible-club/' ) ),
 		'cta2'  => array( __( 'Apply Now', 'faithbridgeacademy' ), home_url( '/apply/' ) ),
 	),
@@ -81,7 +81,7 @@ $slides = array(
 				<?php else : ?>
 				<h2 class="fba-hero-title"><?php echo wp_kses( $s['title'], $kses ); ?></h2>
 				<?php endif; ?>
-				<p class="fba-hero-text"><?php echo esc_html( $s['text'] ); ?></p>
+				<p class="fba-hero-text"><?php echo wp_kses( $s['text'], $kses ); ?></p>
 				<p class="fba-hero-actions">
 					<a class="fba-btn fba-btn-green" href="<?php echo esc_url( $s['cta1'][1] ); ?>"><?php echo esc_html( $s['cta1'][0] ); ?> <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
 					<a class="fba-btn fba-btn-outline-light" href="<?php echo esc_url( $s['cta2'][1] ); ?>"><?php echo esc_html( $s['cta2'][0] ); ?></a>
@@ -198,13 +198,26 @@ $slides = array(
 
 <section class="fba-life" aria-label="<?php esc_attr_e( 'Faith and community life', 'faithbridgeacademy' ); ?>" style="background-image:url('<?php echo esc_url( $uri . '/assets/images/life-band.jpg' ); ?>')">
 	<div class="fba-life-overlay" aria-hidden="true"></div>
-	<div class="fba-wrap">
+	<div class="fba-wrap fba-life-grid">
 		<div class="fba-life-inner reveal">
 			<h2><?php esc_html_e( 'Beyond Classrooms: A Family of Faith', 'faithbridgeacademy' ); ?></h2>
 			<p><?php esc_html_e( 'Monthly Bible Club gatherings, Scripture memory, worship and service — where children belong, participate and grow in community.', 'faithbridgeacademy' ); ?></p>
 			<p class="fba-life-actions">
 				<a class="fba-btn fba-btn-green" href="<?php echo esc_url( home_url( '/bible-club/' ) ); ?>"><?php esc_html_e( 'Discover More', 'faithbridgeacademy' ); ?> <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
 			</p>
+		</div>
+		<div class="fba-life-video reveal">
+			<button class="fba-play-btn" id="fbaPlayBtn" type="button" aria-label="<?php esc_attr_e( 'Play video', 'faithbridgeacademy' ); ?>" aria-haspopup="dialog">
+				<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
+			</button>
+		</div>
+	</div>
+	<div class="fba-video-modal" id="fbaVideoModal" role="dialog" aria-modal="true" aria-label="<?php esc_attr_e( 'Video', 'faithbridgeacademy' ); ?>" hidden>
+		<div class="fba-video-modal-box">
+			<button class="fba-video-close" id="fbaVideoClose" type="button" aria-label="<?php esc_attr_e( 'Close video', 'faithbridgeacademy' ); ?>">&times;</button>
+			<div class="fba-video-frame">
+				<iframe id="fbaVideoFrame" src="" title="<?php esc_attr_e( 'FaithBridge Academy video', 'faithbridgeacademy' ); ?>" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+			</div>
 		</div>
 	</div>
 </section>

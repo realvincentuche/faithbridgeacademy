@@ -242,7 +242,7 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 }
 .fba-slide::before {
 	content: ""; position: absolute; inset: 0;
-	background: rgba(0, 0, 0, 0.45);
+	background: rgba(0, 0, 0, 0.55);
 }
 .fba-slide.active { opacity: 1; visibility: visible; z-index: 1; }
 .fba-slide-content { position: relative; z-index: 2; width: 100%; padding-top: calc(var(--fba-header-h) + 3rem); padding-bottom: 7rem; }
@@ -280,7 +280,7 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 .fba-stat-icon { flex-shrink: 0; line-height: 1; color: rgba(255, 255, 255, 0.68); }
 .fba-stat-icon svg { width: 3.1rem; height: 3.1rem; display: block; }
 .fba-stat-copy { display: flex; flex-direction: column; }
-.fba-stat-num { display: block; font-family: var(--fba-font-display); font-weight: 700; letter-spacing: -0.02em; font-size: 2.6rem; line-height: 1; color: var(--fba-green); }
+.fba-stat-num { display: block; font-family: var(--fba-font-display); font-weight: 400; letter-spacing: -0.02em; font-size: 3.4rem; line-height: 1; color: var(--fba-green); font-variant-numeric: tabular-nums; }
 .fba-stat-label { display: block; font-size: 0.92rem; font-weight: 600; opacity: 0.88; margin-top: 0.35rem; }
 
 /* ---------- Why + programmes (merged, one band per mockup) ---------- */
@@ -330,11 +330,31 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 
 /* ---------- Life band ---------- */
 .fba-life { position: relative; background-size: cover; background-position: center; background-attachment: fixed; color: #fff; }
-.fba-life-overlay { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.35); }
-.fba-life-inner { position: relative; padding: 6rem 0; max-width: 320px; margin-right: auto; }
+.fba-life-overlay { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.5); }
+.fba-life-grid { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: center; }
+.fba-life-inner { position: relative; padding: 6rem 0; max-width: 100%; }
 .fba-life-inner h2 { color: #fff; font-size: clamp(1.8rem, 3.6vw, 2.7rem); text-shadow: 0 1px 14px rgba(0, 0, 0, 0.5); }
 .fba-life-inner > p { color: #d7deeb; text-shadow: 0 1px 10px rgba(0, 0, 0, 0.5); }
 .fba-life-actions { margin-top: 1.6rem; }
+.fba-life-video { display: grid; place-items: center; padding: 6rem 0; }
+.fba-play-btn {
+	width: 96px; height: 96px; border-radius: 50%; border: 0; cursor: pointer;
+	background: var(--fba-green); color: var(--fba-deep);
+	display: grid; place-items: center;
+	box-shadow: 0 0 0 14px rgba(192, 186, 2, 0.25), 0 18px 40px -12px rgba(0, 0, 0, 0.5);
+	transition: transform 0.2s ease, background 0.2s ease;
+}
+.fba-play-btn:hover { transform: scale(1.06); background: #d3cf06; }
+.fba-play-btn svg { width: 38px; height: 38px; margin-left: 4px; }
+.fba-video-modal { position: fixed; inset: 0; z-index: 300; display: grid; place-items: center; background: rgba(0, 0, 0, 0.85); padding: 1.5rem; }
+.fba-video-modal[hidden] { display: none; }
+.fba-video-modal-box { position: relative; width: min(880px, 100%); }
+.fba-video-close {
+	position: absolute; top: -44px; right: 0; border: 0; background: none; cursor: pointer;
+	color: #fff; font-size: 2rem; line-height: 1;
+}
+.fba-video-frame { position: relative; padding-top: 56.25%; background: #000; border-radius: 12px; overflow: hidden; }
+.fba-video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 
 /* ---------- News ---------- */
 .fba-news-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem; }
@@ -363,7 +383,7 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 
 /* ---------- Session panel ---------- */
 .fba-panel { position: relative; background-size: cover; background-position: center; background-color: var(--fba-deep); color: #fff; padding: 5rem 0; }
-.fba-panel-overlay { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.55); }
+.fba-panel-overlay { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.62); }
 .fba-panel-inner { position: relative; }
 .fba-panel h2 { color: #fff; }
 .fba-quarter-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.2rem; margin-top: 2.5rem; }
@@ -400,7 +420,7 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 
 /* ---------- Footer CTA band (full width, content in container) ---------- */
 .fba-footer-cta { position: relative; background-size: cover; background-position: center; background-color: var(--fba-deep); color: #fff; }
-.fba-footer-cta-overlay { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.55); }
+.fba-footer-cta-overlay { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.62); }
 .fba-footer-cta-inner {
 	position: relative; display: grid; grid-template-columns: 1.5fr 1fr; gap: 2.5rem;
 	padding-top: 4.5rem; padding-bottom: 4.5rem; align-items: center;
@@ -477,19 +497,13 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 	transition: background 0.2s, border-color 0.2s, transform 0.2s;
 }
 .fba-socials a:hover { background: var(--fba-green); border-color: var(--fba-green); color: var(--fba-deep); transform: translateY(-2px); }
-.fba-footer-giant {
-	font-family: var(--fba-font-display); font-weight: 800; font-size: clamp(1.05rem, 5.4vw, 4.2rem); line-height: 1.1;
-	text-align: center; margin: 0; color: transparent;
-	-webkit-text-stroke: 1px rgba(255, 255, 255, 0.22);
-	text-shadow: 0 0 42px rgba(192, 186, 2, 0.28), 0 0 12px rgba(255, 255, 255, 0.12);
-	user-select: none; white-space: nowrap; overflow: hidden;
-}
+
 .fba-footer-bottom { border-top: 1px solid rgba(255, 255, 255, 0.12); padding: 1.3rem 0; margin-top: 1.5rem; }
 .fba-footer-bottom-inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
 .fba-footer-bottom p { margin: 0; font-size: 0.86rem; }
 .fba-footer-bottom .menu { list-style: none; margin: 0; padding: 0; display: flex; gap: 1.2rem; }
 .fba-footer-bottom .menu a { font-size: 0.86rem; }
-.fba-powered { margin: 0; font-size: 0.86rem; width: 100%; text-align: center; }
+.fba-powered { margin: 0; font-size: 0.86rem; text-align: center; }
 .fba-powered .ph { color: var(--fba-green); }
 .fba-powered a { font-weight: 700; }
 
@@ -538,7 +552,7 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 	.fba-stat:nth-child(3) { border-left: 0; }
 	.fba-stat { justify-content: flex-start; }
 	.fba-stat-icon svg { width: 2.2rem; height: 2.2rem; }
-	.fba-stat-num { font-size: 2.1rem; }
+	.fba-stat-num { font-size: 2.6rem; }
 	.fba-stat-label { font-size: 0.82rem; }
 	.fba-program-grid { grid-template-columns: 1fr 1fr; }
 	.fba-program-card strong { font-size: 1.1rem; }
@@ -552,7 +566,11 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 	.fba-hero-text { font-size: 0.95rem; }
 	.fba-hero-actions .fba-btn { width: 100%; justify-content: center; }
 	.fba-life { background-attachment: scroll; }
-	.fba-life-inner { padding: 4rem 0; max-width: 100%; }
+	.fba-life-inner { padding: 4rem 0 0; max-width: 100%; }
+	.fba-life-grid { grid-template-columns: 1fr; gap: 0; }
+	.fba-life-video { padding: 2.5rem 0 4rem; }
+	.fba-play-btn { width: 76px; height: 76px; }
+	.fba-play-btn svg { width: 30px; height: 30px; }
 	.fba-mobile-cta { display: block; }
 	.fba-totop { right: 1rem; bottom: 4.8rem; width: 46px; height: 46px; }
 	.fba-why-collage { min-height: 380px; }
