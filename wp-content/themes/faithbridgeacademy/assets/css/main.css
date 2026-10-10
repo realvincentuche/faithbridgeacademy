@@ -95,7 +95,6 @@ p { margin: 0 0 1rem; }
 	font-size: 0.75rem; font-weight: 800; color: var(--fba-green-deep);
 	margin: 0 0 0.8rem;
 }
-.fba-kicker-light { color: var(--fba-green); }
 .fba-section-title { font-size: clamp(1.9rem, 3.6vw, 2.7rem); }
 .fba-title-light { color: #fff; }
 .fba-link-green { color: var(--fba-green); }
@@ -333,8 +332,8 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 .fba-life { position: relative; background-size: cover; background-position: center; background-attachment: fixed; color: #fff; }
 .fba-life-overlay { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.35); }
 .fba-life-inner { position: relative; padding: 6rem 0; max-width: 320px; margin-right: auto; }
-.fba-life-inner h2 { color: #fff; font-size: clamp(1.8rem, 3.6vw, 2.7rem); }
-.fba-life-inner > p { color: #d7deeb; }
+.fba-life-inner h2 { color: #fff; font-size: clamp(1.8rem, 3.6vw, 2.7rem); text-shadow: 0 1px 14px rgba(0, 0, 0, 0.5); }
+.fba-life-inner > p { color: #d7deeb; text-shadow: 0 1px 10px rgba(0, 0, 0, 0.5); }
 .fba-life-actions { margin-top: 1.6rem; }
 
 /* ---------- News ---------- */
@@ -479,7 +478,7 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 }
 .fba-socials a:hover { background: var(--fba-green); border-color: var(--fba-green); color: var(--fba-deep); transform: translateY(-2px); }
 .fba-footer-giant {
-	font-family: var(--fba-font-display); font-weight: 800; font-size: clamp(1.6rem, 6.2vw, 4.6rem); line-height: 1.1;
+	font-family: var(--fba-font-display); font-weight: 800; font-size: clamp(1.05rem, 5.4vw, 4.2rem); line-height: 1.1;
 	text-align: center; margin: 0; color: transparent;
 	-webkit-text-stroke: 1px rgba(255, 255, 255, 0.22);
 	text-shadow: 0 0 42px rgba(192, 186, 2, 0.28), 0 0 12px rgba(255, 255, 255, 0.12);
