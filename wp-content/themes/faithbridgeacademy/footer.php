@@ -20,7 +20,6 @@ $testimonials = get_posts(
 <section class="fba-section fba-voices" aria-label="<?php esc_attr_e( 'Success stories', 'faithbridgeacademy' ); ?>">
 	<div class="fba-wrap">
 		<div class="fba-section-head reveal">
-			<p class="fba-kicker"><?php esc_html_e( 'Success stories', 'faithbridgeacademy' ); ?></p>
 			<h2><?php esc_html_e( 'Families Growing With FaithBridge', 'faithbridgeacademy' ); ?></h2>
 		</div>
 		<div class="fba-voices-grid">
@@ -36,24 +35,23 @@ $testimonials = get_posts(
 </section>
 <?php endif; ?>
 
-<section class="fba-newsletter" aria-label="<?php esc_attr_e( 'Newsletter', 'faithbridgeacademy' ); ?>">
-	<div class="fba-wrap fba-newsletter-inner reveal">
-		<div class="fba-newsletter-copy">
-			<p class="fba-kicker fba-kicker-light"><?php esc_html_e( 'Newsletter', 'faithbridgeacademy' ); ?></p>
-			<h2><?php esc_html_e( 'Stay ', 'faithbridgeacademy' ); ?><em><?php esc_html_e( 'Connected', 'faithbridgeacademy' ); ?></em></h2>
-			<p><?php esc_html_e( 'Session openings, memory verses, parenting wisdom and academy stories — once a month, no noise.', 'faithbridgeacademy' ); ?></p>
+<section class="fba-footer-cta" aria-label="<?php esc_attr_e( 'Call to action', 'faithbridgeacademy' ); ?>" style="background-image:url('<?php echo esc_url( get_template_directory_uri() . '/assets/images/hero-2.jpg' ); ?>')">
+	<div class="fba-footer-cta-overlay" aria-hidden="true"></div>
+	<div class="fba-wrap fba-footer-cta-inner reveal">
+		<div class="fba-footer-cta-copy">
+			<h2><?php esc_html_e( 'Give Your Child a Stronger Foundation.', 'faithbridgeacademy' ); ?></h2>
+			<p><?php esc_html_e( 'Faith, values, knowledge and character are built over time. Start intentionally — applications take minutes.', 'faithbridgeacademy' ); ?></p>
+			<p class="fba-cta-actions">
+				<a class="fba-btn fba-btn-green" href="<?php echo esc_url( home_url( '/apply/' ) ); ?>"><?php esc_html_e( 'Apply Now', 'faithbridgeacademy' ); ?> <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+				<a class="fba-btn fba-btn-outline-light" href="<?php echo esc_url( home_url( '/programmes/' ) ); ?>"><?php esc_html_e( 'Explore Programmes', 'faithbridgeacademy' ); ?></a>
+			</p>
 		</div>
-		<?php if ( isset( $_GET['subscribed'] ) && 'done' === $_GET['subscribed'] ) : ?>
-			<p class="fba-newsletter-done" role="status"><?php esc_html_e( 'Thank you — you are subscribed.', 'faithbridgeacademy' ); ?></p>
-		<?php else : ?>
-		<form class="fba-newsletter-form" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-			<input type="hidden" name="action" value="fba_subscribe">
-			<?php wp_nonce_field( 'fba_subscribe', 'fba_subscribe_nonce' ); ?>
-			<label class="fba-sr-only" for="fbaNewsletterEmail"><?php esc_html_e( 'Email address', 'faithbridgeacademy' ); ?></label>
-			<input id="fbaNewsletterEmail" type="email" name="fba_email" placeholder="<?php esc_attr_e( 'Enter your email', 'faithbridgeacademy' ); ?>" required>
-			<button class="fba-btn fba-btn-green" type="submit"><?php esc_html_e( 'Subscribe', 'faithbridgeacademy' ); ?></button>
-		</form>
-		<?php endif; ?>
+		<aside class="fba-cta-session">
+			<p class="fba-cta-session-label"><i class="ph ph-calendar-check" aria-hidden="true"></i> <?php esc_html_e( 'Now enrolling', 'faithbridgeacademy' ); ?></p>
+			<p class="fba-cta-session-title"><?php echo esc_html( fba_get_option( 'session_label' ) ); ?></p>
+			<p class="fba-cta-session-period"><?php echo esc_html( fba_get_option( 'session_period' ) ); ?></p>
+			<p class="fba-cta-session-days"><?php echo esc_html( fba_get_option( 'class_days' ) . ' · ' . fba_get_option( 'class_time' ) ); ?></p>
+		</aside>
 	</div>
 </section>
 
@@ -103,7 +101,7 @@ $testimonials = get_posts(
 			</ul>
 		</div>
 	</div>
-	<div class="fba-wrap"><p class="fba-footer-giant" aria-hidden="true">faithbridge</p></div>
+	<div class="fba-wrap"><p class="fba-footer-giant" aria-hidden="true">FAITHBRIDGE ACADEMY</p></div>
 	<div class="fba-footer-bottom">
 		<div class="fba-wrap fba-footer-bottom-inner">
 			<p>&copy; <?php echo esc_html( gmdate( 'Y' ) ); ?> <?php esc_html_e( 'FaithBridge Academy. All rights reserved.', 'faithbridgeacademy' ); ?></p>
@@ -118,6 +116,7 @@ $testimonials = get_posts(
 				);
 				?>
 			</nav>
+			<p class="fba-powered"><?php esc_html_e( 'powered with love', 'faithbridgeacademy' ); ?> <i class="ph ph-heart" aria-hidden="true"></i> <?php esc_html_e( 'by', 'faithbridgeacademy' ); ?> <a href="https://octravo.com" target="_blank" rel="noopener">octravo</a></p>
 		</div>
 	</div>
 </footer>

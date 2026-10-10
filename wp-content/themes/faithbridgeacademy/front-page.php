@@ -213,8 +213,8 @@ $slides = array(
 	<div class="fba-wrap">
 		<div class="fba-section-head reveal">
 			<div>
-				<p class="fba-kicker"><?php esc_html_e( 'News & updates', 'faithbridgeacademy' ); ?></p>
-				<h2 class="fba-section-title"><?php esc_html_e( 'Stories From the Academy', 'faithbridgeacademy' ); ?></h2>
+				<h2 class="fba-section-title"><?php esc_html_e( 'News & Updates', 'faithbridgeacademy' ); ?></h2>
+				<p class="fba-section-desc"><?php esc_html_e( 'Stay informed with the latest from FaithBridge Academy.', 'faithbridgeacademy' ); ?></p>
 			</div>
 			<a class="fba-link-arrow" href="<?php echo esc_url( home_url( '/blog/' ) ); ?>"><?php esc_html_e( 'View All News', 'faithbridgeacademy' ); ?> <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
 		</div>
@@ -271,13 +271,12 @@ $slides = array(
 	</div>
 </section>
 
-<section class="fba-panel" aria-label="<?php esc_attr_e( 'Sessions and quick links', 'faithbridgeacademy' ); ?>">
-	<div class="fba-wrap">
+<section class="fba-panel" aria-label="<?php esc_attr_e( 'Sessions and quick links', 'faithbridgeacademy' ); ?>" style="background-image:url('<?php echo esc_url( $uri . '/assets/images/online-class.jpg' ); ?>')">
+	<div class="fba-panel-overlay" aria-hidden="true"></div>
+	<div class="fba-wrap fba-panel-inner">
 		<div class="fba-section-head reveal">
 			<div>
-				<p class="fba-kicker fba-kicker-light"><?php esc_html_e( 'Session calendar', 'faithbridgeacademy' ); ?></p>
 				<h2 class="fba-section-title fba-title-light"><?php esc_html_e( 'Four Sessions, Every Year', 'faithbridgeacademy' ); ?></h2>
-				<p class="fba-panel-sub"><?php esc_html_e( 'Pick the quarter that suits your family. Applications open for the current and upcoming sessions.', 'faithbridgeacademy' ); ?></p>
 			</div>
 		</div>
 		<div class="fba-quarter-grid">
@@ -318,34 +317,10 @@ $slides = array(
 	</div>
 </section>
 
-<section class="fba-section fba-cta-zone" aria-label="<?php esc_attr_e( 'Call to action', 'faithbridgeacademy' ); ?>">
-	<div class="fba-wrap">
-		<div class="fba-cta-panel reveal">
-			<span class="fba-cta-ring" aria-hidden="true"></span>
-			<div class="fba-cta-copy">
-				<p class="fba-kicker fba-kicker-light"><?php esc_html_e( 'Begin the journey', 'faithbridgeacademy' ); ?></p>
-				<h2><?php esc_html_e( 'Give Your Child a Stronger Foundation.', 'faithbridgeacademy' ); ?></h2>
-				<p><?php esc_html_e( 'Faith, values, knowledge and character are built over time. Start intentionally — applications take minutes.', 'faithbridgeacademy' ); ?></p>
-				<p class="fba-cta-actions">
-					<a class="fba-btn fba-btn-green" href="<?php echo esc_url( home_url( '/apply/' ) ); ?>"><?php esc_html_e( 'Apply Now', 'faithbridgeacademy' ); ?> <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
-					<a class="fba-btn fba-btn-outline-light" href="<?php echo esc_url( home_url( '/programmes/' ) ); ?>"><?php esc_html_e( 'Explore Programmes', 'faithbridgeacademy' ); ?></a>
-				</p>
-			</div>
-			<aside class="fba-cta-session">
-				<p class="fba-cta-session-label"><i class="ph ph-calendar-check" aria-hidden="true"></i> <?php esc_html_e( 'Now enrolling', 'faithbridgeacademy' ); ?></p>
-				<p class="fba-cta-session-title"><?php echo esc_html( fba_get_option( 'session_label' ) ); ?></p>
-				<p class="fba-cta-session-period"><?php echo esc_html( fba_get_option( 'session_period' ) ); ?></p>
-				<p class="fba-cta-session-days"><?php echo esc_html( fba_get_option( 'class_days' ) . ' · ' . fba_get_option( 'class_time' ) ); ?></p>
-			</aside>
-		</div>
-	</div>
-</section>
-
 <section class="fba-section fba-homefeel" aria-label="<?php esc_attr_e( 'Learning that feels like home', 'faithbridgeacademy' ); ?>">
 	<div class="fba-wrap fba-homefeel-grid">
 		<img class="reveal" src="<?php echo esc_url( $uri . '/assets/images/home-feel.jpg' ); ?>" alt="<?php esc_attr_e( 'A child learning at home', 'faithbridgeacademy' ); ?>" loading="lazy">
 		<div class="reveal">
-			<p class="fba-kicker"><?php esc_html_e( 'The FaithBridge experience', 'faithbridgeacademy' ); ?></p>
 			<h2 class="fba-section-title"><?php esc_html_e( 'Learning That Feels Like Home', 'faithbridgeacademy' ); ?></h2>
 			<p class="fba-lead"><?php esc_html_e( 'Calm, structured, personal — an online academy where your child is known, guided and celebrated.', 'faithbridgeacademy' ); ?></p>
 			<ul class="fba-checklist">
