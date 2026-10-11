@@ -280,7 +280,7 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 .fba-stat-icon { flex-shrink: 0; line-height: 1; color: rgba(255, 255, 255, 0.68); }
 .fba-stat-icon svg { width: 3.1rem; height: 3.1rem; display: block; }
 .fba-stat-copy { display: flex; flex-direction: column; }
-.fba-stat-num { display: block; font-family: var(--fba-font-display); font-weight: 400; letter-spacing: -0.02em; font-size: 3.4rem; line-height: 1; color: var(--fba-green); font-variant-numeric: tabular-nums; }
+.fba-stat-num { display: block; font-family: var(--fba-font-body); font-weight: 600; letter-spacing: -0.02em; font-size: 3.4rem; line-height: 1; color: var(--fba-green); font-variant-numeric: tabular-nums; }
 .fba-stat-label { display: block; font-size: 0.92rem; font-weight: 600; opacity: 0.88; margin-top: 0.35rem; }
 
 /* ---------- Why + programmes (merged, one band per mockup) ---------- */
