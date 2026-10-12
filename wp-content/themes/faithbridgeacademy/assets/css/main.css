@@ -490,6 +490,16 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 .fba-footer a { color: #cdd6e4; text-decoration: none; }
 .fba-footer a:hover { color: var(--fba-green); }
 .fba-footer-contact { gap: 0.7rem; }
+.fba-footer-news p { font-size: 0.9rem; color: #aebdce; margin: 0 0 1rem; }
+.fba-footer-news-form { display: grid; gap: 0.7rem; }
+.fba-footer-news-form input {
+	width: 100%; padding: 0.75rem 1rem; border-radius: 10px; border: 1.5px solid rgba(255, 255, 255, 0.22);
+	background: rgba(255, 255, 255, 0.07); color: #fff; font: inherit; font-size: 0.92rem;
+}
+.fba-footer-news-form input::placeholder { color: #8d99ad; }
+.fba-footer-news-form input:focus { outline: 2px solid var(--fba-green); border-color: var(--fba-green); }
+.fba-footer-news-form .fba-btn { justify-content: center; }
+.fba-newsletter-done { background: rgba(192, 186, 2, 0.15); border: 1px solid var(--fba-green); color: var(--fba-green); padding: 0.8rem 1.1rem; border-radius: 10px; margin: 0; font-size: 0.9rem; }
 .fba-socials { display: flex !important; flex-direction: row; gap: 0.6rem !important; margin-top: 1.2rem !important; }
 .fba-socials a {
 	width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center;

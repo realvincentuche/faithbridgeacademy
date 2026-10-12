@@ -77,18 +77,10 @@ $testimonials = get_posts(
 				<li><a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php esc_html_e( 'Home', 'faithbridgeacademy' ); ?></a></li>
 				<li><a href="<?php echo esc_url( home_url( '/programmes/' ) ); ?>"><?php esc_html_e( 'Programmes', 'faithbridgeacademy' ); ?></a></li>
 				<li><a href="<?php echo esc_url( home_url( '/apply/' ) ); ?>"><?php esc_html_e( 'Admissions', 'faithbridgeacademy' ); ?></a></li>
-				<li><a href="<?php echo esc_url( home_url( '/about/' ) ); ?>"><?php esc_html_e( 'About Us', 'faithbridgeacademy' ); ?></a></li>
-				<li><a href="<?php echo esc_url( home_url( '/blog/' ) ); ?>"><?php esc_html_e( 'Blog', 'faithbridgeacademy' ); ?></a></li>
-				<li><a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>"><?php esc_html_e( 'Contact', 'faithbridgeacademy' ); ?></a></li>
-			</ul>
-		</div>
-		<div class="fba-footer-col">
-			<h3><?php esc_html_e( 'Resources', 'faithbridgeacademy' ); ?></h3>
-			<ul>
 				<li><a href="<?php echo esc_url( home_url( '/bible-club/' ) ); ?>"><?php esc_html_e( 'Bible Club', 'faithbridgeacademy' ); ?></a></li>
 				<li><a href="<?php echo esc_url( home_url( '/fees/' ) ); ?>"><?php esc_html_e( 'Fees', 'faithbridgeacademy' ); ?></a></li>
 				<li><a href="<?php echo esc_url( home_url( '/faq/' ) ); ?>"><?php esc_html_e( 'FAQs', 'faithbridgeacademy' ); ?></a></li>
-				<li><a href="<?php echo esc_url( home_url( '/resources/' ) ); ?>"><?php esc_html_e( 'Learning Resources', 'faithbridgeacademy' ); ?></a></li>
+				<li><a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>"><?php esc_html_e( 'Contact', 'faithbridgeacademy' ); ?></a></li>
 			</ul>
 		</div>
 		<div class="fba-footer-col">
@@ -99,6 +91,21 @@ $testimonials = get_posts(
 				<li><span><?php echo esc_html( fba_get_option( 'format_note' ) ); ?></span></li>
 				<li><span><?php echo esc_html( fba_get_option( 'online_note' ) ); ?></span></li>
 			</ul>
+		</div>
+		<div class="fba-footer-col fba-footer-news">
+			<h3><?php esc_html_e( 'Stay Connected', 'faithbridgeacademy' ); ?></h3>
+			<p><?php esc_html_e( 'Session openings and academy stories — once a month, no noise.', 'faithbridgeacademy' ); ?></p>
+			<?php if ( isset( $_GET['subscribed'] ) && 'done' === $_GET['subscribed'] ) : ?>
+				<p class="fba-newsletter-done" role="status"><?php esc_html_e( 'Thank you — you are subscribed.', 'faithbridgeacademy' ); ?></p>
+			<?php else : ?>
+			<form class="fba-footer-news-form" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+				<input type="hidden" name="action" value="fba_subscribe">
+				<?php wp_nonce_field( 'fba_subscribe', 'fba_subscribe_nonce' ); ?>
+				<label class="fba-sr-only" for="fbaFooterEmail"><?php esc_html_e( 'Email address', 'faithbridgeacademy' ); ?></label>
+				<input id="fbaFooterEmail" type="email" name="fba_email" placeholder="<?php esc_attr_e( 'Enter your email', 'faithbridgeacademy' ); ?>" required>
+				<button class="fba-btn fba-btn-green fba-btn-sm" type="submit"><?php esc_html_e( 'Subscribe', 'faithbridgeacademy' ); ?></button>
+			</form>
+			<?php endif; ?>
 		</div>
 	</div>
 	<div class="fba-footer-bottom">
