@@ -210,9 +210,9 @@ function fba_fee_label( $usd ) {
  * ------------------------------------------------------------------------- */
 
 /**
- * Register settings page + setting.
+ * Register the fba_options setting.
  */
-function fba_settings_init() {
+function fba_settings_register() {
 	register_setting(
 		'fba_options_group',
 		'fba_options',
@@ -221,7 +221,13 @@ function fba_settings_init() {
 			'default'           => array(),
 		)
 	);
+}
+add_action( 'admin_init', 'fba_settings_register' );
 
+/**
+ * Add the Settings > FaithBridge page.
+ */
+function fba_settings_menu() {
 	add_options_page(
 		__( 'FaithBridge Settings', 'faithbridgeacademy' ),
 		__( 'FaithBridge', 'faithbridgeacademy' ),
@@ -230,8 +236,7 @@ function fba_settings_init() {
 		'fba_settings_page'
 	);
 }
-add_action( 'admin_init', 'fba_settings_init' );
-add_action( 'admin_menu', 'fba_settings_init' );
+add_action( 'admin_menu', 'fba_settings_menu' );
 
 /**
  * Sanitize options by key type.
