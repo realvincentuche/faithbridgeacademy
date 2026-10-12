@@ -7,6 +7,8 @@
 <?php if ( is_front_page() ) : ?>
 <link rel="preload" as="image" fetchpriority="high" href="<?php echo esc_url( get_template_directory_uri() . '/assets/images/hero-1.jpg' ); ?>">
 <?php endif; ?>
+<link rel="icon" type="image/svg+xml" href="<?php echo esc_url( get_template_directory_uri() . '/assets/images/favicon.svg' ); ?>">
+<link rel="apple-touch-icon" href="<?php echo esc_url( get_template_directory_uri() . '/assets/images/logo.png' ); ?>">
 <?php wp_head(); ?>
 </head>
 <body <?php body_class( is_front_page() ? 'fba-has-slider' : 'fba-has-banner' ); ?>>
