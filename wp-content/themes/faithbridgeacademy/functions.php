@@ -947,3 +947,523 @@ function fba_programme_column_values( $col, $post_id ) {
 	}
 }
 add_action( 'manage_programme_posts_custom_column', 'fba_programme_column_values', 10, 2 );
+
+/* -------------------------------------------------------------------------
+ * Phase 3: applications + club memberships
+ * ------------------------------------------------------------------------- */
+
+/**
+ * Register application + club_member CPTs (private, admin UI only).
+ */
+function fba_register_phase3_cpts() {
+	register_post_type(
+		'application',
+		array(
+			'labels'        => array(
+				'name'          => __( 'Applications', 'faithbridgeacademy' ),
+				'singular_name' => __( 'Application', 'faithbridgeacademy' ),
+			),
+			'public'        => false,
+			'show_ui'       => true,
+			'show_in_menu'  => true,
+			'supports'      => array( 'title' ),
+			'menu_icon'     => 'dashicons-clipboard',
+			'menu_position' => 22,
+			'capabilities'  => array( 'create_posts' => 'manage_options' ),
+			'map_meta_cap'  => true,
+		)
+	);
+
+	register_post_type(
+		'club_member',
+		array(
+			'labels'        => array(
+				'name'          => __( 'Club Members', 'faithbridgeacademy' ),
+				'singular_name' => __( 'Club Member', 'faithbridgeacademy' ),
+			),
+			'public'        => false,
+			'show_ui'       => true,
+			'show_in_menu'  => true,
+			'supports'      => array( 'title' ),
+			'menu_icon'     => 'dashicons-groups',
+			'menu_position' => 23,
+			'capabilities'  => array( 'create_posts' => 'manage_options' ),
+			'map_meta_cap'  => true,
+		)
+	);
+}
+add_action( 'init', 'fba_register_phase3_cpts' );
+
+/**
+ * Current class/grade optgroups (classification only, never priced).
+ *
+ * @return array label => items
+ */
+function fba_class_optgroups() {
+	return array(
+		__( 'Early Years', 'faithbridgeacademy' )          => array( __( 'Nursery / Preschool', 'faithbridgeacademy' ), __( 'Kindergarten', 'faithbridgeacademy' ) ),
+		__( 'Primary School', 'faithbridgeacademy' )      => array( __( 'Primary Grade 1', 'faithbridgeacademy' ), __( 'Primary Grade 2', 'faithbridgeacademy' ), __( 'Primary Grade 3', 'faithbridgeacademy' ), __( 'Primary Grade 4', 'faithbridgeacademy' ), __( 'Primary Grade 5', 'faithbridgeacademy' ), __( 'Primary Grade 6', 'faithbridgeacademy' ) ),
+		__( 'Junior High', 'faithbridgeacademy' )         => array( __( 'Junior Grade 7', 'faithbridgeacademy' ), __( 'Junior Grade 8', 'faithbridgeacademy' ), __( 'Junior Grade 9', 'faithbridgeacademy' ) ),
+		__( 'Senior High', 'faithbridgeacademy' )         => array( __( 'Senior Grade 10', 'faithbridgeacademy' ), __( 'Senior Grade 11', 'faithbridgeacademy' ), __( 'Senior Grade 12', 'faithbridgeacademy' ) ),
+		__( 'Continuing Education', 'faithbridgeacademy' ) => array( __( 'Adult Literacy', 'faithbridgeacademy' ), __( 'Professional Upskilling', 'faithbridgeacademy' ) ),
+		__( 'Other', 'faithbridgeacademy' )               => array( __( 'Other', 'faithbridgeacademy' ) ),
+	);
+}
+
+/**
+ * Open sessions list (current + upcoming quarter).
+ *
+ * @return array
+ */
+function fba_open_sessions() {
+	$q    = (int) fba_get_option( 'session_quarter' );
+	$year = (int) fba_get_option( 'session_year' );
+	if ( $q < 1 || $q > 4 ) {
+		$q = 4;
+	}
+	if ( $year < 2020 ) {
+		$year = (int) gmdate( 'Y' );
+	}
+	$out   = array();
+	$out[] = array( 'year' => $year, 'quarter' => $q );
+	$nq    = $q % 4 + 1;
+	$ny    = $nq === 1 ? $year + 1 : $year;
+	$out[] = array( 'year' => $ny, 'quarter' => $nq );
+	return $out;
+}
+
+/**
+ * Session option label: "Session 4 · Oct–Dec 2026".
+ *
+ * @param int $year Year.
+ * @param int $quarter Quarter.
+ * @return string
+ */
+function fba_session_option_label( $year, $quarter ) {
+	return sprintf( __( 'Session %1$d · %2$s %3$d', 'faithbridgeacademy' ), $quarter, fba_quarter_label( $quarter ), $year );
+}
+
+/**
+ * Build an application reference: FBA-YYYY-QN-XXXX.
+ *
+ * @param int $year Year.
+ * @param int $quarter Quarter.
+ * @return string
+ */
+function fba_application_ref( $year, $quarter ) {
+	return sprintf( 'FBA-%d-Q%d-%s', $year, $quarter, strtoupper( wp_generate_password( 4, false, false ) ) );
+}
+
+/**
+ * Dedupe check: same phone + ward name + DOB + session already applied?
+ *
+ * @param string $phone Phone digits.
+ * @param string $ward Ward name.
+ * @param string $dob DOB (Y-m-d).
+ * @param int    $year Year.
+ * @param int    $quarter Quarter.
+ * @return int|false Existing application ID or false.
+ */
+function fba_duplicate_application( $phone, $ward, $dob, $year, $quarter ) {
+	$q = new WP_Query(
+		array(
+			'post_type'      => 'application',
+			'post_status'    => 'any',
+			'posts_per_page' => 1,
+			'meta_query'     => array(
+				array( 'key' => '_fba_phone', 'value' => $phone ),
+				array( 'key' => '_fba_ward_name', 'value' => $ward ),
+				array( 'key' => '_fba_ward_dob', 'value' => $dob ),
+				array( 'key' => '_fba_year', 'value' => (string) $year ),
+				array( 'key' => '_fba_quarter', 'value' => (string) $quarter ),
+			),
+		)
+	);
+	if ( $q->have_posts() ) {
+		return $q->posts[0]->ID;
+	}
+	return false;
+}
+
+/**
+ * Totals for a set of programme IDs at one style, with rate snapshot.
+ *
+ * @param array  $programme_ids Programme IDs.
+ * @param string $style group|one.
+ * @return array {usd, ngn, rate, per}
+ */
+function fba_application_totals( $programme_ids, $style ) {
+	$rate = (float) fba_get_option( 'exchange_rate' );
+	if ( $rate <= 0 ) {
+		$rate = 1500;
+	}
+	$usd = 0;
+	$per = array();
+	foreach ( (array) $programme_ids as $pid ) {
+		$fees  = fba_programme_fees( (int) $pid );
+		$fee   = 'one' === $style ? $fees['one'] : $fees['group'];
+		$usd  += $fee;
+		$per[] = array(
+			'id'    => (int) $pid,
+			'title' => get_the_title( (int) $pid ),
+			'usd'   => $fee,
+			'ngn'   => (int) ( ceil( $fee * $rate / 1000 ) * 1000 ),
+		);
+	}
+	return array(
+		'usd'  => $usd,
+		'ngn'  => (int) ( ceil( $usd * $rate / 1000 ) * 1000 ),
+		'rate' => $rate,
+		'per'  => $per,
+	);
+}
+
+/**
+ * Bank extra group seats when an application is approved.
+ *
+ * @param int $app_id Application ID.
+ */
+function fba_bank_application_seats( $app_id ) {
+	if ( 'approved' !== get_post_meta( $app_id, '_fba_app_status', true ) ) {
+		return;
+	}
+	if ( get_post_meta( $app_id, '_fba_seats_banked', true ) ) {
+		return;
+	}
+	$style = get_post_meta( $app_id, '_fba_style', true );
+	if ( 'group' !== $style ) {
+		update_post_meta( $app_id, '_fba_seats_banked', '1' );
+		return;
+	}
+	$pids = get_post_meta( $app_id, '_fba_programmes', true );
+	foreach ( (array) $pids as $pid ) {
+		$pid      = (int) $pid;
+		$enrolled = max( 0, (int) get_post_meta( $pid, '_fba_enrolled_group', true ) );
+		update_post_meta( $pid, '_fba_enrolled_group', $enrolled + 1 );
+	}
+	update_post_meta( $app_id, '_fba_seats_banked', '1' );
+}
+
+/**
+ * Application form handler (public, nonce-protected).
+ */
+function fba_application_handler() {
+	if ( ! isset( $_POST['fba_apply_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['fba_apply_nonce'] ) ), 'fba_apply' ) ) {
+		wp_safe_redirect( add_query_arg( 'fba', 'error', fba_apply_url() ) );
+		exit;
+	}
+
+	$kind      = isset( $_POST['fba_kind'] ) && 'sponsor' === $_POST['fba_kind'] ? 'sponsor' : 'self';
+	$name      = isset( $_POST['fba_name'] ) ? sanitize_text_field( wp_unslash( $_POST['fba_name'] ) ) : '';
+	$phone_raw = isset( $_POST['fba_phone'] ) ? (string) wp_unslash( $_POST['fba_phone'] ) : '';
+	$phone     = preg_replace( '/[^0-9+]/', '', $phone_raw );
+	$email     = isset( $_POST['fba_email'] ) ? sanitize_email( wp_unslash( $_POST['fba_email'] ) ) : '';
+	$relation  = isset( $_POST['fba_relation'] ) ? sanitize_text_field( wp_unslash( $_POST['fba_relation'] ) ) : '';
+
+	$ward_name  = isset( $_POST['fba_ward_name'] ) ? sanitize_text_field( wp_unslash( $_POST['fba_ward_name'] ) ) : '';
+	$ward_dob   = isset( $_POST['fba_ward_dob'] ) ? sanitize_text_field( wp_unslash( $_POST['fba_ward_dob'] ) ) : '';
+	$ward_class = isset( $_POST['fba_ward_class'] ) ? sanitize_text_field( wp_unslash( $_POST['fba_ward_class'] ) ) : '';
+	$style      = isset( $_POST['fba_style'] ) && 'one' === $_POST['fba_style'] ? 'one' : 'group';
+	$session    = isset( $_POST['fba_session'] ) ? sanitize_text_field( wp_unslash( $_POST['fba_session'] ) ) : '';
+	$pids_raw   = isset( $_POST['fba_programmes'] ) ? (array) wp_unslash( $_POST['fba_programmes'] ) : array();
+
+	if ( '' === $name || '' === $phone || '' === $ward_name || '' === $ward_dob || '' === $session || ! $pids_raw ) {
+		wp_safe_redirect( add_query_arg( 'fba', 'missing', fba_apply_url() ) );
+		exit;
+	}
+	if ( ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $ward_dob ) ) {
+		wp_safe_redirect( add_query_arg( 'fba', 'dob', fba_apply_url() ) );
+		exit;
+	}
+	list( $year, $quarter ) = array_map( 'intval', explode( 'Q', $session ) + array( 0, 0 ) );
+	if ( $year < 2020 || $quarter < 1 || $quarter > 4 ) {
+		wp_safe_redirect( add_query_arg( 'fba', 'session', fba_apply_url() ) );
+		exit;
+	}
+	$pids = array();
+	foreach ( $pids_raw as $raw ) {
+		$pid = (int) $raw;
+		if ( $pid && 'programme' === get_post_type( $pid ) && 'publish' === get_post_status( $pid ) ) {
+			$pids[] = $pid;
+		}
+	}
+	if ( ! $pids ) {
+		wp_safe_redirect( add_query_arg( 'fba', 'programmes', fba_apply_url() ) );
+		exit;
+	}
+
+	$dup = fba_duplicate_application( $phone, $ward_name, $ward_dob, $year, $quarter );
+	if ( $dup ) {
+		$ref = get_post_meta( $dup, '_fba_ref', true );
+		wp_safe_redirect( add_query_arg( array( 'fba' => 'duplicate', 'ref' => $ref ), fba_apply_url() ) );
+		exit;
+	}
+
+	$totals = fba_application_totals( $pids, $style );
+	$ref    = fba_application_ref( $year, $quarter );
+
+	$app_id = wp_insert_post(
+		array(
+			'post_title'  => $ref . ' — ' . $ward_name,
+			'post_status' => 'private',
+			'post_type'   => 'application',
+		)
+	);
+	if ( ! $app_id || is_wp_error( $app_id ) ) {
+		wp_safe_redirect( add_query_arg( 'fba', 'error', fba_apply_url() ) );
+		exit;
+	}
+
+	update_post_meta( $app_id, '_fba_ref', $ref );
+	update_post_meta( $app_id, '_fba_app_status', 'pending' );
+	update_post_meta( $app_id, '_fba_kind', $kind );
+	update_post_meta( $app_id, '_fba_name', $name );
+	update_post_meta( $app_id, '_fba_phone', $phone );
+	update_post_meta( $app_id, '_fba_email', $email );
+	update_post_meta( $app_id, '_fba_relation', $relation );
+	update_post_meta( $app_id, '_fba_ward_name', $ward_name );
+	update_post_meta( $app_id, '_fba_ward_dob', $ward_dob );
+	update_post_meta( $app_id, '_fba_ward_class', $ward_class );
+	update_post_meta( $app_id, '_fba_style', $style );
+	update_post_meta( $app_id, '_fba_year', (string) $year );
+	update_post_meta( $app_id, '_fba_quarter', (string) $quarter );
+	update_post_meta( $app_id, '_fba_programmes', $pids );
+	update_post_meta( $app_id, '_fba_total_usd', $totals['usd'] );
+	update_post_meta( $app_id, '_fba_total_ngn', $totals['ngn'] );
+	update_post_meta( $app_id, '_fba_rate', $totals['rate'] );
+
+	wp_safe_redirect( add_query_arg( array( 'fba' => 'done', 'ref' => $ref ), fba_apply_url() ) );
+	exit;
+}
+add_action( 'admin_post_nopriv_fba_apply', 'fba_application_handler' );
+add_action( 'admin_post_fba_apply', 'fba_application_handler' );
+
+/**
+ * Application detail meta box (status + snapshot + follow-up).
+ */
+function fba_application_metabox() {
+	add_meta_box( 'fba-application-details', __( 'Application Details', 'faithbridgeacademy' ), 'fba_application_metabox_html', 'application', 'normal', 'high' );
+}
+add_action( 'add_meta_boxes', 'fba_application_metabox' );
+
+/**
+ * Application meta box HTML.
+ *
+ * @param WP_Post $post Current post.
+ */
+function fba_application_metabox_html( $post ) {
+	wp_nonce_field( 'fba_application_meta', 'fba_application_nonce' );
+	$get = function ( $k ) use ( $post ) {
+		return get_post_meta( $post->ID, $k, true );
+	};
+	$status   = $get( '_fba_app_status' ) ? $get( '_fba_app_status' ) : 'pending';
+	$pids     = (array) $get( '_fba_programmes' );
+	$titles   = array();
+	foreach ( $pids as $pid ) {
+		$titles[] = get_the_title( (int) $pid );
+	}
+	$followup = (int) fba_get_option( 'followup_days' );
+	?>
+	<p><strong><?php esc_html_e( 'Reference', 'faithbridgeacademy' ); ?>:</strong> <?php echo esc_html( $get( '_fba_ref' ) ); ?></p>
+	<p><strong><?php esc_html_e( 'Applicant', 'faithbridgeacademy' ); ?>:</strong> <?php echo esc_html( $get( '_fba_name' ) . ' (' . $get( '_fba_kind' ) . ')' ); ?> · <?php echo esc_html( $get( '_fba_phone' ) ); ?> · <?php echo esc_html( $get( '_fba_email' ) ); ?>
+	<?php if ( $get( '_fba_relation' ) ) : ?> · <?php echo esc_html( $get( '_fba_relation' ) ); ?><?php endif; ?></p>
+	<p><strong><?php esc_html_e( 'Ward', 'faithbridgeacademy' ); ?>:</strong> <?php echo esc_html( $get( '_fba_ward_name' ) . ' · ' . $get( '_fba_ward_dob' ) . ' · ' . $get( '_fba_ward_class' ) ); ?></p>
+	<p><strong><?php esc_html_e( 'Programmes', 'faithbridgeacademy' ); ?>:</strong> <?php echo esc_html( implode( ', ', $titles ) ); ?> (<?php echo esc_html( $get( '_fba_style' ) ); ?>, <?php echo esc_html( $get( '_fba_year' ) . '-Q' . $get( '_fba_quarter' ) ); ?>)</p>
+	<p><strong><?php esc_html_e( 'Totals (snapshot)', 'faithbridgeacademy' ); ?>:</strong> <?php echo esc_html( '$' . number_format( (float) $get( '_fba_total_usd' ) ) . ' / ₦' . number_format( (float) $get( '_fba_total_ngn' ) ) . ' @ ' . $get( '_fba_rate' ) ); ?></p>
+	<p><label for="fba-app-status"><?php esc_html_e( 'Status', 'faithbridgeacademy' ); ?></label><br>
+	<select id="fba-app-status" name="fba_app_status">
+		<?php foreach ( array( 'pending' => __( 'Pending', 'faithbridgeacademy' ), 'approved' => __( 'Approved', 'faithbridgeacademy' ), 'rejected' => __( 'Rejected', 'faithbridgeacademy' ) ) as $val => $label ) : ?>
+			<option value="<?php echo esc_attr( $val ); ?>" <?php selected( $status, $val ); ?>><?php echo esc_html( $label ); ?></option>
+		<?php endforeach; ?>
+	</select></p>
+	<p><em><?php echo esc_html( sprintf( __( 'Follow up if still pending after %d days.', 'faithbridgeacademy' ), $followup ) ); ?></em></p>
+	<?php
+}
+
+/**
+ * Save application status; bank seats on approval.
+ *
+ * @param int $post_id Post ID.
+ */
+function fba_save_application_meta( $post_id ) {
+	if ( ! isset( $_POST['fba_application_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['fba_application_nonce'] ) ), 'fba_application_meta' ) ) {
+		return;
+	}
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+		return;
+	}
+	if ( ! current_user_can( 'edit_post', $post_id ) ) {
+		return;
+	}
+	if ( isset( $_POST['fba_app_status'] ) ) {
+		$s = sanitize_key( wp_unslash( $_POST['fba_app_status'] ) );
+		update_post_meta( $post_id, '_fba_app_status', in_array( $s, array( 'pending', 'approved', 'rejected' ), true ) ? $s : 'pending' );
+		fba_bank_application_seats( $post_id );
+	}
+}
+add_action( 'save_post_application', 'fba_save_application_meta' );
+
+/**
+ * Application admin columns.
+ *
+ * @param array $cols Columns.
+ * @return array
+ */
+function fba_application_columns( $cols ) {
+	$cols['fba_status'] = __( 'Status', 'faithbridgeacademy' );
+	$cols['fba_total']  = __( 'Total', 'faithbridgeacademy' );
+	return $cols;
+}
+add_filter( 'manage_application_posts_columns', 'fba_application_columns' );
+
+/**
+ * Application column values.
+ *
+ * @param string $col Column key.
+ * @param int    $post_id Post ID.
+ */
+function fba_application_column_values( $col, $post_id ) {
+	if ( 'fba_status' === $col ) {
+		echo esc_html( get_post_meta( $post_id, '_fba_app_status', true ) );
+	} elseif ( 'fba_total' === $col ) {
+		echo esc_html( '$' . number_format( (float) get_post_meta( $post_id, '_fba_total_usd', true ) ) . ' / ₦' . number_format( (float) get_post_meta( $post_id, '_fba_total_ngn', true ) ) );
+	}
+}
+add_action( 'manage_application_posts_custom_column', 'fba_application_column_values', 10, 2 );
+
+/**
+ * Club annual fee in naira + dollar equivalent.
+ *
+ * @return array {ngn, usd}
+ */
+function fba_club_fee() {
+	$ngn  = (float) fba_get_option( 'club_fee' );
+	$rate = (float) fba_get_option( 'exchange_rate' );
+	if ( $rate <= 0 ) {
+		$rate = 1500;
+	}
+	return array( 'ngn' => $ngn, 'usd' => $ngn / $rate );
+}
+
+/**
+ * Club join handler (public, nonce-protected). Payment confirmed offline,
+ * membership active Jan–Dec of the current year.
+ */
+function fba_club_handler() {
+	if ( ! isset( $_POST['fba_club_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['fba_club_nonce'] ) ), 'fba_club' ) ) {
+		wp_safe_redirect( add_query_arg( 'club', 'error', home_url( '/bible-club/' ) ) );
+		exit;
+	}
+	$name  = isset( $_POST['fba_club_name'] ) ? sanitize_text_field( wp_unslash( $_POST['fba_club_name'] ) ) : '';
+	$phone = isset( $_POST['fba_club_phone'] ) ? preg_replace( '/[^0-9+]/', '', (string) wp_unslash( $_POST['fba_club_phone'] ) ) : '';
+	$email = isset( $_POST['fba_club_email'] ) ? sanitize_email( wp_unslash( $_POST['fba_club_email'] ) ) : '';
+	if ( '' === $name || '' === $phone ) {
+		wp_safe_redirect( add_query_arg( 'club', 'missing', home_url( '/bible-club/' ) ) );
+		exit;
+	}
+	$year = (int) gmdate( 'Y' );
+	$fee  = fba_club_fee();
+
+	$mid = wp_insert_post(
+		array(
+			'post_title'  => $name . ' — ' . $year,
+			'post_status' => 'private',
+			'post_type'   => 'club_member',
+		)
+	);
+	if ( ! $mid || is_wp_error( $mid ) ) {
+		wp_safe_redirect( add_query_arg( 'club', 'error', home_url( '/bible-club/' ) ) );
+		exit;
+	}
+	update_post_meta( $mid, '_fba_club_status', 'active' );
+	update_post_meta( $mid, '_fba_club_name', $name );
+	update_post_meta( $mid, '_fba_club_phone', $phone );
+	update_post_meta( $mid, '_fba_club_email', $email );
+	update_post_meta( $mid, '_fba_club_year', (string) $year );
+	update_post_meta( $mid, '_fba_club_fee_ngn', $fee['ngn'] );
+	update_post_meta( $mid, '_fba_club_fee_usd', round( $fee['usd'], 2 ) );
+
+	wp_safe_redirect( add_query_arg( 'club', 'done', home_url( '/bible-club/' ) ) );
+	exit;
+}
+add_action( 'admin_post_nopriv_fba_club', 'fba_club_handler' );
+add_action( 'admin_post_fba_club', 'fba_club_handler' );
+
+/**
+ * Club member detail meta box.
+ */
+function fba_club_metabox() {
+	add_meta_box( 'fba-club-details', __( 'Membership Details', 'faithbridgeacademy' ), 'fba_club_metabox_html', 'club_member', 'normal', 'high' );
+}
+add_action( 'add_meta_boxes', 'fba_club_metabox' );
+
+/**
+ * Club meta box HTML.
+ *
+ * @param WP_Post $post Current post.
+ */
+function fba_club_metabox_html( $post ) {
+	wp_nonce_field( 'fba_club_meta', 'fba_club_nonce' );
+	$status = get_post_meta( $post->ID, '_fba_club_status', true );
+	?>
+	<p><strong><?php esc_html_e( 'Member', 'faithbridgeacademy' ); ?>:</strong> <?php echo esc_html( get_post_meta( $post->ID, '_fba_club_name', true ) . ' · ' . get_post_meta( $post->ID, '_fba_club_phone', true ) . ' · ' . get_post_meta( $post->ID, '_fba_club_email', true ) ); ?></p>
+	<p><strong><?php esc_html_e( 'Year / fee snapshot', 'faithbridgeacademy' ); ?>:</strong> <?php echo esc_html( get_post_meta( $post->ID, '_fba_club_year', true ) . ' · ₦' . number_format( (float) get_post_meta( $post->ID, '_fba_club_fee_ngn', true ) ) ); ?></p>
+	<p><label for="fba-club-status"><?php esc_html_e( 'Status', 'faithbridgeacademy' ); ?></label><br>
+	<select id="fba-club-status" name="fba_club_status">
+		<?php foreach ( array( 'active' => __( 'Active', 'faithbridgeacademy' ), 'expired' => __( 'Expired', 'faithbridgeacademy' ) ) as $val => $label ) : ?>
+			<option value="<?php echo esc_attr( $val ); ?>" <?php selected( $status, $val ); ?>><?php echo esc_html( $label ); ?></option>
+		<?php endforeach; ?>
+	</select></p>
+	<p><em><?php esc_html_e( 'Membership runs Jan–Dec each year. Mark expired members for renewal follow-up in January.', 'faithbridgeacademy' ); ?></em></p>
+	<?php
+}
+
+/**
+ * Save club status.
+ *
+ * @param int $post_id Post ID.
+ */
+function fba_save_club_meta( $post_id ) {
+	if ( ! isset( $_POST['fba_club_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['fba_club_nonce'] ) ), 'fba_club_meta' ) ) {
+		return;
+	}
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+		return;
+	}
+	if ( ! current_user_can( 'edit_post', $post_id ) ) {
+		return;
+	}
+	if ( isset( $_POST['fba_club_status'] ) ) {
+		$s = sanitize_key( wp_unslash( $_POST['fba_club_status'] ) );
+		update_post_meta( $post_id, '_fba_club_status', 'expired' === $s ? 'expired' : 'active' );
+	}
+}
+add_action( 'save_post_club_member', 'fba_save_club_meta' );
+
+/**
+ * Club member admin columns.
+ *
+ * @param array $cols Columns.
+ * @return array
+ */
+function fba_club_columns( $cols ) {
+	$cols['fba_status'] = __( 'Status', 'faithbridgeacademy' );
+	$cols['fba_year']   = __( 'Year', 'faithbridgeacademy' );
+	return $cols;
+}
+add_filter( 'manage_club_member_posts_columns', 'fba_club_columns' );
+
+/**
+ * Club column values.
+ *
+ * @param string $col Column key.
+ * @param int    $post_id Post ID.
+ */
+function fba_club_column_values( $col, $post_id ) {
+	if ( 'fba_status' === $col ) {
+		echo esc_html( get_post_meta( $post_id, '_fba_club_status', true ) );
+	} elseif ( 'fba_year' === $col ) {
+		echo esc_html( get_post_meta( $post_id, '_fba_club_year', true ) );
+	}
+}
+add_action( 'manage_club_member_posts_custom_column', 'fba_club_column_values', 10, 2 );

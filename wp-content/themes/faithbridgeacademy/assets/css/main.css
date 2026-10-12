@@ -579,6 +579,43 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 .fba-side-card .fba-bank-box span { color: var(--fba-deep); }
 .fba-book-list { margin: 0.6rem 0 1.5rem; padding-left: 1.3rem; color: var(--fba-ink); }
 
+/* ---------- Application + club forms ---------- */
+.fba-apply-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 2.5rem; align-items: start; }
+.fba-notice { background: var(--fba-paper); border: 1px solid var(--fba-line); border-left: 5px solid var(--fba-green-deep); border-radius: 12px; padding: 1.4rem 1.6rem; margin-bottom: 1.8rem; }
+.fba-notice-ok { border-left-color: var(--fba-green); }
+.fba-notice h2 { margin: 0 0 0.4rem; font-size: 1.4rem; }
+.fba-notice p { margin: 0; }
+.fba-form { background: var(--fba-paper); border: 1px solid var(--fba-line); border-radius: 18px; padding: 2.2rem; box-shadow: var(--fba-shadow-sm); }
+.fba-steps { list-style: none; margin: 0 0 2rem; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; counter-reset: fba-step; }
+.fba-steps li { counter-increment: fba-step; font-size: 0.8rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--fba-muted); padding-top: 1.6rem; position: relative; }
+.fba-steps li::before { content: counter(fba-step); position: absolute; top: 0; left: 0; width: 1.7rem; height: 1.7rem; border-radius: 50%; background: var(--fba-bg); border: 1.5px solid var(--fba-line); display: grid; place-items: center; font-size: 0.85rem; }
+.fba-steps li.active { color: var(--fba-navy); }
+.fba-steps li.active::before { background: var(--fba-green); border-color: var(--fba-green); color: var(--fba-deep); }
+.fba-step { display: none; border: 0; margin: 0; padding: 0; }
+.fba-step.active { display: block; }
+.fba-step legend { font-family: var(--fba-font-display); font-weight: 700; font-size: 1.5rem; color: var(--fba-navy); margin-bottom: 1.2rem; padding: 0; }
+.fba-form label, .fba-form .fba-label { display: block; font-weight: 700; color: var(--fba-navy); margin-bottom: 0.4rem; }
+.fba-form input[type="text"], .fba-form input[type="tel"], .fba-form input[type="email"], .fba-form input[type="date"], .fba-form select {
+	width: 100%; padding: 0.8rem 1rem; border: 1.5px solid var(--fba-line); border-radius: 10px;
+	font: inherit; color: var(--fba-ink); background: #fff; margin-bottom: 1.1rem;
+}
+.fba-form input:focus, .fba-form select:focus { outline: 2px solid var(--fba-green); border-color: var(--fba-green); }
+.fba-form input.invalid { border-color: #b3261e; }
+.fba-radio, .fba-check { display: flex; align-items: flex-start; gap: 0.6rem; font-weight: 600; color: var(--fba-ink); margin-bottom: 0.8rem; cursor: pointer; }
+.fba-radio input, .fba-check input { margin-top: 0.3rem; accent-color: var(--fba-green-deep); width: 1.1rem; height: 1.1rem; flex-shrink: 0; }
+.fba-check-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.2rem 1rem; margin-bottom: 1.2rem; }
+.fba-check small { display: block; font-size: 0.82rem; color: var(--fba-muted); font-weight: 600; }
+.fba-check.disabled { opacity: 0.5; cursor: not-allowed; }
+.fba-form-nav { display: flex; gap: 0.8rem; margin-top: 1.4rem; }
+.fba-btn-outline-dark { border-color: var(--fba-navy); color: var(--fba-navy); }
+.fba-btn-outline-dark:hover { background: var(--fba-navy); color: #fff; }
+.fba-review { background: var(--fba-bg); border: 1px solid var(--fba-line); border-radius: 12px; padding: 1.3rem 1.5rem; margin-bottom: 1.2rem; }
+.fba-review dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 0.3rem 1rem; }
+.fba-review dt { font-weight: 800; color: var(--fba-navy); }
+.fba-review dd { margin: 0; }
+.fba-review .total { font-size: 1.2rem; font-weight: 800; color: var(--fba-navy); }
+.fba-form .fba-fee-line { color: var(--fba-green-deep); font-weight: 800; }
+
 /* ---------- Responsive ---------- */
 @media (max-width: 1024px) {
 	.fba-header { left: 0.75rem; right: 0.75rem; }
@@ -606,8 +643,11 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 	.fba-stat-label { font-size: 0.82rem; }
 	.fba-program-grid { grid-template-columns: 1fr 1fr; }
 	.fba-cat-grid { grid-template-columns: 1fr; }
-	.fba-single-grid { grid-template-columns: 1fr; }
+	.fba-single-grid, .fba-apply-grid { grid-template-columns: 1fr; }
 	.fba-side-card { position: static; }
+	.fba-steps { grid-template-columns: repeat(2, 1fr); gap: 1rem 0.5rem; }
+	.fba-check-grid { grid-template-columns: 1fr; }
+	.fba-form { padding: 1.6rem 1.2rem; }
 	.fba-program-card strong { font-size: 1.1rem; }
 	.fba-news-grid, .fba-voices-grid, .fba-quicklinks, .fba-quarter-grid { grid-template-columns: 1fr; }
 	.fba-footer-grid { grid-template-columns: 1fr; }

@@ -225,6 +225,101 @@
 		}
 	} );
 
+	/* Application multi-step form. */
+	var applyForm = document.getElementById( 'fbaApplyForm' );
+	if ( applyForm ) {
+		var steps = Array.prototype.slice.call( applyForm.querySelectorAll( '.fba-step' ) );
+		var dots = Array.prototype.slice.call( applyForm.querySelectorAll( '[data-step-dot]' ) );
+		var idx = 0;
+
+		function show( i ) {
+			idx = Math.max( 0, Math.min( steps.length - 1, i ) );
+			steps.forEach( function ( s, k ) { s.classList.toggle( 'active', k === idx ); } );
+			dots.forEach( function ( d, k ) { d.classList.toggle( 'active', k <= idx ); } );
+			if ( idx === steps.length - 1 ) {
+				buildReview();
+			}
+			applyForm.scrollIntoView( { behavior: 'smooth', block: 'start' } );
+		}
+
+		function validStep() {
+			var ok = true;
+			var fields = steps[idx].querySelectorAll( 'input[required], select[required]' );
+			fields.forEach( function ( f ) {
+				var bad = ! f.value || ( 'checkbox' === f.type && ! f.checked );
+				f.classList.toggle( 'invalid', !! bad );
+				if ( bad ) {
+					ok = false;
+				}
+			} );
+			if ( 2 === idx ) {
+				var any = applyForm.querySelectorAll( 'input[name="fba_programmes[]"]:checked' ).length > 0;
+				if ( ! any ) {
+					ok = false;
+				}
+			}
+			return ok;
+		}
+
+		function money( n ) {
+			return '$' + Number( n ).toLocaleString( 'en-US' );
+		}
+
+		function buildReview() {
+			var box = document.getElementById( 'fbaReview' );
+			if ( ! box ) {
+				return;
+			}
+			var val = function ( name ) {
+				var f = applyForm.querySelector( '[name="' + name + '"]' );
+				return f ? f.value : '';
+			};
+			var styleEl = applyForm.querySelector( 'input[name="fba_style"]:checked' );
+			var style = styleEl ? styleEl.value : 'group';
+			var boxes = applyForm.querySelectorAll( 'input[name="fba_programmes[]"]:checked' );
+			var names = [];
+			var total = 0;
+			boxes.forEach( function ( b ) {
+				var fee = Number( 'one' === style ? b.getAttribute( 'data-one' ) : b.getAttribute( 'data-group' ) ) || 0;
+				total += fee;
+				var label = b.getAttribute( 'data-title' ) || b.value;
+				names.push( label + ' (' + money( fee ) + ')' );
+			} );
+			var sessSel = applyForm.querySelector( '#fbaSession' );
+			var sess = sessSel ? sessSel.options[sessSel.selectedIndex].text : '';
+			box.innerHTML = '<dl>'
+				+ '<dt>Applicant</dt><dd>' + val( 'fba_name' ) + ' · ' + val( 'fba_phone' ) + '</dd>'
+				+ '<dt>Ward</dt><dd>' + val( 'fba_ward_name' ) + ' · ' + val( 'fba_ward_dob' ) + ' · ' + val( 'fba_ward_class' ) + '</dd>'
+				+ '<dt>Programmes</dt><dd>' + names.join( ', ' ) + '</dd>'
+				+ '<dt>Style</dt><dd>' + ( 'one' === style ? 'One-on-one' : 'Group class' ) + '</dd>'
+				+ '<dt>Session</dt><dd>' + sess + '</dd>'
+				+ '<dt>Total</dt><dd class="total">' + money( total ) + '</dd>'
+				+ '</dl>';
+		}
+
+		applyForm.querySelectorAll( '[data-next]' ).forEach( function ( b ) {
+			b.addEventListener( 'click', function () {
+				if ( validStep() ) {
+					show( idx + 1 );
+				}
+			} );
+		} );
+		applyForm.querySelectorAll( '[data-prev]' ).forEach( function ( b ) {
+			b.addEventListener( 'click', function () { show( idx - 1 ); } );
+		} );
+
+		var kindRadios = applyForm.querySelectorAll( 'input[name="fba_kind"]' );
+		var sponsorRow = applyForm.querySelector( '.fba-sponsor-only' );
+		kindRadios.forEach( function ( r ) {
+			r.addEventListener( 'change', function () {
+				var sponsor = 'sponsor' === applyForm.querySelector( 'input[name="fba_kind"]:checked' ).value;
+				if ( sponsorRow ) {
+					sponsorRow.hidden = ! sponsor;
+				}
+			} );
+		} );
+	}
+
 	/* Reveal on scroll. */
 	var revealEls = document.querySelectorAll( '.reveal' );
 	if ( 'IntersectionObserver' in window ) {
