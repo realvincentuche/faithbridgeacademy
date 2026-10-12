@@ -610,6 +610,7 @@ function fba_setup_pages_handler() {
 	}
 	fba_seed_on_activate();
 	fba_seed_programmes();
+	fba_seed_faqs();
 	flush_rewrite_rules();
 	wp_safe_redirect( admin_url( 'edit.php?post_type=programme' ) );
 	exit;
@@ -1081,6 +1082,22 @@ function fba_register_phase3_cpts() {
 		)
 	);
 
+	register_taxonomy(
+		'faq_category',
+		'faq',
+		array(
+			'labels'            => array(
+				'name'          => __( 'FAQ Categories', 'faithbridgeacademy' ),
+				'singular_name' => __( 'FAQ Category', 'faithbridgeacademy' ),
+			),
+			'public'            => true,
+			'show_ui'           => true,
+			'show_admin_column' => true,
+			'hierarchical'      => false,
+			'rewrite'           => array( 'slug' => 'faq-category', 'with_front' => false ),
+		)
+	);
+
 	register_post_type(
 		'faq',
 		array(
@@ -1098,6 +1115,103 @@ function fba_register_phase3_cpts() {
 			'map_meta_cap'  => true,
 		)
 	);
+
+/**
+ * Default FAQ seed data: category => [question, answer-callback-key].
+ * Answers stay settings-driven so they track live fees/session.
+ *
+ * Suggested categories: Admissions, Fees & Payment, Classes, Programmes, Bible Club.
+ *
+ * @return array
+ */
+function fba_faq_seed_data() {
+	return array(
+		array( 'cat' => 'classes', 'q' => 'When do classes hold?', 'a' => 'schedule' ),
+		array( 'cat' => 'classes', 'q' => 'Are class recordings available?', 'a' => 'recordings' ),
+		array( 'cat' => 'fees-payment', 'q' => 'How much are the fees?', 'a' => 'fees' ),
+		array( 'cat' => 'fees-payment', 'q' => 'How do I pay?', 'a' => 'pay' ),
+		array( 'cat' => 'admissions', 'q' => 'How many children can join a group class?', 'a' => 'capacity' ),
+		array( 'cat' => 'programmes', 'q' => 'Which programmes do you offer?', 'a' => 'programmes' ),
+		array( 'cat' => 'bible-club', 'q' => 'What is the Bible Club?', 'a' => 'club' ),
+	);
+}
+
+/**
+ * Render a seeded FAQ answer from live settings.
+ *
+ * @param string $key Answer key.
+ * @return string
+ */
+function fba_faq_seed_answer( $key ) {
+	switch ( $key ) {
+		case 'schedule':
+			return fba_get_option( 'class_days' ) . ' · ' . fba_get_option( 'class_time' ) . ' (' . fba_get_option( 'timezone' ) . '). ' . fba_get_option( 'format_note' ) . '.';
+		case 'fees':
+			return sprintf( __( 'Group classes: $%s per session. One-on-one: $%s per session. Exact fees show on each programme page and during application.', 'faithbridgeacademy' ), number_format( (float) fba_get_option( 'fee_group' ) ), number_format( (float) fba_get_option( 'fee_one_to_one' ) ) );
+		case 'pay':
+			return sprintf( __( 'By bank transfer to %s · %s · %s. We confirm every application personally — no receipt upload needed.', 'faithbridgeacademy' ), fba_get_option( 'bank_name' ), fba_get_option( 'bank_number' ), fba_get_option( 'bank_bank' ) );
+		case 'capacity':
+			return sprintf( __( 'At most %s learners per group class. One-on-one places are uncapped.', 'faithbridgeacademy' ), fba_get_option( 'group_capacity' ) );
+		case 'recordings':
+			return fba_get_option( 'recordings_note' );
+		case 'programmes':
+			return __( 'Bible Study, English, French, Igbo, Hausa, Yoruba, Mathematics, Physics, Chemistry, Biology, Government, Literature, Economics, ICT, Agriculture and Basic Science & Technology.', 'faithbridgeacademy' );
+		case 'club':
+			return sprintf( __( 'A separate annual membership (₦%s) for monthly gatherings — worship, Scripture memory and service, January to December.', 'faithbridgeacademy' ), number_format( (float) fba_get_option( 'club_fee' ) ) );
+		default:
+			return '';
+	}
+}
+
+/**
+ * Seed FAQ categories + the 7 default FAQs. Never overwrites.
+ *
+ * @return array created/skipped counts.
+ */
+function fba_seed_faqs() {
+	$done = array( 'cats' => 0, 'created' => 0, 'skipped' => 0 );
+	$cats = array(
+		'admissions'   => 'Admissions',
+		'fees-payment' => 'Fees & Payment',
+		'classes'      => 'Classes',
+		'programmes'   => 'Programmes',
+		'bible-club'   => 'Bible Club',
+	);
+	foreach ( $cats as $slug => $name ) {
+		if ( ! term_exists( $slug, 'faq_category' ) ) {
+			$res = wp_insert_term( $name, 'faq_category', array( 'slug' => $slug ) );
+			if ( ! is_wp_error( $res ) ) {
+				$done['cats']++;
+			}
+		}
+	}
+	$order = 1;
+	foreach ( fba_faq_seed_data() as $f ) {
+		$existing = get_page_by_title( $f['q'], OBJECT, 'faq' );
+		if ( $existing ) {
+			$done['skipped']++;
+			$order++;
+			continue;
+		}
+		$new_id = wp_insert_post(
+			wp_slash(
+				array(
+					'post_title'   => $f['q'],
+					'post_content' => fba_faq_seed_answer( $f['a'] ),
+					'post_status'  => 'publish',
+					'post_type'    => 'faq',
+					'menu_order'   => $order,
+				)
+			)
+		);
+		if ( $new_id && ! is_wp_error( $new_id ) ) {
+			wp_set_object_terms( $new_id, $f['cat'], 'faq_category' );
+			$done['created']++;
+		}
+		$order++;
+	}
+	return $done;
+}
 
 	register_post_type(
 		'enquiry',
