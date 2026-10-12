@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'FBA_VERSION', '0.2.0' );
+define( 'FBA_VERSION', '0.3.0' );
 
 /**
  * Theme setup: menus, title tag, thumbnails, HTML5, feed links, custom logo.
@@ -546,6 +546,13 @@ function fba_setup_notice() {
 			$missing[] = $slug;
 		}
 	}
+	if ( post_type_exists( 'programme' ) ) {
+		$c = wp_count_posts( 'programme' );
+		$prog_count = $c ? (int) $c->publish : 0;
+		if ( $prog_count < 16 ) {
+			$missing[] = 'programmes-catalogue(' . $prog_count . '/16)';
+		}
+	}
 	if ( ! $missing ) {
 		return;
 	}
@@ -565,7 +572,373 @@ function fba_setup_pages_handler() {
 		wp_die( esc_html__( 'Not allowed.', 'faithbridgeacademy' ) );
 	}
 	fba_seed_on_activate();
-	wp_safe_redirect( admin_url( 'edit.php?post_type=page' ) );
+	fba_seed_programmes();
+	flush_rewrite_rules();
+	wp_safe_redirect( admin_url( 'edit.php?post_type=programme' ) );
 	exit;
 }
 add_action( 'admin_post_fba_setup_pages', 'fba_setup_pages_handler' );
+
+/* -------------------------------------------------------------------------
+ * Programme catalogue (Phase 2): CPT + groups + fees/seats logic
+ * ------------------------------------------------------------------------- */
+
+/**
+ * The 16 client-locked programmes, in catalogue order.
+ *
+ * @return array
+ */
+function fba_programme_seed_data() {
+	return array(
+		array( 'slug' => 'bible-study', 'title' => 'Bible Study', 'group' => 'bible', 'desc' => 'Know God deeply through Scripture — memory verses, character lessons and practical faith, taught live with recordings for revision.' ),
+		array( 'slug' => 'english', 'title' => 'English', 'group' => 'languages', 'desc' => 'Read widely, write clearly and speak with poise — from phonics to essay writing, built on great books and godly speech.' ),
+		array( 'slug' => 'french', 'title' => 'French', 'group' => 'languages', 'desc' => 'A second language learned joyfully — speak, sing and shine en français, from first greetings to confident conversation.' ),
+		array( 'slug' => 'igbo', 'title' => 'Igbo', 'group' => 'languages', 'desc' => 'Asụsụ Igbo learned with pride — speak, read and write the language of home, guided by fluent facilitators.' ),
+		array( 'slug' => 'hausa', 'title' => 'Hausa', 'group' => 'languages', 'desc' => 'Hausa learned step by step — conversation, reading and writing, rooted in respect for culture and community.' ),
+		array( 'slug' => 'yoruba', 'title' => 'Yoruba', 'group' => 'languages', 'desc' => 'Èdè Yorùbá with confidence — proverbs, stories and sound structure, from first words to fluent expression.' ),
+		array( 'slug' => 'mathematics', 'title' => 'Mathematics', 'group' => 'others', 'desc' => 'Strong foundations and fearless problem-solving — from number basics to exam brilliance, no fear, just method.' ),
+		array( 'slug' => 'physics', 'title' => 'Physics', 'group' => 'others', 'desc' => "Understand how God's ordered world works — motion, energy and matter explained clearly with worked examples." ),
+		array( 'slug' => 'chemistry', 'title' => 'Chemistry', 'group' => 'others', 'desc' => 'Matter, reactions and the order in creation — theory plus diagrams that make abstract ideas stick.' ),
+		array( 'slug' => 'biology', 'title' => 'Biology', 'group' => 'others', 'desc' => 'Life in all its wonder — cells, systems and the environment, studied with awe and exam precision.' ),
+		array( 'slug' => 'government', 'title' => 'Government', 'group' => 'others', 'desc' => 'Power, citizenship and the Nigerian state — understand governance and your place in it.' ),
+		array( 'slug' => 'literature', 'title' => 'Literature', 'group' => 'others', 'desc' => 'Stories that shape the soul — prose, poetry and drama, read deeply and answered with insight.' ),
+		array( 'slug' => 'economics', 'title' => 'Economics', 'group' => 'others', 'desc' => 'Choice, markets and stewardship — grasp the principles that explain everyday life and exams alike.' ),
+		array( 'slug' => 'ict', 'title' => 'ICT', 'group' => 'others', 'desc' => 'Confident with computers — from computing basics to practical digital skills for school and life online.' ),
+		array( 'slug' => 'agriculture', 'title' => 'Agriculture', 'group' => 'others', 'desc' => 'The soil, the seed and the harvest — crop and animal husbandry taught plainly for school and real life.' ),
+		array( 'slug' => 'basic-science-technology', 'title' => 'Basic Science & Technology', 'group' => 'others', 'desc' => 'Curiosity first — explore living things, materials and simple machines the hands-on way.' ),
+	);
+}
+
+/**
+ * Register the programme CPT + group taxonomy. Never flushes here.
+ */
+function fba_register_programme_cpt() {
+	register_taxonomy(
+		'programme_group',
+		'programme',
+		array(
+			'labels'            => array(
+				'name'          => __( 'Programme Groups', 'faithbridgeacademy' ),
+				'singular_name' => __( 'Programme Group', 'faithbridgeacademy' ),
+			),
+			'public'            => true,
+			'show_ui'           => true,
+			'show_admin_column' => true,
+			'hierarchical'      => false,
+			'rewrite'           => array( 'slug' => 'programme-group', 'with_front' => false ),
+		)
+	);
+
+	register_post_type(
+		'programme',
+		array(
+			'labels'        => array(
+				'name'          => __( 'Programmes', 'faithbridgeacademy' ),
+				'singular_name' => __( 'Programme', 'faithbridgeacademy' ),
+				'add_new_item'  => __( 'Add New Programme', 'faithbridgeacademy' ),
+				'edit_item'     => __( 'Edit Programme', 'faithbridgeacademy' ),
+			),
+			'public'        => true,
+			'has_archive'   => 'programme',
+			'rewrite'       => array( 'slug' => 'programme', 'with_front' => false ),
+			'supports'      => array( 'title', 'editor', 'thumbnail', 'excerpt' ),
+			'menu_icon'     => 'dashicons-book',
+			'menu_position' => 21,
+			'show_in_rest'  => false,
+		)
+	);
+}
+add_action( 'init', 'fba_register_programme_cpt' );
+
+/**
+ * Seed groups + the 16 locked programmes. Never overwrites existing slugs.
+ *
+ * @return array created/skipped counts.
+ */
+function fba_seed_programmes() {
+	$done = array( 'groups' => 0, 'created' => 0, 'skipped' => 0 );
+
+	foreach ( array( 'bible' => 'Bible', 'languages' => 'Languages', 'others' => 'Others' ) as $slug => $name ) {
+		if ( ! term_exists( $slug, 'programme_group' ) ) {
+			$res = wp_insert_term( $name, 'programme_group', array( 'slug' => $slug ) );
+			if ( ! is_wp_error( $res ) ) {
+				$done['groups']++;
+			}
+		}
+	}
+
+	$order = 1;
+	foreach ( fba_programme_seed_data() as $p ) {
+		$existing = get_page_by_path( $p['slug'], OBJECT, 'programme' );
+		if ( $existing ) {
+			$done['skipped']++;
+			$order++;
+			continue;
+		}
+		$new_id = wp_insert_post(
+			wp_slash(
+				array(
+					'post_title'   => $p['title'],
+					'post_name'    => $p['slug'],
+					'post_content' => $p['desc'],
+					'post_excerpt' => $p['desc'],
+					'post_status'  => 'publish',
+					'post_type'    => 'programme',
+					'menu_order'   => $order,
+				)
+			)
+		);
+		if ( $new_id && ! is_wp_error( $new_id ) ) {
+			wp_set_object_terms( $new_id, $p['group'], 'programme_group' );
+			update_post_meta( $new_id, '_fba_status', 'open' );
+			$done['created']++;
+		}
+		$order++;
+	}
+
+	return $done;
+}
+
+/**
+ * Current session snapshot from settings.
+ *
+ * @return array
+ */
+function fba_current_session() {
+	return array(
+		'label'   => fba_get_option( 'session_label' ),
+		'period'  => fba_get_option( 'session_period' ),
+		'year'    => fba_get_option( 'session_year' ),
+		'quarter' => fba_get_option( 'session_quarter' ),
+	);
+}
+
+/**
+ * Effective fees for a programme ($), meta override falls back to settings.
+ *
+ * @param int $post_id Programme ID.
+ * @return array {group, one}
+ */
+function fba_programme_fees( $post_id ) {
+	$group = get_post_meta( $post_id, '_fba_fee_group', true );
+	$one   = get_post_meta( $post_id, '_fba_fee_one_to_one', true );
+	return array(
+		'group' => '' !== $group ? (float) $group : (float) fba_get_option( 'fee_group' ),
+		'one'   => '' !== $one ? (float) $one : (float) fba_get_option( 'fee_one_to_one' ),
+	);
+}
+
+/**
+ * Enrolment status: open|closed|coming.
+ *
+ * @param int $post_id Programme ID.
+ * @return string
+ */
+function fba_programme_status( $post_id ) {
+	$s = get_post_meta( $post_id, '_fba_status', true );
+	return in_array( $s, array( 'open', 'closed', 'coming' ), true ) ? $s : 'open';
+}
+
+/**
+ * Group enrolments banked for the current session (Phase 3 applications drive this).
+ *
+ * @param int $post_id Programme ID.
+ * @return int
+ */
+function fba_enrolled_group( $post_id ) {
+	return max( 0, (int) get_post_meta( $post_id, '_fba_enrolled_group', true ) );
+}
+
+/**
+ * Seats left in the group class for the current session.
+ *
+ * @param int $post_id Programme ID.
+ * @return int
+ */
+function fba_seats_left( $post_id ) {
+	$cap = (int) fba_get_option( 'group_capacity' );
+	if ( $cap <= 0 ) {
+		return 999;
+	}
+	return max( 0, $cap - fba_enrolled_group( $post_id ) );
+}
+
+/**
+ * Whether a programme currently accepts group applications.
+ *
+ * @param int $post_id Programme ID.
+ * @return bool
+ */
+function fba_programme_is_open( $post_id ) {
+	return 'open' === fba_programme_status( $post_id ) && fba_seats_left( $post_id ) > 0;
+}
+
+/**
+ * Published programme count (honest stats).
+ *
+ * @return int
+ */
+function fba_programme_count() {
+	$c = wp_count_posts( 'programme' );
+	return $c ? (int) $c->publish : 0;
+}
+
+/**
+ * Apply-page URL, optionally pre-selecting a programme (Phase 3 reads ?programme=).
+ *
+ * @param int $post_id Programme ID (0 = plain apply URL).
+ * @return string
+ */
+function fba_apply_url( $post_id = 0 ) {
+	$page = get_page_by_path( 'apply' );
+	$url  = $page ? get_permalink( $page ) : home_url( '/apply/' );
+	if ( $post_id ) {
+		$url = add_query_arg( 'programme', (int) $post_id, $url );
+	}
+	return $url;
+}
+
+/**
+ * Linked LMS course URL. LMS-agnostic: renders only when the course exists.
+ *
+ * @param int $post_id Programme ID.
+ * @return string
+ */
+function fba_programme_course_url( $post_id ) {
+	$course_id = (int) get_post_meta( $post_id, '_fba_course_id', true );
+	if ( ! $course_id ) {
+		return '';
+	}
+	if ( post_type_exists( 'mto-course' ) && 'mto-course' === get_post_type( $course_id ) ) {
+		return get_permalink( $course_id );
+	}
+	if ( 'publish' === get_post_status( $course_id ) ) {
+		return get_permalink( $course_id );
+	}
+	return '';
+}
+
+/**
+ * Thin-stroke icon (inline SVG) per programme group.
+ *
+ * @param int $post_id Programme ID.
+ * @return string
+ */
+function fba_programme_group_icon( $post_id ) {
+	$terms = get_the_terms( $post_id, 'programme_group' );
+	$slug  = ( $terms && ! is_wp_error( $terms ) ) ? $terms[0]->slug : 'others';
+	$paths = array(
+		'bible'     => '<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>',
+		'languages' => '<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>',
+		'others'    => '<circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>',
+	);
+	$inner = isset( $paths[ $slug ] ) ? $paths[ $slug ] : $paths['others'];
+	return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">' . $inner . '</svg>';
+}
+
+/**
+ * Programme details meta box.
+ */
+function fba_programme_metabox() {
+	add_meta_box( 'fba-programme-details', __( 'Programme Details', 'faithbridgeacademy' ), 'fba_programme_metabox_html', 'programme', 'normal', 'high' );
+}
+add_action( 'add_meta_boxes', 'fba_programme_metabox' );
+
+/**
+ * Meta box HTML.
+ *
+ * @param WP_Post $post Current post.
+ */
+function fba_programme_metabox_html( $post ) {
+	wp_nonce_field( 'fba_programme_meta', 'fba_programme_nonce' );
+	$fee_group = get_post_meta( $post->ID, '_fba_fee_group', true );
+	$fee_one   = get_post_meta( $post->ID, '_fba_fee_one_to_one', true );
+	$status    = fba_programme_status( $post->ID );
+	$enrolled  = fba_enrolled_group( $post->ID );
+	$course    = get_post_meta( $post->ID, '_fba_course_id', true );
+	$books     = get_post_meta( $post->ID, '_fba_books', true );
+	?>
+	<p><label for="fba-fee-group"><?php esc_html_e( 'Group fee ($) — blank uses settings default', 'faithbridgeacademy' ); ?></label><br>
+	<input type="number" min="0" step="1" id="fba-fee-group" name="fba_fee_group" value="<?php echo esc_attr( $fee_group ); ?>" class="small-text"></p>
+	<p><label for="fba-fee-one"><?php esc_html_e( 'One-on-one fee ($) — blank uses settings default', 'faithbridgeacademy' ); ?></label><br>
+	<input type="number" min="0" step="1" id="fba-fee-one" name="fba_fee_one" value="<?php echo esc_attr( $fee_one ); ?>" class="small-text"></p>
+	<p><label for="fba-status"><?php esc_html_e( 'Enrolment status', 'faithbridgeacademy' ); ?></label><br>
+	<select id="fba-status" name="fba_status">
+		<?php foreach ( array( 'open' => __( 'Open', 'faithbridgeacademy' ), 'coming' => __( 'Coming soon', 'faithbridgeacademy' ), 'closed' => __( 'Closed', 'faithbridgeacademy' ) ) as $val => $label ) : ?>
+			<option value="<?php echo esc_attr( $val ); ?>" <?php selected( $status, $val ); ?>><?php echo esc_html( $label ); ?></option>
+		<?php endforeach; ?>
+	</select></p>
+	<p><label for="fba-enrolled"><?php esc_html_e( 'Group enrolments banked (current session)', 'faithbridgeacademy' ); ?></label><br>
+	<input type="number" min="0" step="1" id="fba-enrolled" name="fba_enrolled_group" value="<?php echo esc_attr( $enrolled ); ?>" class="small-text"></p>
+	<p><label for="fba-course"><?php esc_html_e( 'Linked LMS course ID (optional)', 'faithbridgeacademy' ); ?></label><br>
+	<input type="number" min="0" step="1" id="fba-course" name="fba_course_id" value="<?php echo esc_attr( $course ); ?>" class="small-text"></p>
+	<p><label for="fba-books"><?php esc_html_e( 'Recommended books (one per line)', 'faithbridgeacademy' ); ?></label><br>
+	<textarea id="fba-books" name="fba_books" rows="3" class="large-text"><?php echo esc_textarea( $books ); ?></textarea></p>
+	<?php
+}
+
+/**
+ * Save programme meta.
+ *
+ * @param int $post_id Post ID.
+ */
+function fba_save_programme_meta( $post_id ) {
+	if ( ! isset( $_POST['fba_programme_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['fba_programme_nonce'] ) ), 'fba_programme_meta' ) ) {
+		return;
+	}
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+		return;
+	}
+	if ( ! current_user_can( 'edit_post', $post_id ) ) {
+		return;
+	}
+	if ( isset( $_POST['fba_fee_group'] ) ) {
+		update_post_meta( $post_id, '_fba_fee_group', preg_replace( '/[^0-9.]/', '', (string) wp_unslash( $_POST['fba_fee_group'] ) ) );
+	}
+	if ( isset( $_POST['fba_fee_one'] ) ) {
+		update_post_meta( $post_id, '_fba_fee_one_to_one', preg_replace( '/[^0-9.]/', '', (string) wp_unslash( $_POST['fba_fee_one'] ) ) );
+	}
+	if ( isset( $_POST['fba_status'] ) ) {
+		$s = sanitize_key( wp_unslash( $_POST['fba_status'] ) );
+		update_post_meta( $post_id, '_fba_status', in_array( $s, array( 'open', 'closed', 'coming' ), true ) ? $s : 'open' );
+	}
+	if ( isset( $_POST['fba_enrolled_group'] ) ) {
+		update_post_meta( $post_id, '_fba_enrolled_group', max( 0, (int) wp_unslash( $_POST['fba_enrolled_group'] ) ) );
+	}
+	if ( isset( $_POST['fba_course_id'] ) ) {
+		update_post_meta( $post_id, '_fba_course_id', max( 0, (int) wp_unslash( $_POST['fba_course_id'] ) ) );
+	}
+	if ( isset( $_POST['fba_books'] ) ) {
+		update_post_meta( $post_id, '_fba_books', sanitize_textarea_field( wp_unslash( $_POST['fba_books'] ) ) );
+	}
+}
+add_action( 'save_post_programme', 'fba_save_programme_meta' );
+
+/**
+ * Admin columns: fees + seats at a glance.
+ *
+ * @param array $cols Columns.
+ * @return array
+ */
+function fba_programme_columns( $cols ) {
+	$cols['fba_fees']  = __( 'Fees', 'faithbridgeacademy' );
+	$cols['fba_seats'] = __( 'Seats left', 'faithbridgeacademy' );
+	return $cols;
+}
+add_filter( 'manage_programme_posts_columns', 'fba_programme_columns' );
+
+/**
+ * Admin column values.
+ *
+ * @param string $col Column key.
+ * @param int    $post_id Post ID.
+ */
+function fba_programme_column_values( $col, $post_id ) {
+	if ( 'fba_fees' === $col ) {
+		$fees = fba_programme_fees( $post_id );
+		echo esc_html( '$' . number_format( $fees['group'] ) . ' / $' . number_format( $fees['one'] ) );
+	} elseif ( 'fba_seats' === $col ) {
+		echo esc_html( (string) fba_seats_left( $post_id ) );
+	}
+}
+add_action( 'manage_programme_posts_custom_column', 'fba_programme_column_values', 10, 2 );
