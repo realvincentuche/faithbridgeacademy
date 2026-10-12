@@ -459,7 +459,7 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 .fba-prose ul { padding-left: 1.4rem; }
 
 /* ---------- Inner banner ---------- */
-.fba-banner { position: relative; background: #101010; color: #fff; padding: calc(var(--fba-header-h) + 4rem) 0 3.5rem; overflow: clip; }
+.fba-banner { position: relative; background: #101010; color: #fff; padding: calc(var(--fba-header-h) + 12rem) 0 3.5rem; overflow: clip; }
 .fba-banner-bg { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 1; }
 .fba-banner-shade { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.45); }
 .fba-banner-green .fba-banner-shade { background: rgba(126, 122, 0, 0.45); }
@@ -517,6 +517,17 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 .fba-footer-bottom p { margin: 0; font-size: 0.86rem; }
 .fba-footer-bottom .menu { list-style: none; margin: 0; padding: 0; display: flex; gap: 1.2rem; }
 .fba-footer-bottom .menu a { font-size: 0.86rem; }
+.fba-fee-ngn { display: none; }
+body.fba-cur-ngn .fba-fee-ngn { display: inline; }
+body.fba-cur-ngn .fba-fee-usd { display: none; }
+.fba-currency { display: inline-flex; border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 999px; overflow: hidden; }
+.fba-currency, .fba-currency button { font-family: "Figtree", -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
+.fba-fee-ngn, .fba-check-fee { font-family: "Figtree", -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
+.fba-currency button {
+	border: 0; background: none; color: #cdd6e4; cursor: pointer;
+	font-weight: 800; font-size: 0.86rem; padding: 0.35rem 0.9rem;
+}
+.fba-currency button.active { background: var(--fba-green); color: var(--fba-deep); }
 .fba-powered { margin: 0; font-size: 0.86rem; text-align: center; }
 .fba-powered .ph { color: var(--fba-green); }
 .fba-powered a { font-weight: 700; }
@@ -710,7 +721,10 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 	.fba-life-video { padding: 2.5rem 0 4rem; }
 	.fba-play-btn { width: 76px; height: 76px; }
 	.fba-play-btn svg { width: 30px; height: 30px; }
+	.fba-header-inner { min-height: calc(var(--fba-header-h) - 1rem); }
+	.fba-brand img { height: 50px; }
 	.fba-mobile-cta { display: block; }
+	body.page-apply .fba-mobile-cta { display: none; }
 	.fba-totop { right: 1rem; bottom: 4.8rem; width: 46px; height: 46px; }
 	.fba-why-collage { min-height: 380px; }
 	.fba-why-main { height: 340px; }

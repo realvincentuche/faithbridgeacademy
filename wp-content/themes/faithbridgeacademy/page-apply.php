@@ -52,7 +52,7 @@ $sessions = fba_open_sessions();
 			</div>
 		<?php endif; ?>
 
-		<form class="fba-form reveal" id="fbaApplyForm" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" novalidate>
+		<form class="fba-form reveal" id="fbaApplyForm" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" data-fba-rate="<?php echo esc_attr( fba_get_option( 'exchange_rate' ) ); ?>" novalidate>
 			<input type="hidden" name="action" value="fba_apply">
 			<?php wp_nonce_field( 'fba_apply', 'fba_apply_nonce' ); ?>
 
@@ -111,8 +111,8 @@ $sessions = fba_open_sessions();
 							$open  = fba_programme_is_open( $pid );
 							?>
 							<label class="fba-check<?php echo $open ? '' : ' disabled'; ?>">
-								<input type="checkbox" name="fba_programmes[]" value="<?php echo esc_attr( (string) $pid ); ?>" data-group="<?php echo esc_attr( (string) $fees['group'] ); ?>" data-one="<?php echo esc_attr( (string) $fees['one'] ); ?>" data-title="<?php echo esc_attr( get_the_title() ); ?>"<?php echo $pre === $pid ? ' checked' : ''; ?><?php echo $open ? '' : ' disabled'; ?>>
-								<span><?php the_title(); ?> <small><?php echo esc_html( '$' . number_format( $fees['group'] ) . ' / $' . number_format( $fees['one'] ) ); ?><?php echo $open ? '' : ' · ' . __( 'full', 'faithbridgeacademy' ); ?></small></span>
+								<input type="checkbox" name="fba_programmes[]" value="<?php echo esc_attr( (string) $pid ); ?>" data-group="<?php echo esc_attr( (string) $fees['group'] ); ?>" data-one="<?php echo esc_attr( (string) $fees['one'] ); ?>" data-ngn-group="<?php echo esc_attr( (string) fba_usd_to_ngn( $fees['group'] ) ); ?>" data-ngn-one="<?php echo esc_attr( (string) fba_usd_to_ngn( $fees['one'] ) ); ?>" data-title="<?php echo esc_attr( get_the_title() ); ?>"<?php echo $pre === $pid ? ' checked' : ''; ?><?php echo $open ? '' : ' disabled'; ?>>
+								<span><?php the_title(); ?> <small class="fba-check-fee" data-fee-usd="<?php echo esc_attr( '$' . number_format( $fees['group'] ) . ' / $' . number_format( $fees['one'] ) ); ?>" data-fee-ngn="<?php echo esc_attr( '₦' . number_format( fba_usd_to_ngn( $fees['group'] ) ) . ' / ₦' . number_format( fba_usd_to_ngn( $fees['one'] ) ) ); ?>"><?php echo esc_html( '$' . number_format( $fees['group'] ) . ' / $' . number_format( $fees['one'] ) ); ?></small><?php echo $open ? '' : ' · ' . __( 'full', 'faithbridgeacademy' ); ?></span>
 							</label>
 							<?php
 						endwhile;
@@ -148,7 +148,7 @@ $sessions = fba_open_sessions();
 		<aside class="fba-side-card">
 			<h3><?php echo esc_html( fba_get_option( 'session_label' ) ); ?></h3>
 			<p><?php echo esc_html( fba_get_option( 'session_period' ) . ' · ' . fba_get_option( 'class_days' ) . ' · ' . fba_get_option( 'class_time' ) ); ?></p>
-			<p class="fba-fee-line"><?php echo esc_html( sprintf( __( 'Group: %s · One-on-one: %s', 'faithbridgeacademy' ), fba_fee_label( (float) fba_get_option( 'fee_group' ) ), fba_fee_label( (float) fba_get_option( 'fee_one_to_one' ) ) ) ); ?></p>
+			<p class="fba-fee-line"><?php esc_html_e( 'Group', 'faithbridgeacademy' ); ?>: <?php echo fba_fee_label( (float) fba_get_option( 'fee_group' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> · <?php esc_html_e( 'One-on-one', 'faithbridgeacademy' ); ?>: <?php echo fba_fee_label( (float) fba_get_option( 'fee_one_to_one' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
 			<p><?php esc_html_e( 'Bank transfer only. No receipt upload — we confirm every application personally.', 'faithbridgeacademy' ); ?></p>
 		</aside>
 	</div>

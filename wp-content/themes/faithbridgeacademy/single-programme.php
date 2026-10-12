@@ -54,11 +54,11 @@ while ( have_posts() ) :
 					</tr>
 					<tr>
 						<td><?php esc_html_e( 'Group class (15 learners or fewer)', 'faithbridgeacademy' ); ?></td>
-						<td><?php echo esc_html( fba_fee_label( $fees['group'] ) ); ?></td>
+						<td><?php echo fba_fee_label( $fees['group'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></td>
 					</tr>
 					<tr>
 						<td><?php esc_html_e( 'One-on-one', 'faithbridgeacademy' ); ?></td>
-						<td><?php echo esc_html( fba_fee_label( $fees['one'] ) ); ?></td>
+						<td><?php echo fba_fee_label( $fees['one'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></td>
 					</tr>
 				</table>
 				<p><small><?php echo esc_html( fba_get_option( 'fee_note' ) ); ?></small></p>
@@ -87,8 +87,8 @@ while ( have_posts() ) :
 
 			<aside class="fba-side-card">
 				<h3><?php esc_html_e( 'Apply for this programme', 'faithbridgeacademy' ); ?></h3>
-				<p class="fba-fee-line"><?php echo esc_html( __( 'Group', 'faithbridgeacademy' ) . ': ' . fba_fee_label( $fees['group'] ) ); ?></p>
-				<p class="fba-fee-line"><?php echo esc_html( __( 'One-on-one', 'faithbridgeacademy' ) . ': ' . fba_fee_label( $fees['one'] ) ); ?></p>
+				<p class="fba-fee-line"><?php esc_html_e( 'Group', 'faithbridgeacademy' ); ?>: <?php echo fba_fee_label( $fees['group'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
+				<p class="fba-fee-line"><?php esc_html_e( 'One-on-one', 'faithbridgeacademy' ); ?>: <?php echo fba_fee_label( $fees['one'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
 				<p><?php echo esc_html( $session['label'] . ' · ' . $session['period'] . ' · ' . fba_get_option( 'class_days' ) . ' · ' . fba_get_option( 'class_time' ) ); ?></p>
 				<?php if ( $open ) : ?>
 					<a class="fba-btn fba-btn-green" href="<?php echo esc_url( fba_apply_url( $pid ) ); ?>"><?php esc_html_e( 'Apply Now', 'faithbridgeacademy' ); ?> <i class="ph ph-arrow-right" aria-hidden="true"></i></a>

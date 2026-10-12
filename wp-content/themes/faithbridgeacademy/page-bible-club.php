@@ -41,7 +41,7 @@ get_template_part(
 			<?php wp_nonce_field( 'fba_club', 'fba_club_nonce' ); ?>
 			<fieldset class="fba-step active">
 				<legend><?php esc_html_e( 'Join the Bible Club', 'faithbridgeacademy' ); ?></legend>
-				<p class="fba-fee-line"><?php echo esc_html( sprintf( __( 'Annual fee: ₦%s (≈ $%s) · %d', 'faithbridgeacademy' ), number_format( $fee['ngn'] ), number_format( $fee['usd'], 2 ), $year ) ); ?></p>
+				<p class="fba-fee-line"><?php esc_html_e( 'Annual fee', 'faithbridgeacademy' ); ?>: <?php echo fba_fee_label( $fee['usd'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> · <?php echo esc_html( (string) $year ); ?></p>
 				<p><label for="fbaClubName"><?php esc_html_e( 'Full name', 'faithbridgeacademy' ); ?></label>
 				<input id="fbaClubName" name="fba_club_name" type="text" autocomplete="name" required></p>
 				<p><label for="fbaClubPhone"><?php esc_html_e( 'Phone / WhatsApp', 'faithbridgeacademy' ); ?></label>
@@ -55,7 +55,7 @@ get_template_part(
 		<aside class="fba-side-card">
 			<h3><?php esc_html_e( 'How membership works', 'faithbridgeacademy' ); ?></h3>
 			<p><?php echo esc_html( sprintf( __( 'One payment covers January to December %d. The club meets %s.', 'faithbridgeacademy' ), $year, fba_get_option( 'club_rhythm' ) ) ); ?></p>
-			<p class="fba-fee-line"><?php echo esc_html( sprintf( __( '₦%s (≈ $%s)', 'faithbridgeacademy' ), number_format( $fee['ngn'] ), number_format( $fee['usd'], 2 ) ) ); ?></p>
+			<p class="fba-fee-line"><?php echo fba_fee_label( $fee['usd'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
 			<div class="fba-bank-box">
 				<strong><?php esc_html_e( 'Pay by bank transfer', 'faithbridgeacademy' ); ?></strong>
 				<span><?php echo esc_html( fba_get_option( 'bank_name' ) . ' · ' . fba_get_option( 'bank_number' ) . ' · ' . fba_get_option( 'bank_bank' ) ); ?></span>

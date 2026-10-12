@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="<?php echo esc_url( get_template_directory_uri() . '/assets/images/logo.png' ); ?>">
 <?php wp_head(); ?>
 </head>
-<body <?php body_class( is_front_page() ? 'fba-has-slider' : 'fba-has-banner' ); ?>>
+<body <?php body_class( ( is_front_page() ? 'fba-has-slider' : 'fba-has-banner' ) . ( 'ngn' === fba_currency() ? ' fba-cur-ngn' : ' fba-cur-usd' ) ); ?>>
 <?php wp_body_open(); ?>
 
 <a class="fba-skip-link" href="#content"><?php esc_html_e( 'Skip to content', 'faithbridgeacademy' ); ?></a>

@@ -78,7 +78,6 @@ $testimonials = get_posts(
 				<li><a href="<?php echo esc_url( home_url( '/programmes/' ) ); ?>"><?php esc_html_e( 'Programmes', 'faithbridgeacademy' ); ?></a></li>
 				<li><a href="<?php echo esc_url( home_url( '/apply/' ) ); ?>"><?php esc_html_e( 'Admissions', 'faithbridgeacademy' ); ?></a></li>
 				<li><a href="<?php echo esc_url( home_url( '/bible-club/' ) ); ?>"><?php esc_html_e( 'Bible Club', 'faithbridgeacademy' ); ?></a></li>
-				<li><a href="<?php echo esc_url( home_url( '/fees/' ) ); ?>"><?php esc_html_e( 'Fees', 'faithbridgeacademy' ); ?></a></li>
 				<li><a href="<?php echo esc_url( home_url( '/faq/' ) ); ?>"><?php esc_html_e( 'FAQs', 'faithbridgeacademy' ); ?></a></li>
 				<li><a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>"><?php esc_html_e( 'Contact', 'faithbridgeacademy' ); ?></a></li>
 			</ul>
@@ -111,17 +110,10 @@ $testimonials = get_posts(
 	<div class="fba-footer-bottom">
 		<div class="fba-wrap fba-footer-bottom-inner">
 			<p>&copy; <?php echo esc_html( gmdate( 'Y' ) ); ?> <?php esc_html_e( 'FaithBridge Academy. All rights reserved.', 'faithbridgeacademy' ); ?></p>
-			<nav aria-label="<?php esc_attr_e( 'Footer', 'faithbridgeacademy' ); ?>">
-				<?php
-				wp_nav_menu(
-					array(
-						'theme_location' => 'footer',
-						'container'      => false,
-						'fallback_cb'    => 'fba_footer_fallback',
-					)
-				);
-				?>
-			</nav>
+			<div class="fba-currency" role="group" aria-label="<?php esc_attr_e( 'Currency', 'faithbridgeacademy' ); ?>">
+				<button type="button" data-cur="usd" class="<?php echo 'ngn' === fba_currency() ? '' : 'active'; ?>" aria-pressed="<?php echo 'ngn' === fba_currency() ? 'false' : 'true'; ?>">USD</button>
+				<button type="button" data-cur="ngn" class="<?php echo 'ngn' === fba_currency() ? 'active' : ''; ?>" aria-pressed="<?php echo 'ngn' === fba_currency() ? 'true' : 'false'; ?>">NGN</button>
+			</div>
 			<p class="fba-powered"><?php esc_html_e( 'powered with love', 'faithbridgeacademy' ); ?> <i class="ph ph-heart" aria-hidden="true"></i> <?php esc_html_e( 'by', 'faithbridgeacademy' ); ?> <a href="https://octravo.com" target="_blank" rel="noopener">octravo</a></p>
 		</div>
 	</div>

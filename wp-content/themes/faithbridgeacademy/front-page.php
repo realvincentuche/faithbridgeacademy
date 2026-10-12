@@ -30,7 +30,7 @@ $slides = array(
 		'title' => __( 'Bible Study That Shapes Character.<br><span class="hl">Rooted Deeply in Christ.</span>', 'faithbridgeacademy' ),
 		'text'  => __( 'Scripture, memory verses and practical faith —<br>taught live on Google Meet, with recordings.', 'faithbridgeacademy' ),
 		'cta1'  => array( __( 'Discover Bible Study', 'faithbridgeacademy' ), home_url( '/programmes/' ) ),
-		'cta2'  => array( __( 'View Fees', 'faithbridgeacademy' ), home_url( '/fees/' ) ),
+		'cta2'  => array( __( 'Apply Now', 'faithbridgeacademy' ), home_url( '/apply/' ) ),
 	),
 	array(
 		'align' => 'center',
@@ -48,7 +48,7 @@ $slides = array(
 		'title' => __( 'Seventeen Programmes, One Method.<br><span class="hl">Every Child Thrives Here.</span>', 'faithbridgeacademy' ),
 		'text'  => __( 'Bible Study, languages, sciences and more —<br>one intentional method, every single session.', 'faithbridgeacademy' ),
 		'cta1'  => array( __( 'View Programmes', 'faithbridgeacademy' ), home_url( '/programmes/' ) ),
-		'cta2'  => array( __( 'View Fees', 'faithbridgeacademy' ), home_url( '/fees/' ) ),
+		'cta2'  => array( __( 'Apply Now', 'faithbridgeacademy' ), home_url( '/apply/' ) ),
 	),
 	array(
 		'align' => 'center',
@@ -339,7 +339,6 @@ $slides = array(
 		</div>
 		<ul class="fba-quicklinks reveal">
 			<li><a href="<?php echo esc_url( home_url( '/apply/' ) ); ?>"><i class="ph ph-graduation-cap" aria-hidden="true"></i> <?php esc_html_e( 'Admissions & Application', 'faithbridgeacademy' ); ?> <i class="ph ph-arrow-right" aria-hidden="true"></i></a></li>
-			<li><a href="<?php echo esc_url( home_url( '/fees/' ) ); ?>"><i class="ph ph-star" aria-hidden="true"></i> <?php esc_html_e( 'Fees & Sessions', 'faithbridgeacademy' ); ?> <i class="ph ph-arrow-right" aria-hidden="true"></i></a></li>
 			<li><a href="<?php echo esc_url( home_url( '/programmes/' ) ); ?>"><i class="ph ph-book-open" aria-hidden="true"></i> <?php esc_html_e( 'All Programmes', 'faithbridgeacademy' ); ?> <i class="ph ph-arrow-right" aria-hidden="true"></i></a></li>
 			<li><a href="<?php echo esc_url( home_url( '/resources/' ) ); ?>"><i class="ph ph-globe-stand" aria-hidden="true"></i> <?php esc_html_e( 'Learning Resources', 'faithbridgeacademy' ); ?> <i class="ph ph-arrow-right" aria-hidden="true"></i></a></li>
 			<li><a href="<?php echo esc_url( home_url( '/bible-club/' ) ); ?>"><i class="ph ph-hands-praying" aria-hidden="true"></i> <?php esc_html_e( 'Bible Club', 'faithbridgeacademy' ); ?> <i class="ph ph-arrow-right" aria-hidden="true"></i></a></li>

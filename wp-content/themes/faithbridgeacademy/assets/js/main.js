@@ -238,6 +238,11 @@
 			dots.forEach( function ( d, k ) { d.classList.toggle( 'active', k <= idx ); } );
 			if ( idx === steps.length - 1 ) {
 				buildReview();
+			} else {
+				var box = document.getElementById( 'fbaReview' );
+				if ( box ) {
+					box.innerHTML = '';
+				}
 			}
 			applyForm.scrollIntoView( { behavior: 'smooth', block: 'start' } );
 		}
@@ -261,10 +266,29 @@
 			return ok;
 		}
 
+		var fbaRate = 1500;
+		var rateEl = document.querySelector( '[data-fba-rate]' );
+		if ( rateEl ) {
+			fbaRate = Number( rateEl.getAttribute( 'data-fba-rate' ) ) || 1500;
+		}
 		function money( n ) {
 			return '$' + Number( n ).toLocaleString( 'en-US' );
 		}
+		function moneyNgn( n ) {
+			var v = Math.ceil( Number( n ) * fbaRate / 1000 ) * 1000;
+			return '₦' + v.toLocaleString( 'en-US' );
+		}
+		function curIsNgn() {
+			return document.body.classList.contains( 'fba-cur-ngn' );
+		}
 
+		window.fbaRebuildReview = function () {
+			var box = document.getElementById( 'fbaReview' );
+			if ( ! box || ! box.innerHTML ) {
+				return;
+			}
+			buildReview();
+		};
 		function buildReview() {
 			var box = document.getElementById( 'fbaReview' );
 			if ( ! box ) {
@@ -276,6 +300,7 @@
 			};
 			var styleEl = applyForm.querySelector( 'input[name="fba_style"]:checked' );
 			var style = styleEl ? styleEl.value : 'group';
+			var ngn = curIsNgn();
 			var boxes = applyForm.querySelectorAll( 'input[name="fba_programmes[]"]:checked' );
 			var names = [];
 			var total = 0;
@@ -283,7 +308,7 @@
 				var fee = Number( 'one' === style ? b.getAttribute( 'data-one' ) : b.getAttribute( 'data-group' ) ) || 0;
 				total += fee;
 				var label = b.getAttribute( 'data-title' ) || b.value;
-				names.push( label + ' (' + money( fee ) + ')' );
+				names.push( label + ' (' + ( ngn ? moneyNgn( fee ) : money( fee ) ) + ')' );
 			} );
 			var sessSel = applyForm.querySelector( '#fbaSession' );
 			var sess = sessSel ? sessSel.options[sessSel.selectedIndex].text : '';
@@ -293,7 +318,7 @@
 				+ '<dt>Programmes</dt><dd>' + names.join( ', ' ) + '</dd>'
 				+ '<dt>Style</dt><dd>' + ( 'one' === style ? 'One-on-one' : 'Group class' ) + '</dd>'
 				+ '<dt>Session</dt><dd>' + sess + '</dd>'
-				+ '<dt>Total</dt><dd class="total">' + money( total ) + '</dd>'
+				+ '<dt>Total</dt><dd class="total">' + ( ngn ? moneyNgn( total ) : money( total ) ) + '</dd>'
 				+ '</dl>';
 		}
 
@@ -308,6 +333,15 @@
 			b.addEventListener( 'click', function () { show( idx - 1 ); } );
 		} );
 
+		applyForm.querySelectorAll( 'input[name="fba_programmes[]"], input[name="fba_style"]' ).forEach( function ( el ) {
+			el.addEventListener( 'change', function () {
+				var box = document.getElementById( 'fbaReview' );
+				if ( box && box.innerHTML ) {
+					buildReview();
+				}
+			} );
+		} );
+
 		var kindRadios = applyForm.querySelectorAll( 'input[name="fba_kind"]' );
 		var sponsorRow = applyForm.querySelector( '.fba-sponsor-only' );
 		kindRadios.forEach( function ( r ) {
@@ -319,6 +353,30 @@
 			} );
 		} );
 	}
+
+	/* Currency switcher: usd|ngn, persisted in a cookie. */
+	var curBtns = document.querySelectorAll( '.fba-currency button' );
+	function setCurrency( cur ) {
+		document.body.classList.toggle( 'fba-cur-ngn', 'ngn' === cur );
+		document.body.classList.toggle( 'fba-cur-usd', 'ngn' !== cur );
+		curBtns.forEach( function ( b ) {
+			var on = b.getAttribute( 'data-cur' ) === cur;
+			b.classList.toggle( 'active', on );
+			b.setAttribute( 'aria-pressed', on ? 'true' : 'false' );
+		} );
+		document.querySelectorAll( '.fba-check-fee' ).forEach( function ( el ) {
+			el.textContent = 'ngn' === cur ? el.getAttribute( 'data-fee-ngn' ) : el.getAttribute( 'data-fee-usd' );
+		} );
+		if ( 'function' === typeof window.fbaRebuildReview ) {
+			window.fbaRebuildReview();
+		}
+		try {
+			document.cookie = 'fba_currency=' + cur + '; path=/; max-age=31536000; SameSite=Lax';
+		} catch ( e ) {}
+	}
+	curBtns.forEach( function ( b ) {
+		b.addEventListener( 'click', function () { setCurrency( b.getAttribute( 'data-cur' ) ); } );
+	} );
 
 	/* FAQ accordion. */
 	document.querySelectorAll( '.fba-faq-item' ).forEach( function ( item ) {

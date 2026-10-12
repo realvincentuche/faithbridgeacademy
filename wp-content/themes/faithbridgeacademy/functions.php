@@ -114,7 +114,7 @@ function fba_option_defaults() {
 		'exchange_rate'    => '1500',
 		'fee_group'        => '200',
 		'fee_one_to_one'   => '300',
-		'fee_note'         => 'Programme fees are charged per session (per quarter). Naira equivalents are calculated from the dollar price at the current exchange rate, rounded up to the nearest ₦1,000.',
+		'fee_note'         => 'Programme fees are charged per session (per quarter). Switch currency in the footer to see naira equivalents, calculated at the current exchange rate and rounded up to the nearest ₦1,000.',
 		'bank_name'        => 'Faithbridgeacademy Limited',
 		'bank_number'      => '1309301999',
 		'bank_bank'        => 'Providus Bank',
@@ -195,14 +195,48 @@ function fba_usd_to_ngn( $usd ) {
 }
 
 /**
- * Format a dollar fee as "$200 / ₦300,000".
+ * Visitpr currency: usd|ngn. Cookie wins, default usd.
+ *
+ * @return string
+ */
+function fba_currency() {
+	$c = isset( $_COOKIE['fba_currency'] ) ? sanitize_key( wp_unslash( $_COOKIE['fba_currency'] ) ) : '';
+	return 'ngn' === $c ? 'ngn' : 'usd';
+}
+
+/**
+ * Fee HTML with both currencies; CSS shows one based on body class,
+ * JS toggles instantly, server default is dollar-only.
  *
  * @param float $usd Dollar amount.
  * @return string
  */
 function fba_fee_label( $usd ) {
 	$usd = (float) $usd;
-	return '$' . number_format( $usd ) . ' / ₦' . number_format( fba_usd_to_ngn( $usd ) );
+	$ngn = fba_usd_to_ngn( $usd );
+	return '<span class="fba-fee" data-usd="$'
+		. esc_attr( number_format( $usd ) )
+		. '" data-ngn="₦'
+		. esc_attr( number_format( $ngn ) )
+		. '"><span class="fba-fee-usd">$'
+		. esc_html( number_format( $usd ) )
+		. '</span><span class="fba-fee-ngn">₦'
+		. esc_html( number_format( $ngn ) )
+		. '</span></span>';
+}
+
+/**
+ * Plain-text fee in the visitor currency (emails, review box, aria).
+ *
+ * @param float $usd Dollar amount.
+ * @return string
+ */
+function fba_fee_text( $usd ) {
+	$usd = (float) $usd;
+	if ( 'ngn' === fba_currency() ) {
+		return '₦' . number_format( fba_usd_to_ngn( $usd ) );
+	}
+	return '$' . number_format( $usd );
 }
 
 /* -------------------------------------------------------------------------
@@ -387,7 +421,6 @@ function fba_menu_fallback() {
 	echo '<li class="menu-item-has-children"><a href="' . esc_url( home_url( '/apply/' ) ) . '" aria-haspopup="true" aria-expanded="false">' . esc_html__( 'Admissions', 'faithbridgeacademy' ) . '</a>';
 	echo '<ul class="sub-menu">';
 	echo '<li><a href="' . esc_url( home_url( '/apply/' ) ) . '">' . esc_html__( 'How to Apply', 'faithbridgeacademy' ) . '</a></li>';
-	echo '<li><a href="' . esc_url( home_url( '/fees/' ) ) . '">' . esc_html__( 'Fees & Sessions', 'faithbridgeacademy' ) . '</a></li>';
 	echo '<li><a href="' . esc_url( home_url( '/faq/' ) ) . '">' . esc_html__( 'FAQs', 'faithbridgeacademy' ) . '</a></li>';
 	echo '</ul></li>';
 	echo '<li><a href="' . esc_url( home_url( '/bible-club/' ) ) . '">' . esc_html__( 'Bible Club', 'faithbridgeacademy' ) . '</a></li>';
@@ -403,7 +436,6 @@ function fba_menu_fallback() {
 function fba_footer_fallback() {
 	echo '<ul class="menu">';
 	echo '<li><a href="' . esc_url( home_url( '/apply/' ) ) . '">' . esc_html__( 'Apply Now', 'faithbridgeacademy' ) . '</a></li>';
-	echo '<li><a href="' . esc_url( home_url( '/fees/' ) ) . '">' . esc_html__( 'Fees', 'faithbridgeacademy' ) . '</a></li>';
 	echo '<li><a href="' . esc_url( home_url( '/faq/' ) ) . '">' . esc_html__( 'FAQ', 'faithbridgeacademy' ) . '</a></li>';
 	echo '<li><a href="' . esc_url( home_url( '/contact/' ) ) . '">' . esc_html__( 'Contact', 'faithbridgeacademy' ) . '</a></li>';
 	echo '</ul>';
