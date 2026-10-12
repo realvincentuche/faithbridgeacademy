@@ -490,6 +490,8 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 .fba-footer a { color: #cdd6e4; text-decoration: none; }
 .fba-footer a:hover { color: var(--fba-green); }
 .fba-footer-contact { gap: 0.7rem; }
+.fba-footer-contact li { display: flex; align-items: flex-start; gap: 0.6rem; }
+.fba-footer-contact .ph { color: var(--fba-green); font-size: 1.05rem; margin-top: 0.15rem; flex-shrink: 0; }
 .fba-footer-news p { font-size: 0.9rem; color: #aebdce; margin: 0 0 1rem; }
 .fba-footer-news-form { display: grid; gap: 0.7rem; }
 .fba-footer-news-form input {
@@ -605,6 +607,23 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 .fba-step.active { display: block; }
 .fba-step legend { font-family: var(--fba-font-display); font-weight: 700; font-size: 1.5rem; color: var(--fba-navy); margin-bottom: 1.2rem; padding: 0; }
 .fba-form label, .fba-form .fba-label { display: block; font-weight: 700; color: var(--fba-navy); margin-bottom: 0.4rem; }
+.fba-form textarea {
+	width: 100%; padding: 0.8rem 1rem; border: 1.5px solid var(--fba-line); border-radius: 10px;
+	font: inherit; color: var(--fba-ink); background: #fff; margin-bottom: 1.1rem; resize: vertical;
+}
+.fba-form textarea:focus { outline: 2px solid var(--fba-green); border-color: var(--fba-green); }
+.wpcf7 form { background: var(--fba-paper); border: 1px solid var(--fba-line); border-radius: 18px; padding: 2.2rem; box-shadow: var(--fba-shadow-sm); }
+.wpcf7 label { display: block; font-weight: 700; color: var(--fba-navy); margin-bottom: 0.4rem; }
+.wpcf7 input[type="text"], .wpcf7 input[type="tel"], .wpcf7 input[type="email"], .wpcf7 textarea, .wpcf7 select {
+	width: 100%; padding: 0.8rem 1rem; border: 1.5px solid var(--fba-line); border-radius: 10px;
+	font: inherit; color: var(--fba-ink); background: #fff; margin-bottom: 1.1rem;
+}
+.wpcf7 input[type="submit"] {
+	display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.85rem 1.7rem; border-radius: 10px;
+	font-weight: 700; font-size: 0.98rem; border: 2px solid transparent; cursor: pointer;
+	background: var(--fba-green); color: var(--fba-deep);
+}
+.wpcf7-response-output { border-radius: 10px; }
 .fba-form input[type="text"], .fba-form input[type="tel"], .fba-form input[type="email"], .fba-form input[type="date"], .fba-form select {
 	width: 100%; padding: 0.8rem 1rem; border: 1.5px solid var(--fba-line); border-radius: 10px;
 	font: inherit; color: var(--fba-ink); background: #fff; margin-bottom: 1.1rem;
@@ -635,7 +654,6 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 	padding: 1.1rem 1.3rem; font: inherit; font-weight: 800; color: var(--fba-navy);
 }
 .fba-faq-q span { font-size: 1.4rem; line-height: 1; color: var(--fba-green-deep); flex-shrink: 0; }
-.fba-faq-item.open .fba-faq-q span { transform: rotate(45deg); }
 .fba-faq-a { padding: 0 1.3rem 1.2rem; }
 .fba-faq-a[hidden] { display: none; }
 .fba-faq-a p { margin: 0; color: var(--fba-muted); }

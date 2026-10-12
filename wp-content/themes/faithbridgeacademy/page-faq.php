@@ -18,15 +18,34 @@ get_template_part(
 	)
 );
 
-$faqs = array(
-	array( __( 'When do classes hold?', 'faithbridgeacademy' ), fba_get_option( 'class_days' ) . ' · ' . fba_get_option( 'class_time' ) . ' (' . fba_get_option( 'timezone' ) . '). ' . fba_get_option( 'format_note' ) . '.' ),
-	array( __( 'How much are the fees?', 'faithbridgeacademy' ), sprintf( __( 'Group classes: %s per session. One-on-one: %s per session. See the Fees page for naira equivalents.', 'faithbridgeacademy' ), fba_fee_label( (float) fba_get_option( 'fee_group' ) ), fba_fee_label( (float) fba_get_option( 'fee_one_to_one' ) ) ) ),
-	array( __( 'How do I pay?', 'faithbridgeacademy' ), sprintf( __( 'By bank transfer to %s · %s · %s. We confirm every application personally — no receipt upload needed.', 'faithbridgeacademy' ), fba_get_option( 'bank_name' ), fba_get_option( 'bank_number' ), fba_get_option( 'bank_bank' ) ) ),
-	array( __( 'How many children can join a group class?', 'faithbridgeacademy' ), sprintf( __( 'At most %s learners per group class. One-on-one places are uncapped.', 'faithbridgeacademy' ), fba_get_option( 'group_capacity' ) ) ),
-	array( __( 'Are class recordings available?', 'faithbridgeacademy' ), fba_get_option( 'recordings_note' ) ),
-	array( __( 'What is the Bible Club?', 'faithbridgeacademy' ), sprintf( __( 'A separate annual membership (₦%s) for monthly gatherings — worship, Scripture memory and service, January to December.', 'faithbridgeacademy' ), number_format( (float) fba_get_option( 'club_fee' ) ) ) ),
-	array( __( 'Which programmes do you offer?', 'faithbridgeacademy' ), __( 'Bible Study, English, French, Igbo, Hausa, Yoruba, Mathematics, Physics, Chemistry, Biology, Government, Literature, Economics, ICT, Agriculture and Basic Science & Technology.', 'faithbridgeacademy' ) ),
+$faqs = array();
+$faq_loop = new WP_Query(
+	array(
+		'post_type'      => 'faq',
+		'post_status'    => 'publish',
+		'posts_per_page' => -1,
+		'orderby'        => 'menu_order',
+		'order'          => 'ASC',
+	)
 );
+if ( $faq_loop->have_posts() ) {
+	while ( $faq_loop->have_posts() ) {
+		$faq_loop->the_post();
+		$faqs[] = array( get_the_title(), get_the_content() );
+	}
+	wp_reset_postdata();
+}
+if ( ! $faqs ) {
+	$faqs = array(
+		array( __( 'When do classes hold?', 'faithbridgeacademy' ), fba_get_option( 'class_days' ) . ' · ' . fba_get_option( 'class_time' ) . ' (' . fba_get_option( 'timezone' ) . '). ' . fba_get_option( 'format_note' ) . '.' ),
+		array( __( 'How much are the fees?', 'faithbridgeacademy' ), sprintf( __( 'Group classes: %s per session. One-on-one: %s per session. See the Fees page for naira equivalents.', 'faithbridgeacademy' ), fba_fee_label( (float) fba_get_option( 'fee_group' ) ), fba_fee_label( (float) fba_get_option( 'fee_one_to_one' ) ) ) ),
+		array( __( 'How do I pay?', 'faithbridgeacademy' ), sprintf( __( 'By bank transfer to %s · %s · %s. We confirm every application personally — no receipt upload needed.', 'faithbridgeacademy' ), fba_get_option( 'bank_name' ), fba_get_option( 'bank_number' ), fba_get_option( 'bank_bank' ) ) ),
+		array( __( 'How many children can join a group class?', 'faithbridgeacademy' ), sprintf( __( 'At most %s learners per group class. One-on-one places are uncapped.', 'faithbridgeacademy' ), fba_get_option( 'group_capacity' ) ) ),
+		array( __( 'Are class recordings available?', 'faithbridgeacademy' ), fba_get_option( 'recordings_note' ) ),
+		array( __( 'What is the Bible Club?', 'faithbridgeacademy' ), sprintf( __( 'A separate annual membership (₦%s) for monthly gatherings — worship, Scripture memory and service, January to December.', 'faithbridgeacademy' ), number_format( (float) fba_get_option( 'club_fee' ) ) ) ),
+		array( __( 'Which programmes do you offer?', 'faithbridgeacademy' ), __( 'Bible Study, English, French, Igbo, Hausa, Yoruba, Mathematics, Physics, Chemistry, Biology, Government, Literature, Economics, ICT, Agriculture and Basic Science & Technology.', 'faithbridgeacademy' ) ),
+	);
+}
 ?>
 
 <div class="fba-content">
@@ -39,7 +58,7 @@ $faqs = array(
 						<span aria-hidden="true">+</span>
 					</button>
 					<div class="fba-faq-a"<?php echo 0 === $i ? '' : ' hidden'; ?>>
-						<p><?php echo esc_html( $f[1] ); ?></p>
+						<p><?php echo wp_kses_post( $f[1] ); ?></p>
 					</div>
 				</div>
 			<?php endforeach; ?>

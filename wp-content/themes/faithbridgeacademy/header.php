@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="<?php bloginfo( 'description' ); ?>">
 <?php if ( is_front_page() ) : ?>
-<link rel="preload" as="image" fetchpriority="high" href="<?php echo esc_url( get_template_directory_uri() . '/assets/images/hero-1.jpg' ); ?>">
+<link rel="preload" as="image" fetchpriority="high" href="<?php echo esc_url( get_template_directory_uri() . '/assets/images/slide-1.jpg' ); ?>">
 <?php endif; ?>
-<link rel="icon" type="image/svg+xml" href="<?php echo esc_url( get_template_directory_uri() . '/assets/images/favicon.svg' ); ?>">
+<link rel="icon" type="image/png" href="<?php echo esc_url( get_template_directory_uri() . '/assets/images/logo.png' ); ?>">
 <link rel="apple-touch-icon" href="<?php echo esc_url( get_template_directory_uri() . '/assets/images/logo.png' ); ?>">
 <?php wp_head(); ?>
 </head>

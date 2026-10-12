@@ -86,10 +86,10 @@ $testimonials = get_posts(
 		<div class="fba-footer-col">
 			<h3><?php esc_html_e( 'Contact Us', 'faithbridgeacademy' ); ?></h3>
 			<ul class="fba-footer-contact">
-				<li><a href="mailto:<?php echo esc_attr( fba_get_option( 'email' ) ); ?>"><?php echo esc_html( fba_get_option( 'email' ) ); ?></a></li>
-				<li><a href="<?php echo esc_url( fba_get_option( 'whatsapp' ) ); ?>"><?php echo esc_html( fba_get_option( 'phone' ) ); ?></a></li>
-				<li><span><?php echo esc_html( fba_get_option( 'format_note' ) ); ?></span></li>
-				<li><span><?php echo esc_html( fba_get_option( 'online_note' ) ); ?></span></li>
+				<li><i class="ph ph-envelope-simple" aria-hidden="true"></i><a href="mailto:<?php echo esc_attr( fba_get_option( 'email' ) ); ?>"><?php echo esc_html( fba_get_option( 'email' ) ); ?></a></li>
+				<li><i class="ph ph-phone" aria-hidden="true"></i><a href="<?php echo esc_url( fba_get_option( 'whatsapp' ) ); ?>"><?php echo esc_html( fba_get_option( 'phone' ) ); ?></a></li>
+				<li><i class="ph ph-video-camera" aria-hidden="true"></i><span><?php echo esc_html( fba_get_option( 'format_note' ) ); ?></span></li>
+				<li><i class="ph ph-globe" aria-hidden="true"></i><span><?php echo esc_html( fba_get_option( 'online_note' ) ); ?></span></li>
 			</ul>
 		</div>
 		<div class="fba-footer-col fba-footer-news">

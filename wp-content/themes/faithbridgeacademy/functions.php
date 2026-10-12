@@ -130,7 +130,7 @@ function fba_option_defaults() {
 		'followup_days'    => '7',
 		'max_wards'        => '0', // 0 = unlimited.
 		// Contact.
-		'email'            => 'faithbridgeacad@gmail.com',
+		'email'            => 'info@faithbridgeacademy.com',
 		'phone'            => '+234 808 583 4096',
 		'whatsapp'         => 'https://wa.me/2348085834096',
 		'online_note'      => 'Available to families globally where the programme permits.',
@@ -1006,6 +1006,42 @@ function fba_register_phase3_cpts() {
 	);
 
 	register_post_type(
+		'faq',
+		array(
+			'labels'        => array(
+				'name'          => __( 'FAQs', 'faithbridgeacademy' ),
+				'singular_name' => __( 'FAQ', 'faithbridgeacademy' ),
+			),
+			'public'        => false,
+			'show_ui'       => true,
+			'show_in_menu'  => true,
+			'supports'      => array( 'title', 'editor', 'page-attributes' ),
+			'menu_icon'     => 'dashicons-editor-help',
+			'menu_position' => 25,
+			'capabilities'  => array( 'create_posts' => 'manage_options' ),
+			'map_meta_cap'  => true,
+		)
+	);
+
+	register_post_type(
+		'enquiry',
+		array(
+			'labels'        => array(
+				'name'          => __( 'Enquiries', 'faithbridgeacademy' ),
+				'singular_name' => __( 'Enquiry', 'faithbridgeacademy' ),
+			),
+			'public'        => false,
+			'show_ui'       => true,
+			'show_in_menu'  => true,
+			'supports'      => array( 'title', 'editor' ),
+			'menu_icon'     => 'dashicons-email-alt',
+			'menu_position' => 24,
+			'capabilities'  => array( 'create_posts' => 'manage_options' ),
+			'map_meta_cap'  => true,
+		)
+	);
+
+	register_post_type(
 		'club_member',
 		array(
 			'labels'        => array(
@@ -1476,6 +1512,41 @@ function fba_save_club_meta( $post_id ) {
 	}
 }
 add_action( 'save_post_club_member', 'fba_save_club_meta' );
+
+/**
+ * Enquiry handler (public, nonce-protected). Stores private record for admin.
+ */
+function fba_enquiry_handler() {
+	if ( ! isset( $_POST['fba_enquiry_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['fba_enquiry_nonce'] ) ), 'fba_enquiry' ) ) {
+		wp_safe_redirect( add_query_arg( 'sent', 'error', home_url( '/contact/' ) ) );
+		exit;
+	}
+	$name    = isset( $_POST['fba_enquiry_name'] ) ? sanitize_text_field( wp_unslash( $_POST['fba_enquiry_name'] ) ) : '';
+	$phone   = isset( $_POST['fba_enquiry_phone'] ) ? preg_replace( '/[^0-9+]/', '', (string) wp_unslash( $_POST['fba_enquiry_phone'] ) ) : '';
+	$email   = isset( $_POST['fba_enquiry_email'] ) ? sanitize_email( wp_unslash( $_POST['fba_enquiry_email'] ) ) : '';
+	$message = isset( $_POST['fba_enquiry_message'] ) ? sanitize_textarea_field( wp_unslash( $_POST['fba_enquiry_message'] ) ) : '';
+	if ( '' === $name || '' === $message || ( '' === $phone && '' === $email ) ) {
+		wp_safe_redirect( add_query_arg( 'sent', 'missing', home_url( '/contact/' ) ) );
+		exit;
+	}
+	$eid = wp_insert_post(
+		array(
+			'post_title'   => $name . ' — ' . gmdate( 'Y-m-d H:i' ),
+			'post_content' => $message,
+			'post_status'  => 'private',
+			'post_type'    => 'enquiry',
+		)
+	);
+	if ( $eid && ! is_wp_error( $eid ) ) {
+		update_post_meta( $eid, '_fba_enquiry_name', $name );
+		update_post_meta( $eid, '_fba_enquiry_phone', $phone );
+		update_post_meta( $eid, '_fba_enquiry_email', $email );
+	}
+	wp_safe_redirect( add_query_arg( 'sent', 'done', home_url( '/contact/' ) ) );
+	exit;
+}
+add_action( 'admin_post_nopriv_fba_enquiry', 'fba_enquiry_handler' );
+add_action( 'admin_post_fba_enquiry', 'fba_enquiry_handler' );
 
 /**
  * Club member admin columns.

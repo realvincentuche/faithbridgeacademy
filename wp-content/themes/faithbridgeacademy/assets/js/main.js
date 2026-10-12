@@ -330,6 +330,10 @@
 		btn.addEventListener( 'click', function () {
 			var open = item.classList.toggle( 'open' );
 			btn.setAttribute( 'aria-expanded', open ? 'true' : 'false' );
+			var glyph = btn.querySelector( 'span[aria-hidden="true"]' );
+			if ( glyph ) {
+				glyph.textContent = open ? '–' : '+';
+			}
 			if ( open ) {
 				panel.removeAttribute( 'hidden' );
 			} else {
