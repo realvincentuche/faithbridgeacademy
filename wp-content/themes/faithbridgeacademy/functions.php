@@ -857,19 +857,30 @@ function fba_masteriyo_enrol( $user_id, $course_id ) {
 /**
  * Thin-stroke icon (inline SVG) per programme group.
  *
+ * @param string $slug Group slug: bible|languages|others|all.
+ * @return string
+ */
+function fba_group_icon( $slug = 'others' ) {
+	$paths = array(
+		'all'       => '<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
+		'bible'     => '<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>',
+		'languages' => '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+		'others'    => '<path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/><line x1="22" y1="10" x2="22" y2="16"/>',
+	);
+	$inner = isset( $paths[ $slug ] ) ? $paths[ $slug ] : $paths['others'];
+	return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">' . $inner . '</svg>';
+}
+
+/**
+ * Thin-stroke icon (inline SVG) for a programme's group.
+ *
  * @param int $post_id Programme ID.
  * @return string
  */
 function fba_programme_group_icon( $post_id ) {
 	$terms = get_the_terms( $post_id, 'programme_group' );
 	$slug  = ( $terms && ! is_wp_error( $terms ) ) ? $terms[0]->slug : 'others';
-	$paths = array(
-		'bible'     => '<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>',
-		'languages' => '<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>',
-		'others'    => '<circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>',
-	);
-	$inner = isset( $paths[ $slug ] ) ? $paths[ $slug ] : $paths['others'];
-	return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">' . $inner . '</svg>';
+	return fba_group_icon( $slug );
 }
 
 /**
@@ -911,6 +922,15 @@ function fba_programme_metabox_html( $post ) {
 	<p><label for="fba-books"><?php esc_html_e( 'Recommended books (one per line)', 'faithbridgeacademy' ); ?></label><br>
 	<textarea id="fba-books" name="fba_books" rows="3" class="large-text"><?php echo esc_textarea( $books ); ?></textarea></p>
 	<?php
+	$cover_id  = (int) get_post_meta( $post->ID, '_fba_cover_id', true );
+	$cover_url = $cover_id ? wp_get_attachment_image_url( $cover_id, 'medium' ) : '';
+	?>
+	<p><label><?php esc_html_e( 'Cover image (used as the detail page banner)', 'faithbridgeacademy' ); ?></label><br>
+	<span id="fba-cover-preview"><?php echo $cover_url ? '<img src="' . esc_url( $cover_url ) . '" style="max-width:220px;height:auto;display:block;margin-bottom:0.5rem">' : ''; ?></span>
+	<input type="hidden" id="fba-cover-id" name="fba_cover_id" value="<?php echo esc_attr( (string) $cover_id ); ?>">
+	<button type="button" class="button" id="fba-cover-pick"><?php esc_html_e( 'Choose cover image', 'faithbridgeacademy' ); ?></button>
+	<button type="button" class="button-link" id="fba-cover-clear"<?php echo $cover_id ? '' : ' hidden'; ?>><?php esc_html_e( 'Remove', 'faithbridgeacademy' ); ?></button></p>
+	<?php
 }
 
 /**
@@ -947,8 +967,32 @@ function fba_save_programme_meta( $post_id ) {
 	if ( isset( $_POST['fba_books'] ) ) {
 		update_post_meta( $post_id, '_fba_books', sanitize_textarea_field( wp_unslash( $_POST['fba_books'] ) ) );
 	}
+	if ( isset( $_POST['fba_cover_id'] ) ) {
+		update_post_meta( $post_id, '_fba_cover_id', max( 0, (int) wp_unslash( $_POST['fba_cover_id'] ) ) );
+	}
 }
 add_action( 'save_post_programme', 'fba_save_programme_meta' );
+
+/**
+ * Media picker for the programme cover image.
+ *
+ * @param string $hook Current admin page hook.
+ */
+function fba_cover_media_assets( $hook ) {
+	if ( 'post.php' !== $hook && 'post-new.php' !== $hook ) {
+		return;
+	}
+	$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+	if ( ! $screen || 'programme' !== $screen->post_type ) {
+		return;
+	}
+	wp_enqueue_media();
+	wp_add_inline_script(
+		'media-editor',
+		"jQuery(function($){var f=wp.media({title:'Choose cover image',multiple:false,library:{type:'image'}});$('#fba-cover-pick').on('click',function(e){e.preventDefault();f.open();});f.on('select',function(){var a=f.state().get('selection').first().toJSON();$('#fba-cover-id').val(a.id);$('#fba-cover-preview').html('<img src=\"'+a.sizes.medium.url+'\" style=\"max-width:220px;height:auto;display:block;margin-bottom:0.5rem\">');$('#fba-cover-clear').removeAttr('hidden');});$('#fba-cover-clear').on('click',function(e){e.preventDefault();$('#fba-cover-id').val('');$('#fba-cover-preview').empty();$(this).attr('hidden','');});});"
+	);
+}
+add_action( 'admin_enqueue_scripts', 'fba_cover_media_assets' );
 
 /**
  * Admin columns: fees + seats at a glance.

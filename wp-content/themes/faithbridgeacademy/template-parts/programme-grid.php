@@ -41,10 +41,10 @@ $loop = new WP_Query( $query_args );
 ?>
 
 <ul class="fba-cat-filter reveal">
-	<li><a class="<?php echo '' === $active ? 'active' : ''; ?>" href="<?php echo esc_url( get_permalink( get_page_by_path( 'programmes' ) ) ); ?>"><?php esc_html_e( 'All', 'faithbridgeacademy' ); ?> <span class="count"><?php echo esc_html( (string) $total ); ?></span></a></li>
+	<li><a class="<?php echo '' === $active ? 'active' : ''; ?>" href="<?php echo esc_url( get_permalink( get_page_by_path( 'programmes' ) ) ); ?>"><span class="fba-filter-icon" aria-hidden="true"><?php echo fba_group_icon( 'all' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span><?php esc_html_e( 'All', 'faithbridgeacademy' ); ?> <span class="count"><?php echo esc_html( (string) $total ); ?></span></a></li>
 	<?php if ( $groups && ! is_wp_error( $groups ) ) : ?>
 		<?php foreach ( $groups as $g ) : ?>
-			<li><a class="<?php echo $active === $g->slug ? 'active' : ''; ?>" href="<?php echo esc_url( add_query_arg( 'group', $g->slug, get_permalink( get_page_by_path( 'programmes' ) ) ) ); ?>"><?php echo esc_html( $g->name ); ?> <span class="count"><?php echo esc_html( (string) $g->count ); ?></span></a></li>
+			<li><a class="<?php echo $active === $g->slug ? 'active' : ''; ?>" href="<?php echo esc_url( add_query_arg( 'group', $g->slug, get_permalink( get_page_by_path( 'programmes' ) ) ) ); ?>"><span class="fba-filter-icon" aria-hidden="true"><?php echo fba_group_icon( $g->slug ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span><?php echo esc_html( $g->name ); ?> <span class="count"><?php echo esc_html( (string) $g->count ); ?></span></a></li>
 		<?php endforeach; ?>
 	<?php endif; ?>
 </ul>
@@ -55,9 +55,6 @@ $loop = new WP_Query( $query_args );
 		while ( $loop->have_posts() ) :
 			$loop->the_post();
 			$pid    = get_the_ID();
-			$fees   = fba_programme_fees( $pid );
-			$seats  = fba_seats_left( $pid );
-			$open   = fba_programme_is_open( $pid );
 			$status = fba_programme_status( $pid );
 			$slug   = get_post_field( 'post_name', $pid );
 			?>
@@ -68,12 +65,9 @@ $loop = new WP_Query( $query_args );
 				<span class="fba-program-icon" aria-hidden="true"><?php echo fba_programme_group_icon( $pid ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
 				<strong><?php the_title(); ?></strong>
 				<p><?php echo esc_html( get_the_excerpt() ); ?></p>
-				<span class="fba-cat-fee"><?php echo esc_html( __( 'Group', 'faithbridgeacademy' ) . ': ' . fba_fee_label( $fees['group'] ) . '  ·  ' . __( 'One-on-one', 'faithbridgeacademy' ) . ': ' . fba_fee_label( $fees['one'] ) ); ?></span>
-				<?php if ( $open ) : ?>
-					<span class="fba-cat-seats"><?php echo esc_html( sprintf( __( '%d group seats left', 'faithbridgeacademy' ), $seats ) ); ?></span>
-				<?php elseif ( 'coming' === $status ) : ?>
+				<?php if ( 'coming' === $status ) : ?>
 					<span class="fba-cat-status"><?php esc_html_e( 'Coming soon', 'faithbridgeacademy' ); ?></span>
-				<?php else : ?>
+				<?php elseif ( ! fba_programme_is_open( $pid ) ) : ?>
 					<span class="fba-cat-status closed"><?php esc_html_e( 'Group class full', 'faithbridgeacademy' ); ?></span>
 				<?php endif; ?>
 			</a>

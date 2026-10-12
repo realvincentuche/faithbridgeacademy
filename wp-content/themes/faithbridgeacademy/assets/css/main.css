@@ -459,8 +459,10 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 .fba-prose ul { padding-left: 1.4rem; }
 
 /* ---------- Inner banner ---------- */
-.fba-banner { position: relative; background: var(--fba-navy); color: #fff; padding: calc(var(--fba-header-h) + 4rem) 0 3.5rem; overflow: clip; }
-.fba-banner-bg { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0.28; }
+.fba-banner { position: relative; background: #101010; color: #fff; padding: calc(var(--fba-header-h) + 4rem) 0 3.5rem; overflow: clip; }
+.fba-banner-bg { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 1; }
+.fba-banner-shade { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.45); }
+.fba-banner-green .fba-banner-shade { background: rgba(126, 122, 0, 0.45); }
 .fba-banner-inner { position: relative; }
 .fba-banner h1 { color: #fff; font-size: clamp(2rem, 4.5vw, 3.2rem); }
 .fba-banner p { color: #d7deeb; max-width: 60ch; }
@@ -553,6 +555,8 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 .fba-cat-filter a:hover { border-color: var(--fba-green-deep); }
 .fba-cat-filter a.active { background: var(--fba-navy); border-color: var(--fba-navy); color: #fff; }
 .fba-cat-filter .count { font-size: 0.78rem; opacity: 0.7; }
+.fba-filter-icon { display: inline-flex; line-height: 1; }
+.fba-filter-icon svg { width: 1.1rem; height: 1.1rem; display: block; }
 .fba-cat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.3rem; }
 .fba-cat-card {
 	background: var(--fba-paper); border: 1px solid var(--fba-line); border-radius: var(--fba-radius);

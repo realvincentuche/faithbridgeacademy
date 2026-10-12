@@ -19,13 +19,18 @@ while ( have_posts() ) :
 	$books   = array_filter( array_map( 'trim', explode( "\n", (string) get_post_meta( $pid, '_fba_books', true ) ) ) );
 	$course  = fba_programme_course_url( $pid );
 
+	$cover = get_post_meta( $pid, '_fba_cover_id', true ) ? wp_get_attachment_image_url( (int) get_post_meta( $pid, '_fba_cover_id', true ), 'full' ) : false;
+	if ( ! $cover && has_post_thumbnail() ) {
+		$cover = get_the_post_thumbnail_url( $pid, 'full' );
+	}
 	get_template_part(
 		'template-parts/page',
 		'banner',
 		array(
 			'title' => get_the_title(),
 			'sub'   => $session['label'] . ' · ' . $session['period'],
-			'img'   => has_post_thumbnail() ? get_the_post_thumbnail_url( $pid, 'full' ) : $uri . '/assets/images/slide-5.jpg',
+			'img'   => $cover ? $cover : $uri . '/assets/images/slide-5.jpg',
+			'tint'  => 'green',
 		)
 	);
 	?>
