@@ -616,6 +616,20 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 .fba-review .total { font-size: 1.2rem; font-weight: 800; color: var(--fba-navy); }
 .fba-form .fba-fee-line { color: var(--fba-green-deep); font-weight: 800; }
 
+/* ---------- FAQ accordion ---------- */
+.fba-faq { display: grid; gap: 0.8rem; }
+.fba-faq-item { background: var(--fba-paper); border: 1px solid var(--fba-line); border-radius: 12px; overflow: hidden; }
+.fba-faq-q {
+	width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+	background: none; border: 0; cursor: pointer; text-align: left;
+	padding: 1.1rem 1.3rem; font: inherit; font-weight: 800; color: var(--fba-navy);
+}
+.fba-faq-q span { font-size: 1.4rem; line-height: 1; color: var(--fba-green-deep); flex-shrink: 0; }
+.fba-faq-item.open .fba-faq-q span { transform: rotate(45deg); }
+.fba-faq-a { padding: 0 1.3rem 1.2rem; }
+.fba-faq-a[hidden] { display: none; }
+.fba-faq-a p { margin: 0; color: var(--fba-muted); }
+
 /* ---------- Responsive ---------- */
 @media (max-width: 1024px) {
 	.fba-header { left: 0.75rem; right: 0.75rem; }

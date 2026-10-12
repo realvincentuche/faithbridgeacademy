@@ -805,6 +805,7 @@ function fba_apply_url( $post_id = 0 ) {
 
 /**
  * Linked LMS course URL. LMS-agnostic: renders only when the course exists.
+ * Masteriyo pilot: Bible Study course ID stored on the programme.
  *
  * @param int $post_id Programme ID.
  * @return string
@@ -821,6 +822,36 @@ function fba_programme_course_url( $post_id ) {
 		return get_permalink( $course_id );
 	}
 	return '';
+}
+
+/**
+ * Whether the Masteriyo LMS plugin is active (pilot gate).
+ *
+ * @return bool
+ */
+function fba_masteriyo_active() {
+	return post_type_exists( 'mto-course' ) || class_exists( 'Masteriyo\Masteriyo' ) || defined( 'MASTERIYO_VERSION' );
+}
+
+/**
+ * Enrol a user into a Masteriyo course. No-op unless Masteriyo is active.
+ * Called from approved applications when a WP user + course link exist.
+ *
+ * @param int $user_id WP user ID.
+ * @param int $course_id Masteriyo course ID.
+ * @return bool
+ */
+function fba_masteriyo_enrol( $user_id, $course_id ) {
+	if ( ! fba_masteriyo_active() || ! $user_id || ! $course_id ) {
+		return false;
+	}
+	if ( function_exists( 'masteriyo_enroll_user_to_course' ) ) {
+		return (bool) masteriyo_enroll_user_to_course( $course_id, $user_id );
+	}
+	if ( class_exists( 'Masteriyo\Addons\Enrollment\EnrollmentHelper' ) && method_exists( 'Masteriyo\Addons\Enrollment\EnrollmentHelper', 'enroll' ) ) {
+		return (bool) call_user_func( array( 'Masteriyo\Addons\Enrollment\EnrollmentHelper', 'enroll' ), $course_id, $user_id );
+	}
+	return false;
 }
 
 /**
@@ -1299,6 +1330,12 @@ function fba_save_application_meta( $post_id ) {
 		$s = sanitize_key( wp_unslash( $_POST['fba_app_status'] ) );
 		update_post_meta( $post_id, '_fba_app_status', in_array( $s, array( 'pending', 'approved', 'rejected' ), true ) ? $s : 'pending' );
 		fba_bank_application_seats( $post_id );
+		if ( 'approved' === $s ) {
+			$user_id = (int) get_post_meta( $post_id, '_fba_user_id', true );
+			foreach ( (array) get_post_meta( $post_id, '_fba_programmes', true ) as $cpid ) {
+				fba_masteriyo_enrol( $user_id, (int) get_post_meta( (int) $cpid, '_fba_course_id', true ) );
+			}
+		}
 	}
 }
 add_action( 'save_post_application', 'fba_save_application_meta' );

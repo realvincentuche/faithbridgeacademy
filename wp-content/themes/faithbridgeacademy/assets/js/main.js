@@ -320,6 +320,24 @@
 		} );
 	}
 
+	/* FAQ accordion. */
+	document.querySelectorAll( '.fba-faq-item' ).forEach( function ( item ) {
+		var btn = item.querySelector( '.fba-faq-q' );
+		var panel = item.querySelector( '.fba-faq-a' );
+		if ( ! btn || ! panel ) {
+			return;
+		}
+		btn.addEventListener( 'click', function () {
+			var open = item.classList.toggle( 'open' );
+			btn.setAttribute( 'aria-expanded', open ? 'true' : 'false' );
+			if ( open ) {
+				panel.removeAttribute( 'hidden' );
+			} else {
+				panel.setAttribute( 'hidden', '' );
+			}
+		} );
+	} );
+
 	/* Reveal on scroll. */
 	var revealEls = document.querySelectorAll( '.reveal' );
 	if ( 'IntersectionObserver' in window ) {
