@@ -53,7 +53,7 @@ while ( have_posts() ) :
 						<th><?php esc_html_e( 'Fee per session', 'faithbridgeacademy' ); ?></th>
 					</tr>
 					<tr>
-						<td><?php esc_html_e( 'Group class (15 learners or fewer)', 'faithbridgeacademy' ); ?></td>
+						<td><?php echo esc_html( sprintf( __( 'Group class (%d learners or fewer)', 'faithbridgeacademy' ), (int) fba_get_option( 'group_capacity' ) ) ); ?></td>
 						<td><?php echo fba_fee_label( $fees['group'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></td>
 					</tr>
 					<tr>
@@ -105,6 +105,7 @@ while ( have_posts() ) :
 	<?php
 endwhile;
 
-get_template_part( 'template-parts/dynamic', 'content' );
+// No dynamic-content include: the programme body already printed above inside
+// the loop. Including it here would re-loop a consumed query (silent no-op).
 
 get_footer();

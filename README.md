@@ -1,7 +1,8 @@
 # Faith Bridge Academy — classic WordPress theme + auto-deploy to Namecheap
 
-Classic (non-block) custom theme. Coming-soon v1 homepage in git, optional
-live DB content section per template, blog fully DB-driven.
+Classic (non-block) custom theme. Full marketing homepage (hero slider,
+stats, catalogue, life band, sessions), optional live DB content section per
+template, blog fully DB-driven.
 
 ## Local dev (Herd)
 

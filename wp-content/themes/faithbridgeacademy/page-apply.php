@@ -148,7 +148,8 @@ $sessions = fba_open_sessions();
 		<aside class="fba-side-card">
 			<h3><?php echo esc_html( fba_current_session()['label'] ); ?></h3>
 			<p><?php echo esc_html( fba_current_session()['period'] . ' · ' . fba_get_option( 'class_days' ) . ' · ' . fba_get_option( 'class_time' ) ); ?></p>
-			<p class="fba-fee-line"><?php esc_html_e( 'Fees show per programme as you select them — group from $200, one-on-one from $300 per session.', 'faithbridgeacademy' ); ?></p>
+			<?php $min_fees = fba_min_fees(); ?>
+			<p class="fba-fee-line"><?php echo esc_html( sprintf( __( 'Fees show per programme as you select them — group from %1$s, one-on-one from %2$s per session.', 'faithbridgeacademy' ), fba_fee_text( $min_fees['group'] ), fba_fee_text( $min_fees['one'] ) ) ); ?></p>
 			<p><?php esc_html_e( 'Bank transfer only. No receipt upload — we confirm every application personally.', 'faithbridgeacademy' ); ?></p>
 		</aside>
 	</div>

@@ -294,9 +294,17 @@
 			if ( ! box ) {
 				return;
 			}
+			var esc = function ( s ) {
+				return String( s == null ? '' : s )
+					.replace( /&/g, '&amp;' )
+					.replace( /</g, '&lt;' )
+					.replace( />/g, '&gt;' )
+					.replace( /"/g, '&quot;' )
+					.replace( /'/g, '&#39;' );
+			};
 			var val = function ( name ) {
 				var f = applyForm.querySelector( '[name="' + name + '"]' );
-				return f ? f.value : '';
+				return f ? esc( f.value ) : '';
 			};
 			var styleEl = applyForm.querySelector( 'input[name="fba_style"]:checked' );
 			var style = styleEl ? styleEl.value : 'group';
@@ -307,11 +315,11 @@
 			boxes.forEach( function ( b ) {
 				var fee = Number( 'one' === style ? b.getAttribute( 'data-one' ) : b.getAttribute( 'data-group' ) ) || 0;
 				total += fee;
-				var label = b.getAttribute( 'data-title' ) || b.value;
+				var label = esc( b.getAttribute( 'data-title' ) || b.value );
 				names.push( label + ' (' + ( ngn ? moneyNgn( fee ) : money( fee ) ) + ')' );
 			} );
 			var sessSel = applyForm.querySelector( '#fbaSession' );
-			var sess = sessSel ? sessSel.options[sessSel.selectedIndex].text : '';
+			var sess = sessSel ? esc( sessSel.options[sessSel.selectedIndex].text ) : '';
 			box.innerHTML = '<dl>'
 				+ '<dt>Applicant</dt><dd>' + val( 'fba_name' ) + ' · ' + val( 'fba_phone' ) + '</dd>'
 				+ '<dt>Ward</dt><dd>' + val( 'fba_ward_name' ) + ' · ' + val( 'fba_ward_dob' ) + ' · ' + val( 'fba_ward_class' ) + '</dd>'
