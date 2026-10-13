@@ -913,6 +913,103 @@ function fba_masteriyo_active() {
 }
 
 /**
+ * Create + link Masteriyo course shells for every programme.
+ * Drafts only — you fill lessons/quizzes inside Masteriyo, then publish.
+ * Safe to re-run: skips programmes already linked to an existing course.
+ *
+ * @return array {created, linked, skipped}
+ */
+function fba_sync_masteriyo_courses() {
+	$done = array( 'created' => 0, 'linked' => 0, 'skipped' => 0 );
+	if ( ! fba_masteriyo_active() ) {
+		return $done;
+	}
+	$loop = new WP_Query(
+		array(
+			'post_type'      => 'programme',
+			'post_status'    => 'publish',
+			'posts_per_page' => -1,
+			'orderby'        => 'menu_order',
+			'order'          => 'ASC',
+		)
+	);
+	foreach ( $loop->posts as $p ) {
+		$linked = (int) get_post_meta( $p->ID, '_fba_course_id', true );
+		if ( $linked && get_post_status( $linked ) ) {
+			$done['skipped']++;
+			continue;
+		}
+		$existing = get_page_by_title( $p->post_title, OBJECT, 'mto-course' );
+		if ( $existing ) {
+			update_post_meta( $p->ID, '_fba_course_id', $existing->ID );
+			$done['linked']++;
+			continue;
+		}
+		$cid = wp_insert_post(
+			wp_slash(
+				array(
+					'post_title'   => $p->post_title,
+					'post_content' => $p->post_content,
+					'post_excerpt' => $p->post_excerpt,
+					'post_status'  => 'draft',
+					'post_type'    => 'mto-course',
+				)
+			)
+		);
+		if ( $cid && ! is_wp_error( $cid ) ) {
+			update_post_meta( $p->ID, '_fba_course_id', $cid );
+			$done['created']++;
+		}
+	}
+	wp_reset_postdata();
+	return $done;
+}
+
+/**
+ * Admin-post handler: one-click Masteriyo course sync.
+ */
+function fba_sync_courses_handler() {
+	if ( ! current_user_can( 'manage_options' ) || ! check_admin_referer( 'fba_sync_courses' ) ) {
+		wp_die( esc_html__( 'Not allowed.', 'faithbridgeacademy' ) );
+	}
+	$res = fba_sync_masteriyo_courses();
+	if ( ! fba_masteriyo_active() ) {
+		wp_safe_redirect( add_query_arg( 'fba_courses', 'no-lms', admin_url( 'edit.php?post_type=programme' ) ) );
+		exit;
+	}
+	wp_safe_redirect( add_query_arg( 'fba_courses', rawurlencode( $res['created'] . ' created, ' . $res['linked'] . ' linked, ' . $res['skipped'] . ' skipped' ), admin_url( 'edit.php?post_type=programme' ) ) );
+	exit;
+}
+add_action( 'admin_post_fba_sync_courses', 'fba_sync_courses_handler' );
+
+/**
+ * Sync result notice on the programme list.
+ */
+function fba_sync_courses_notice() {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+	$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+	if ( ! $screen || 'edit-programme' !== $screen->id ) {
+		return;
+	}
+	if ( isset( $_GET['fba_courses'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- result display.
+		echo '<div class="notice notice-success"><p>';
+		echo esc_html__( 'Masteriyo sync: ', 'faithbridgeacademy' ) . esc_html( sanitize_text_field( wp_unslash( $_GET['fba_courses'] ) ) ) . '.'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- result display.
+		echo '</p></div>';
+	}
+	if ( ! fba_masteriyo_active() ) {
+		return;
+	}
+	$url = wp_nonce_url( admin_url( 'admin-post.php?action=fba_sync_courses' ), 'fba_sync_courses' );
+	echo '<div class="notice notice-info"><p>';
+	echo esc_html__( 'Masteriyo detected. ', 'faithbridgeacademy' );
+	echo '<a class="button button-secondary" href="' . esc_url( $url ) . '">' . esc_html__( 'Sync 16 course shells now', 'faithbridgeacademy' ) . '</a>';
+	echo '</p></div>';
+}
+add_action( 'admin_notices', 'fba_sync_courses_notice' );
+
+/**
  * Enrol a user into a Masteriyo course. No-op unless Masteriyo is active.
  * Called from approved applications when a WP user + course link exist.
  *
