@@ -62,7 +62,7 @@ $loop = new WP_Query( $query_args );
 				<?php if ( 'bible-study' === $slug ) : ?>
 					<span class="fba-cat-flag"><?php esc_html_e( 'Flagship', 'faithbridgeacademy' ); ?></span>
 				<?php endif; ?>
-				<span class="fba-program-icon" aria-hidden="true"><?php echo fba_programme_group_icon( $pid ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
+				<span class="fba-cat-photo" aria-hidden="true"><img src="<?php echo esc_url( fba_programme_image( $pid ) ); ?>" alt="" loading="lazy"></span>
 				<strong><?php the_title(); ?></strong>
 				<p><?php echo esc_html( get_the_excerpt() ); ?></p>
 				<?php if ( 'coming' === $status ) : ?>

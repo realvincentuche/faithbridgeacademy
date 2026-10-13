@@ -1301,6 +1301,36 @@ function fba_programme_group_icon( $post_id ) {
 }
 
 /**
+ * Programme photo URL. Priority: cover meta > featured image >
+ * bundled prog-{slug}.jpg > slide-5.jpg. Always returns a URL.
+ *
+ * @param int $post_id Programme ID.
+ * @return string
+ */
+function fba_programme_image( $post_id ) {
+	$post_id  = (int) $post_id;
+	$cover_id = (int) get_post_meta( $post_id, '_fba_cover_id', true );
+	if ( $cover_id ) {
+		$cover = wp_get_attachment_image_url( $cover_id, 'large' );
+		if ( $cover ) {
+			return $cover;
+		}
+	}
+	if ( has_post_thumbnail( $post_id ) ) {
+		$thumb = get_the_post_thumbnail_url( $post_id, 'large' );
+		if ( $thumb ) {
+			return $thumb;
+		}
+	}
+	$slug = get_post_field( 'post_name', $post_id );
+	$uri  = get_template_directory_uri();
+	if ( $slug ) {
+		return $uri . '/assets/images/prog-' . sanitize_file_name( $slug ) . '.jpg';
+	}
+	return $uri . '/assets/images/slide-5.jpg';
+}
+
+/**
  * Programme details meta box.
  */
 function fba_programme_metabox() {

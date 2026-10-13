@@ -189,24 +189,24 @@ $slides = array(
 					$pslug   = get_post_field( 'post_name', $ppid );
 					$first   = 0 === $pi;
 					?>
-					<a class="fba-program-card<?php echo $first ? ' fba-program-featured' : ''; ?> reveal" href="<?php the_permalink(); ?>">
-						<?php if ( $first ) : ?>
-							<span class="fba-program-tag"><?php esc_html_e( 'Flagship', 'faithbridgeacademy' ); ?></span>
-						<?php endif; ?>
-						<span class="fba-program-icon" aria-hidden="true"><?php echo fba_programme_group_icon( $ppid ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
-						<strong><?php the_title(); ?></strong>
-					</a>
+				<a class="fba-program-card<?php echo $first ? ' fba-program-featured' : ''; ?> reveal" href="<?php the_permalink(); ?>">
+					<?php if ( $first ) : ?>
+						<span class="fba-program-tag"><?php esc_html_e( 'Flagship', 'faithbridgeacademy' ); ?></span>
+					<?php endif; ?>
+					<span class="fba-program-photo" aria-hidden="true"><img src="<?php echo esc_url( fba_programme_image( $ppid ) ); ?>" alt="" loading="lazy"></span>
+					<strong><?php the_title(); ?></strong>
+				</a>
 					<?php
 					$pi++;
 				endwhile;
 				wp_reset_postdata();
 			else :
 				?>
-				<a class="fba-program-card fba-program-featured reveal" href="<?php echo esc_url( home_url( '/programmes/' ) ); ?>">
-					<span class="fba-program-tag"><?php esc_html_e( 'Flagship', 'faithbridgeacademy' ); ?></span>
-					<span class="fba-program-icon" aria-hidden="true"><?php echo fba_programme_group_icon( 0 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
-					<strong><?php esc_html_e( 'Bible Study', 'faithbridgeacademy' ); ?></strong>
-				</a>
+			<a class="fba-program-card fba-program-featured reveal" href="<?php echo esc_url( home_url( '/programmes/' ) ); ?>">
+				<span class="fba-program-tag"><?php esc_html_e( 'Flagship', 'faithbridgeacademy' ); ?></span>
+				<span class="fba-program-photo" aria-hidden="true"><img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/prog-bible-study.jpg' ); ?>" alt="" loading="lazy"></span>
+				<strong><?php esc_html_e( 'Bible Study', 'faithbridgeacademy' ); ?></strong>
+			</a>
 				<?php
 			endif;
 			?>
