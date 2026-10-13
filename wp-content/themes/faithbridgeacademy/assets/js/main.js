@@ -362,6 +362,59 @@
 		} );
 	}
 
+	/* Sponsorship calculator: duration x children, or free amount. */
+	var spForm = document.getElementById( 'fbaSponsorForm' );
+	if ( spForm ) {
+		var spTotal = document.getElementById( 'fbaSpTotal' );
+		function ngn( n ) {
+			return '₦' + Number( n ).toLocaleString( 'en-US' );
+		}
+		function spUpdate() {
+			var catEl = spForm.querySelector( 'input[name="fba_sp_category"]:checked' );
+			var cat = catEl ? catEl.value : 'bible';
+			var durEl = spForm.querySelector( 'input[name="fba_sp_duration"]:checked' );
+			var dur = durEl ? durEl.value : 'session';
+			var plan = spForm.querySelector( '.fba-sp-plan' );
+			var gen = spForm.querySelector( '.fba-sp-general' );
+			var acad = spForm.querySelector( '.fba-sp-academic-only' );
+			var total = 0;
+			if ( 'general' === cat ) {
+				if ( plan ) { plan.hidden = true; }
+				if ( gen ) { gen.hidden = false; }
+				var amtEl = spForm.querySelector( '#fbaSpAmount' );
+				total = amtEl ? ( Number( amtEl.value ) || 0 ) : 0;
+			} else {
+				if ( plan ) { plan.hidden = false; }
+				if ( gen ) { gen.hidden = true; }
+				if ( acad ) { acad.style.display = 'academic' === cat ? '' : 'none'; }
+				var kidsEl = spForm.querySelector( '#fbaSpChildren' );
+				var kids = kidsEl ? ( parseInt( kidsEl.value, 10 ) || 1 ) : 1;
+				var per = 0;
+				if ( 'bible' === cat ) {
+					per = Number( 'year' === dur ? spForm.getAttribute( 'data-bible-year' ) : spForm.getAttribute( 'data-bible-session' ) ) || 0;
+				} else {
+					per = Number( 'year' === dur ? spForm.getAttribute( 'data-academic-year' ) : spForm.getAttribute( 'data-academic-session' ) ) || 0;
+				}
+				total = per * kids;
+			}
+			if ( spTotal ) {
+				spTotal.textContent = ngn( total );
+			}
+		}
+		spForm.querySelectorAll( 'input[name="fba_sp_category"], input[name="fba_sp_duration"]' ).forEach( function ( el ) {
+			el.addEventListener( 'change', spUpdate );
+		} );
+		var spKids = spForm.querySelector( '#fbaSpChildren' );
+		if ( spKids ) {
+			spKids.addEventListener( 'change', spUpdate );
+		}
+		var spAmt = spForm.querySelector( '#fbaSpAmount' );
+		if ( spAmt ) {
+			spAmt.addEventListener( 'input', spUpdate );
+		}
+		spUpdate();
+	}
+
 	/* Currency switcher: usd|ngn select, persisted in a cookie. */
 	var curSel = document.getElementById( 'fbaCurrency' );
 	function setCurrency( cur ) {

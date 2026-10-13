@@ -120,6 +120,12 @@ function fba_option_defaults() {
 		'club_rhythm'      => 'once every month',
 		'club_year_rule'   => 'calendar',
 		'club_welcome'     => 'Welcome to the FaithBridge Bible Club family. Watch out for our monthly meeting details on WhatsApp.',
+		// Sponsorship (NGN flat rates, bank transfer only).
+		'sponsor_bible_session'   => '200000',
+		'sponsor_bible_year'      => '800000',
+		'sponsor_academic_session' => '200000',
+		'sponsor_academic_year'    => '800000',
+		'sponsor_general_min'      => '50000',
 		// Caps & rules.
 		'group_capacity'   => '15',
 		'one_to_one_cap'   => 'unlimited',
@@ -277,7 +283,7 @@ add_action( 'admin_menu', 'fba_settings_menu' );
 function fba_sanitize_options( $input ) {
 	$out      = array();
 	$urls     = array( 'enrol_url', 'whatsapp', 'social_instagram', 'social_facebook', 'social_tiktok', 'social_youtube', 'social_linkedin', 'social_x' );
-	$ints     = array( 'exchange_rate', 'club_fee', 'group_capacity', 'followup_days', 'max_wards', 'session_year', 'session_quarter' );
+	$ints     = array( 'exchange_rate', 'club_fee', 'group_capacity', 'followup_days', 'max_wards', 'session_year', 'session_quarter', 'sponsor_bible_session', 'sponsor_bible_year', 'sponsor_academic_session', 'sponsor_academic_year', 'sponsor_general_min' );
 	$checkbox = array( 'session_alert_on', 'session_override' );
 	foreach ( (array) $input as $key => $value ) {
 		if ( 'email' === $key ) {
@@ -306,6 +312,7 @@ function fba_settings_page() {
 	$tabs = array(
 		'session'   => __( 'Session', 'faithbridgeacademy' ),
 		'fees'      => __( 'Fees & Bank', 'faithbridgeacademy' ),
+		'sponsor'   => __( 'Sponsorship', 'faithbridgeacademy' ),
 		'club'      => __( 'Bible Club', 'faithbridgeacademy' ),
 		'catalogue' => __( 'Catalogue', 'faithbridgeacademy' ),
 		'contact'   => __( 'Contact & Socials', 'faithbridgeacademy' ),
@@ -314,6 +321,7 @@ function fba_settings_page() {
 	$fields = array(
 		'session'   => array( 'session_override', 'session_year', 'session_quarter', 'class_days', 'class_time', 'timezone', 'platform', 'recordings_note', 'onsite_note', 'session_alert_on', 'session_alert' ),
 		'fees'      => array( 'exchange_rate', 'fee_note', 'bank_name', 'bank_number', 'bank_bank', 'enrol_url' ),
+		'sponsor'   => array( 'sponsor_bible_session', 'sponsor_bible_year', 'sponsor_academic_session', 'sponsor_academic_year', 'sponsor_general_min' ),
 		'club'      => array( 'club_fee', 'club_rhythm', 'club_year_rule', 'club_welcome' ),
 		'catalogue' => array( 'group_capacity', 'one_to_one_cap', 'followup_days', 'max_wards', 'memory_verses', 'hero_cta_primary', 'hero_cta_secondary', 'footer_tagline' ),
 		'contact'   => array( 'email', 'phone', 'whatsapp', 'online_note', 'social_instagram', 'social_facebook', 'social_tiktok', 'social_youtube', 'social_linkedin', 'social_x' ),
@@ -337,6 +345,11 @@ function fba_settings_page() {
 		'bank_number' => __( 'Account number', 'faithbridgeacademy' ),
 		'bank_bank' => __( 'Bank', 'faithbridgeacademy' ),
 		'enrol_url' => __( 'External enrol URL (optional)', 'faithbridgeacademy' ),
+		'sponsor_bible_session' => __( 'Bible School per child per session (₦)', 'faithbridgeacademy' ),
+		'sponsor_bible_year' => __( 'Bible School per child per year (₦)', 'faithbridgeacademy' ),
+		'sponsor_academic_session' => __( 'Academic per child per session (₦)', 'faithbridgeacademy' ),
+		'sponsor_academic_year' => __( 'Academic per child per year (₦)', 'faithbridgeacademy' ),
+		'sponsor_general_min' => __( 'General support minimum (₦)', 'faithbridgeacademy' ),
 		'club_fee' => __( 'Club annual fee (₦)', 'faithbridgeacademy' ),
 		'club_rhythm' => __( 'Meeting rhythm', 'faithbridgeacademy' ),
 		'club_year_rule' => __( 'Membership year rule', 'faithbridgeacademy' ),
@@ -427,6 +440,7 @@ function fba_menu_fallback() {
 	echo '<li><a href="' . esc_url( home_url( '/faq/' ) ) . '">' . esc_html__( 'FAQs', 'faithbridgeacademy' ) . '</a></li>';
 	echo '</ul></li>';
 	echo '<li><a href="' . esc_url( home_url( '/bible-club/' ) ) . '">' . esc_html__( 'Bible Club', 'faithbridgeacademy' ) . '</a></li>';
+	echo '<li><a href="' . esc_url( home_url( '/partner/' ) ) . '">' . esc_html__( 'Partner With Us', 'faithbridgeacademy' ) . '</a></li>';
 	echo '<li><a href="' . esc_url( home_url( '/about/' ) ) . '">' . esc_html__( 'About', 'faithbridgeacademy' ) . '</a></li>';
 	echo '<li><a href="' . esc_url( home_url( '/blog/' ) ) . '">' . esc_html__( 'Blog', 'faithbridgeacademy' ) . '</a></li>';
 	echo '<li><a href="' . esc_url( home_url( '/contact/' ) ) . '">' . esc_html__( 'Contact', 'faithbridgeacademy' ) . '</a></li>';
@@ -476,6 +490,7 @@ function fba_primary_menu_items() {
 			),
 		),
 		array( 'title' => __( 'Bible Club', 'faithbridgeacademy' ), 'url' => home_url( '/bible-club/' ) ),
+		array( 'title' => __( 'Partner With Us', 'faithbridgeacademy' ), 'url' => home_url( '/partner/' ) ),
 		array( 'title' => __( 'About', 'faithbridgeacademy' ), 'url' => home_url( '/about/' ) ),
 		array( 'title' => __( 'Blog', 'faithbridgeacademy' ), 'url' => home_url( '/blog/' ) ),
 		array( 'title' => __( 'Contact', 'faithbridgeacademy' ), 'url' => home_url( '/contact/' ) ),
@@ -500,6 +515,7 @@ function fba_seed_menus() {
 		$out['primary'] = (int) $primary->term_id;
 		$items          = wp_get_nav_menu_items( $primary->term_id );
 		// Repair stale links on existing menus (dead /fees/, #group anchors).
+		// Append the Partner link when missing (pre-menu-seed installs).
 		if ( is_array( $items ) && $items ) {
 			foreach ( $items as $it ) {
 				if ( false !== strpos( (string) $it->url, '/fees' ) ) {
@@ -520,6 +536,31 @@ function fba_seed_menus() {
 				}
 			}
 			$items = wp_get_nav_menu_items( $primary->term_id );
+			$has_partner = false;
+			if ( is_array( $items ) ) {
+				foreach ( $items as $it ) {
+					if ( false !== strpos( (string) $it->url, '/partner' ) ) {
+						$has_partner = true;
+						break;
+					}
+				}
+			}
+			if ( ! $has_partner ) {
+				$max = 0;
+				foreach ( (array) $items as $it ) {
+					$max = max( $max, (int) $it->menu_order );
+				}
+				wp_update_nav_menu_item(
+					$primary->term_id, 0,
+					array(
+						'menu-item-title'    => __( 'Partner With Us', 'faithbridgeacademy' ),
+						'menu-item-url'      => home_url( '/partner/' ),
+						'menu-item-status'   => 'publish',
+						'menu-item-position' => $max + 1,
+					)
+				);
+				$items = wp_get_nav_menu_items( $primary->term_id );
+			}
 		}
 		if ( ! is_array( $items ) || ! count( $items ) ) {
 			foreach ( fba_primary_menu_items() as $order => $top ) {
@@ -676,6 +717,7 @@ function fba_seed_on_activate() {
 		'bible-club' => __( 'Bible Club', 'faithbridgeacademy' ),
 		'faq'        => __( 'FAQs', 'faithbridgeacademy' ),
 		'apply'      => __( 'Apply Now', 'faithbridgeacademy' ),
+		'partner'    => __( 'Partner With FaithBridge Academy — Sponsor a Child, Support a Future', 'faithbridgeacademy' ),
 		'contact'    => __( 'Contact Us', 'faithbridgeacademy' ),
 		'blog'       => __( 'Blog', 'faithbridgeacademy' ),
 		'resources'  => __( 'Resources', 'faithbridgeacademy' ),
@@ -730,7 +772,7 @@ function fba_setup_notice() {
 		echo '</p></div>';
 	}
 	$missing = array();
-	foreach ( array( 'home', 'about', 'programmes', 'bible-club', 'faq', 'apply', 'contact', 'blog', 'resources' ) as $slug ) {
+	foreach ( array( 'home', 'about', 'programmes', 'bible-club', 'faq', 'apply', 'partner', 'contact', 'blog', 'resources' ) as $slug ) {
 		if ( ! get_page_by_path( $slug ) ) {
 			$missing[] = $slug;
 		}
@@ -2167,3 +2209,321 @@ function fba_club_column_values( $col, $post_id ) {
 	}
 }
 add_action( 'manage_club_member_posts_custom_column', 'fba_club_column_values', 10, 2 );
+
+/* -------------------------------------------------------------------------
+ * Sponsorship (Partner page): settings-driven NGN rates + private sponsor CPT
+ * ------------------------------------------------------------------------- */
+
+/**
+ * Sponsorship rates in naira (settings-driven, code defaults).
+ *
+ * @return array {bible_session, bible_year, academic_session, academic_year, general_min}
+ */
+function fba_sponsor_rates() {
+	return array(
+		'bible_session'    => max( 0, (int) fba_get_option( 'sponsor_bible_session' ) ),
+		'bible_year'       => max( 0, (int) fba_get_option( 'sponsor_bible_year' ) ),
+		'academic_session' => max( 0, (int) fba_get_option( 'sponsor_academic_session' ) ),
+		'academic_year'    => max( 0, (int) fba_get_option( 'sponsor_academic_year' ) ),
+		'general_min'      => max( 0, (int) fba_get_option( 'sponsor_general_min' ) ),
+	);
+}
+
+/**
+ * Sponsorship categories: key => label.
+ *
+ * @return array
+ */
+function fba_sponsor_categories() {
+	return array(
+		'bible'    => __( "Children's Bible School", 'faithbridgeacademy' ),
+		'academic' => __( "Child's Academic Education", 'faithbridgeacademy' ),
+		'general'  => __( 'General Support', 'faithbridgeacademy' ),
+	);
+}
+
+/**
+ * Server-side sponsorship total (₦). Returns 0 when inputs are invalid.
+ *
+ * @param string $category bible|academic|general.
+ * @param string $duration session|year.
+ * @param int    $children Child count.
+ * @param float  $amount   Free amount (general only).
+ * @return int
+ */
+function fba_sponsor_total( $category, $duration, $children, $amount = 0 ) {
+	$rates = fba_sponsor_rates();
+	if ( 'general' === $category ) {
+		$amount = (int) round( (float) $amount );
+		return $amount >= $rates['general_min'] && $rates['general_min'] > 0 ? $amount : 0;
+	}
+	if ( ! in_array( $category, array( 'bible', 'academic' ), true ) ) {
+		return 0;
+	}
+	$children = (int) $children;
+	if ( $children < 1 || $children > 50 ) {
+		return 0;
+	}
+	$per = 0;
+	if ( 'bible' === $category ) {
+		$per = 'year' === $duration ? $rates['bible_year'] : $rates['bible_session'];
+	} else {
+		$per = 'year' === $duration ? $rates['academic_year'] : $rates['academic_session'];
+	}
+	if ( $per <= 0 ) {
+		return 0;
+	}
+	return $per * $children;
+}
+
+/**
+ * Build a sponsorship reference: FBA-SPN-YYYY-XXXX.
+ *
+ * @return string
+ */
+function fba_sponsor_ref() {
+	$year = (int) date( 'Y', current_time( 'timestamp' ) );
+	return sprintf( 'FBA-SPN-%d-%s', $year, strtoupper( wp_generate_password( 4, false, false ) ) );
+}
+
+/**
+ * Register the private sponsor CPT.
+ */
+function fba_register_sponsor_cpt() {
+	register_post_type(
+		'sponsor',
+		array(
+			'labels'        => array(
+				'name'          => __( 'Sponsors', 'faithbridgeacademy' ),
+				'singular_name' => __( 'Sponsor', 'faithbridgeacademy' ),
+			),
+			'public'        => false,
+			'show_ui'       => true,
+			'show_in_menu'  => true,
+			'supports'      => array( 'title' ),
+			'menu_icon'     => 'dashicons-heart',
+			'menu_position' => 24,
+			'capabilities'  => array( 'create_posts' => 'manage_options' ),
+			'map_meta_cap'  => true,
+		)
+	);
+}
+add_action( 'init', 'fba_register_sponsor_cpt' );
+
+/**
+ * Sponsorship form handler (public, nonce-protected). Bank transfer only:
+ * records a pending pledge; admin confirms on payment receipt.
+ */
+function fba_sponsor_handler() {
+	if ( ! isset( $_POST['fba_sponsor_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['fba_sponsor_nonce'] ) ), 'fba_sponsor' ) ) {
+		wp_safe_redirect( add_query_arg( 'sp', 'error', home_url( '/partner/' ) ) );
+		exit;
+	}
+	$name     = isset( $_POST['fba_sp_name'] ) ? sanitize_text_field( wp_unslash( $_POST['fba_sp_name'] ) ) : '';
+	$phone_raw = isset( $_POST['fba_sp_phone'] ) ? (string) wp_unslash( $_POST['fba_sp_phone'] ) : '';
+	$phone    = preg_replace( '/[^0-9+]/', '', $phone_raw );
+	$email    = isset( $_POST['fba_sp_email'] ) ? sanitize_email( wp_unslash( $_POST['fba_sp_email'] ) ) : '';
+	$category = isset( $_POST['fba_sp_category'] ) ? sanitize_key( wp_unslash( $_POST['fba_sp_category'] ) ) : '';
+	$duration = isset( $_POST['fba_sp_duration'] ) && 'year' === $_POST['fba_sp_duration'] ? 'year' : 'session';
+	$children = isset( $_POST['fba_sp_children'] ) ? (int) $_POST['fba_sp_children'] : 0;
+	$programme = isset( $_POST['fba_sp_programme'] ) ? sanitize_text_field( wp_unslash( $_POST['fba_sp_programme'] ) ) : '';
+	$amount_raw = isset( $_POST['fba_sp_amount'] ) ? (string) wp_unslash( $_POST['fba_sp_amount'] ) : '0';
+	$amount   = (float) preg_replace( '/[^0-9.]/', '', $amount_raw );
+
+	if ( '' === $name || '' === $phone || '' === $email ) {
+		wp_safe_redirect( add_query_arg( 'sp', 'missing', home_url( '/partner/' ) ) );
+		exit;
+	}
+	if ( strlen( preg_replace( '/[^0-9]/', '', $phone ) ) < 7 ) {
+		wp_safe_redirect( add_query_arg( 'sp', 'phone', home_url( '/partner/' ) ) );
+		exit;
+	}
+	if ( ! is_email( $email ) ) {
+		wp_safe_redirect( add_query_arg( 'sp', 'email', home_url( '/partner/' ) ) );
+		exit;
+	}
+	if ( ! in_array( $category, array( 'bible', 'academic', 'general' ), true ) ) {
+		wp_safe_redirect( add_query_arg( 'sp', 'category', home_url( '/partner/' ) ) );
+		exit;
+	}
+
+	$total = 0;
+	$designation = '';
+	if ( 'general' === $category ) {
+		$total = fba_sponsor_total( 'general', 'session', 0, $amount );
+		if ( $total <= 0 ) {
+			wp_safe_redirect( add_query_arg( 'sp', 'amount', home_url( '/partner/' ) ) );
+			exit;
+		}
+		$designation = __( 'General support — where most needed', 'faithbridgeacademy' );
+		$duration = '';
+		$children = 0;
+	} else {
+		if ( $children < 1 || $children > 50 ) {
+			wp_safe_redirect( add_query_arg( 'sp', 'children', home_url( '/partner/' ) ) );
+			exit;
+		}
+		if ( 'bible' === $category ) {
+			$designation = __( "Children's Bible School", 'faithbridgeacademy' );
+		} else {
+			// Academic designation: a published programme or "where most needed".
+			if ( 'needed' === $programme || '' === $programme ) {
+				$designation = __( 'Academic — where most needed', 'faithbridgeacademy' );
+			} else {
+				$apid = (int) $programme;
+				if ( ! $apid || 'programme' !== get_post_type( $apid ) || 'publish' !== get_post_status( $apid ) ) {
+					wp_safe_redirect( add_query_arg( 'sp', 'programme', home_url( '/partner/' ) ) );
+					exit;
+				}
+				$designation = get_the_title( $apid );
+			}
+		}
+		$total = fba_sponsor_total( $category, $duration, $children );
+		if ( $total <= 0 ) {
+			wp_safe_redirect( add_query_arg( 'sp', 'amount', home_url( '/partner/' ) ) );
+			exit;
+		}
+	}
+
+	// Collision-safe reference.
+	$ref = '';
+	for ( $i = 0; $i < 5 && '' === $ref; $i++ ) {
+		$candidate = fba_sponsor_ref();
+		$clash     = new WP_Query(
+			array(
+				'post_type'      => 'sponsor',
+				'post_status'    => 'any',
+				'posts_per_page' => 1,
+				'fields'         => 'ids',
+				'meta_query'     => array(
+					array( 'key' => '_fba_sp_ref', 'value' => $candidate ),
+				),
+			)
+		);
+		if ( ! $clash->have_posts() ) {
+			$ref = $candidate;
+		}
+	}
+	if ( '' === $ref ) {
+		wp_safe_redirect( add_query_arg( 'sp', 'error', home_url( '/partner/' ) ) );
+		exit;
+	}
+
+	$sid = wp_insert_post(
+		array(
+			'post_title'  => $ref . ' — ' . $name,
+			'post_status' => 'private',
+			'post_type'   => 'sponsor',
+		)
+	);
+	if ( ! $sid || is_wp_error( $sid ) ) {
+		wp_safe_redirect( add_query_arg( 'sp', 'error', home_url( '/partner/' ) ) );
+		exit;
+	}
+	update_post_meta( $sid, '_fba_sp_ref', $ref );
+	update_post_meta( $sid, '_fba_sp_status', 'pending' );
+	update_post_meta( $sid, '_fba_sp_name', $name );
+	update_post_meta( $sid, '_fba_sp_phone', $phone );
+	update_post_meta( $sid, '_fba_sp_email', $email );
+	update_post_meta( $sid, '_fba_sp_category', $category );
+	update_post_meta( $sid, '_fba_sp_duration', $duration );
+	update_post_meta( $sid, '_fba_sp_children', $children );
+	update_post_meta( $sid, '_fba_sp_designation', $designation );
+	update_post_meta( $sid, '_fba_sp_total', $total );
+
+	wp_safe_redirect( add_query_arg( array( 'sp' => 'done', 'ref' => $ref ), home_url( '/partner/' ) ) );
+	exit;
+}
+add_action( 'admin_post_nopriv_fba_sponsor', 'fba_sponsor_handler' );
+add_action( 'admin_post_fba_sponsor', 'fba_sponsor_handler' );
+
+/**
+ * Sponsor detail meta box.
+ */
+function fba_sponsor_metabox() {
+	add_meta_box( 'fba-sponsor-details', __( 'Sponsorship Details', 'faithbridgeacademy' ), 'fba_sponsor_metabox_html', 'sponsor', 'normal', 'high' );
+}
+add_action( 'add_meta_boxes', 'fba_sponsor_metabox' );
+
+/**
+ * Sponsor meta box HTML.
+ *
+ * @param WP_Post $post Current post.
+ */
+function fba_sponsor_metabox_html( $post ) {
+	wp_nonce_field( 'fba_sponsor_meta', 'fba_sponsor_nonce' );
+	$get = function ( $k ) use ( $post ) {
+		return get_post_meta( $post->ID, $k, true );
+	};
+	$status = $get( '_fba_sp_status' ) ? $get( '_fba_sp_status' ) : 'pending';
+	$cats   = fba_sponsor_categories();
+	$cat    = $get( '_fba_sp_category' );
+	?>
+	<p><strong><?php esc_html_e( 'Reference', 'faithbridgeacademy' ); ?>:</strong> <?php echo esc_html( $get( '_fba_sp_ref' ) ); ?></p>
+	<p><strong><?php esc_html_e( 'Sponsor', 'faithbridgeacademy' ); ?>:</strong> <?php echo esc_html( $get( '_fba_sp_name' ) . ' · ' . $get( '_fba_sp_phone' ) . ' · ' . $get( '_fba_sp_email' ) ); ?></p>
+	<p><strong><?php esc_html_e( 'Gift', 'faithbridgeacademy' ); ?>:</strong> <?php echo esc_html( isset( $cats[ $cat ] ) ? $cats[ $cat ] : $cat ); ?><?php echo $get( '_fba_sp_designation' ) ? ' — ' . esc_html( $get( '_fba_sp_designation' ) ) : ''; ?><?php echo $get( '_fba_sp_duration' ) ? ' · ' . esc_html( $get( '_fba_sp_duration' ) ) : ''; ?><?php echo (int) $get( '_fba_sp_children' ) > 0 ? ' · ' . esc_html( sprintf( __( '%d child(ren)', 'faithbridgeacademy' ), (int) $get( '_fba_sp_children' ) ) ) : ''; ?></p>
+	<p><strong><?php esc_html_e( 'Total (₦ snapshot)', 'faithbridgeacademy' ); ?>:</strong> <?php echo esc_html( '₦' . number_format( (float) $get( '_fba_sp_total' ) ) ); ?></p>
+	<p><label for="fba-sp-status"><?php esc_html_e( 'Status', 'faithbridgeacademy' ); ?></label><br>
+	<select id="fba-sp-status" name="fba_sp_status">
+		<?php foreach ( array( 'pending' => __( 'Pending transfer', 'faithbridgeacademy' ), 'confirmed' => __( 'Confirmed', 'faithbridgeacademy' ), 'cancelled' => __( 'Cancelled', 'faithbridgeacademy' ) ) as $val => $label ) : ?>
+			<option value="<?php echo esc_attr( $val ); ?>" <?php selected( $status, $val ); ?>><?php echo esc_html( $label ); ?></option>
+		<?php endforeach; ?>
+	</select></p>
+	<p><em><?php esc_html_e( 'Bank transfer only. Flip to Confirmed when the transfer lands, then follow up personally.', 'faithbridgeacademy' ); ?></em></p>
+	<?php
+}
+
+/**
+ * Save sponsor status.
+ *
+ * @param int $post_id Post ID.
+ */
+function fba_save_sponsor_meta( $post_id ) {
+	if ( ! isset( $_POST['fba_sponsor_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['fba_sponsor_nonce'] ) ), 'fba_sponsor_meta' ) ) {
+		return;
+	}
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+		return;
+	}
+	if ( ! current_user_can( 'edit_post', $post_id ) ) {
+		return;
+	}
+	if ( isset( $_POST['fba_sp_status'] ) ) {
+		$s = sanitize_key( wp_unslash( $_POST['fba_sp_status'] ) );
+		update_post_meta( $post_id, '_fba_sp_status', in_array( $s, array( 'pending', 'confirmed', 'cancelled' ), true ) ? $s : 'pending' );
+	}
+}
+add_action( 'save_post_sponsor', 'fba_save_sponsor_meta' );
+
+/**
+ * Sponsor admin columns.
+ *
+ * @param array $cols Columns.
+ * @return array
+ */
+function fba_sponsor_columns( $cols ) {
+	$cols['fba_status']   = __( 'Status', 'faithbridgeacademy' );
+	$cols['fba_category'] = __( 'Category', 'faithbridgeacademy' );
+	$cols['fba_total']    = __( 'Total (₦)', 'faithbridgeacademy' );
+	return $cols;
+}
+add_filter( 'manage_sponsor_posts_columns', 'fba_sponsor_columns' );
+
+/**
+ * Sponsor column values.
+ *
+ * @param string $col Column key.
+ * @param int    $post_id Post ID.
+ */
+function fba_sponsor_column_values( $col, $post_id ) {
+	$cats = fba_sponsor_categories();
+	$cat  = get_post_meta( $post_id, '_fba_sp_category', true );
+	if ( 'fba_status' === $col ) {
+		echo esc_html( get_post_meta( $post_id, '_fba_sp_status', true ) );
+	} elseif ( 'fba_category' === $col ) {
+		echo esc_html( isset( $cats[ $cat ] ) ? $cats[ $cat ] : $cat );
+	} elseif ( 'fba_total' === $col ) {
+		echo esc_html( '₦' . number_format( (float) get_post_meta( $post_id, '_fba_sp_total', true ) ) );
+	}
+}
+add_action( 'manage_sponsor_posts_custom_column', 'fba_sponsor_column_values', 10, 2 );
