@@ -618,9 +618,11 @@ function fba_seed_menus() {
 		$fitems        = wp_get_nav_menu_items( $footer->term_id );
 		if ( ! is_array( $fitems ) || ! count( $fitems ) ) {
 			$defs = array(
-				__( 'Apply Now', 'faithbridgeacademy' ) => home_url( '/apply/' ),
-				__( 'FAQ', 'faithbridgeacademy' )       => home_url( '/faq/' ),
-				__( 'Contact', 'faithbridgeacademy' )   => home_url( '/contact/' ),
+				__( 'Apply Now', 'faithbridgeacademy' )  => home_url( '/apply/' ),
+				__( 'Partner', 'faithbridgeacademy' )    => home_url( '/partner/' ),
+				__( 'Bible Club', 'faithbridgeacademy' ) => home_url( '/bible-club/' ),
+				__( 'FAQ', 'faithbridgeacademy' )        => home_url( '/faq/' ),
+				__( 'Contact', 'faithbridgeacademy' )    => home_url( '/contact/' ),
 			);
 			$pos  = 1;
 			foreach ( $defs as $title => $url ) {

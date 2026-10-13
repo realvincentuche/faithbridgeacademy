@@ -366,8 +366,12 @@
 	var spForm = document.getElementById( 'fbaSponsorForm' );
 	if ( spForm ) {
 		var spTotal = document.getElementById( 'fbaSpTotal' );
+		var spHint = document.getElementById( 'fbaSpAmountHint' );
 		function ngn( n ) {
 			return '₦' + Number( n ).toLocaleString( 'en-US' );
+		}
+		function digits( v ) {
+			return parseInt( String( v ).replace( /[^0-9]/g, '' ), 10 ) || 0;
 		}
 		function spUpdate() {
 			var catEl = spForm.querySelector( 'input[name="fba_sp_category"]:checked' );
@@ -378,11 +382,17 @@
 			var gen = spForm.querySelector( '.fba-sp-general' );
 			var acad = spForm.querySelector( '.fba-sp-academic-only' );
 			var total = 0;
+			var genMin = Number( spForm.getAttribute( 'data-general-min' ) ) || 50000;
 			if ( 'general' === cat ) {
 				if ( plan ) { plan.hidden = true; }
 				if ( gen ) { gen.hidden = false; }
 				var amtEl = spForm.querySelector( '#fbaSpAmount' );
-				total = amtEl ? ( Number( amtEl.value ) || 0 ) : 0;
+				total = amtEl ? digits( amtEl.value ) : 0;
+				if ( spHint ) {
+					spHint.textContent = total > 0 && total < genMin
+						? 'Minimum is ' + ngn( genMin )
+						: ( total >= genMin ? ngn( total ) + ' — thank you!' : '' );
+				}
 			} else {
 				if ( plan ) { plan.hidden = false; }
 				if ( gen ) { gen.hidden = true; }
@@ -410,10 +420,63 @@
 		}
 		var spAmt = spForm.querySelector( '#fbaSpAmount' );
 		if ( spAmt ) {
-			spAmt.addEventListener( 'input', spUpdate );
+			spAmt.addEventListener( 'input', function () {
+				var pos = spAmt.selectionStart || 0;
+				var before = spAmt.value.length;
+				var n = digits( spAmt.value );
+				spAmt.value = n ? n.toLocaleString( 'en-US' ) : '';
+				pos += spAmt.value.length - before;
+				try { spAmt.setSelectionRange( pos, pos ); } catch ( e ) {}
+				spUpdate();
+			} );
 		}
 		spUpdate();
 	}
+
+	/* Share row: copy link + native share. */
+	document.querySelectorAll( '.fba-share-row' ).forEach( function ( row ) {
+		var url = row.getAttribute( 'data-share-url' ) || window.location.href;
+		var copyBtn = row.querySelector( '[data-share-copy]' );
+		var sendBtn = row.querySelector( '[data-share-send]' );
+		function done( btn ) {
+			var label = btn.querySelector( 'span' );
+			if ( ! label ) {
+				label = document.createElement( 'span' );
+				btn.appendChild( document.createTextNode( ' ' ) );
+				btn.appendChild( label );
+			}
+			label.textContent = 'Copied!';
+			setTimeout( function () { label.textContent = ''; }, 2000 );
+		}
+		if ( copyBtn ) {
+			copyBtn.addEventListener( 'click', function () {
+				function fallback() {
+					var ta = document.createElement( 'textarea' );
+					ta.value = url;
+					ta.style.position = 'fixed';
+					ta.style.opacity = '0';
+					document.body.appendChild( ta );
+					ta.select();
+					try { document.execCommand( 'copy' ); done( copyBtn ); } catch ( e ) {}
+					document.body.removeChild( ta );
+				}
+				if ( navigator.clipboard && navigator.clipboard.writeText ) {
+					navigator.clipboard.writeText( url ).then( function () { done( copyBtn ); }, fallback );
+				} else {
+					fallback();
+				}
+			} );
+		}
+		if ( sendBtn ) {
+			sendBtn.addEventListener( 'click', function () {
+				if ( navigator.share ) {
+					navigator.share( { url: url, title: document.title } ).catch( function () {} );
+				} else {
+					window.open( 'https://wa.me/?text=' + encodeURIComponent( url ), '_blank', 'noopener' );
+				}
+			} );
+		}
+	} );
 
 	/* Currency switcher: usd|ngn select, persisted in a cookie. */
 	var curSel = document.getElementById( 'fbaCurrency' );

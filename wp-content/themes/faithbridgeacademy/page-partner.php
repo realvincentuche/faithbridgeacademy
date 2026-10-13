@@ -55,22 +55,30 @@ $programmes = new WP_Query(
 
 		<div class="fba-sp-cards">
 			<article class="fba-sp-card reveal">
-				<span class="fba-program-icon" aria-hidden="true"><i class="ph ph-book-open-text"></i></span>
+				<span class="fba-sp-icon" aria-hidden="true"><i class="ph ph-book-open-text"></i></span>
 				<h3><?php echo esc_html( $cats['bible'] ); ?></h3>
 				<p><?php esc_html_e( 'Cover fees for a child whose family cannot afford them — Scripture, memory verses, character lessons and spiritual growth.', 'faithbridgeacademy' ); ?></p>
-				<p class="fba-fee-line"><?php echo esc_html( sprintf( __( '₦%1$s per child per session (3 months) · ₦%2$s per child per year (4 sessions)', 'faithbridgeacademy' ), number_format( $rates['bible_session'] ), number_format( $rates['bible_year'] ) ) ); ?></p>
+				<ul class="fba-sp-rates">
+					<li><span><?php esc_html_e( 'One session · 3 months · per child', 'faithbridgeacademy' ); ?></span><strong>₦<?php echo esc_html( number_format( $rates['bible_session'] ) ); ?></strong></li>
+					<li class="fba-sp-rate-best"><span><?php esc_html_e( 'One full year · 4 sessions · per child', 'faithbridgeacademy' ); ?></span><strong>₦<?php echo esc_html( number_format( $rates['bible_year'] ) ); ?></strong></li>
+				</ul>
 			</article>
 			<article class="fba-sp-card reveal">
-				<span class="fba-program-icon" aria-hidden="true"><i class="ph ph-graduation-cap"></i></span>
+				<span class="fba-sp-icon" aria-hidden="true"><i class="ph ph-graduation-cap"></i></span>
 				<h3><?php echo esc_html( $cats['academic'] ); ?></h3>
 				<p><?php esc_html_e( 'Fund tutoring for a child who needs financial help — pick a programme or let us place your gift where most needed.', 'faithbridgeacademy' ); ?></p>
-				<p class="fba-fee-line"><?php echo esc_html( sprintf( __( '₦%1$s per child per session (3 months) · ₦%2$s per child per year (4 sessions)', 'faithbridgeacademy' ), number_format( $rates['academic_session'] ), number_format( $rates['academic_year'] ) ) ); ?></p>
+				<ul class="fba-sp-rates">
+					<li><span><?php esc_html_e( 'One session · 3 months · per child', 'faithbridgeacademy' ); ?></span><strong>₦<?php echo esc_html( number_format( $rates['academic_session'] ) ); ?></strong></li>
+					<li class="fba-sp-rate-best"><span><?php esc_html_e( 'One full year · 4 sessions · per child', 'faithbridgeacademy' ); ?></span><strong>₦<?php echo esc_html( number_format( $rates['academic_year'] ) ); ?></strong></li>
+				</ul>
 			</article>
 			<article class="fba-sp-card reveal">
-				<span class="fba-program-icon" aria-hidden="true"><i class="ph ph-heart"></i></span>
+				<span class="fba-sp-icon" aria-hidden="true"><i class="ph ph-heart"></i></span>
 				<h3><?php echo esc_html( $cats['general'] ); ?></h3>
 				<p><?php esc_html_e( 'For individuals, churches and organisations: back learning resources, programme development and faith-based initiatives.', 'faithbridgeacademy' ); ?></p>
-				<p class="fba-fee-line"><?php echo esc_html( sprintf( __( 'Any amount from ₦%s', 'faithbridgeacademy' ), number_format( $rates['general_min'] ) ) ); ?></p>
+				<ul class="fba-sp-rates">
+					<li class="fba-sp-rate-best"><span><?php esc_html_e( 'Any amount, from', 'faithbridgeacademy' ); ?></span><strong>₦<?php echo esc_html( number_format( $rates['general_min'] ) ); ?></strong></li>
+				</ul>
 			</article>
 		</div>
 
@@ -130,7 +138,8 @@ $programmes = new WP_Query(
 
 					<div class="fba-sp-general" hidden>
 						<p><label for="fbaSpAmount"><?php echo esc_html( sprintf( __( 'Amount in naira (minimum ₦%s)', 'faithbridgeacademy' ), number_format( $rates['general_min'] ) ) ); ?></label>
-						<input id="fbaSpAmount" name="fba_sp_amount" type="number" min="<?php echo esc_attr( (string) $rates['general_min'] ); ?>" step="1000" placeholder="<?php echo esc_attr( (string) $rates['general_min'] ); ?>"></p>
+						<span class="fba-sp-amount-wrap"><span aria-hidden="true">₦</span><input id="fbaSpAmount" name="fba_sp_amount" type="text" inputmode="numeric" autocomplete="off" placeholder="<?php echo esc_attr( number_format( $rates['general_min'] ) ); ?>"></span>
+						<small class="fba-sp-amount-hint" id="fbaSpAmountHint" aria-live="polite"></small></p>
 					</div>
 
 					<div class="fba-sp-total" role="status" aria-live="polite">
@@ -151,7 +160,10 @@ $programmes = new WP_Query(
 				<p><a href="mailto:<?php echo esc_attr( fba_get_option( 'email' ) ); ?>"><?php echo esc_html( fba_get_option( 'email' ) ); ?></a><br>
 				<a href="<?php echo esc_url( fba_get_option( 'whatsapp' ) ); ?>"><?php echo esc_html( fba_get_option( 'phone' ) ); ?></a></p>
 				<p><?php esc_html_e( 'Share this page directly: friends, churches and organisations can sponsor without registering any child.', 'faithbridgeacademy' ); ?></p>
-				<p class="fba-fee-line"><?php echo esc_url( home_url( '/partner/' ) ); ?></p>
+				<p class="fba-share-row" data-share-url="<?php echo esc_url( home_url( '/partner/' ) ); ?>">
+					<button class="fba-btn fba-btn-green fba-btn-sm" type="button" data-share-copy><i class="ph ph-copy" aria-hidden="true"></i> <?php esc_html_e( 'Copy link', 'faithbridgeacademy' ); ?></button>
+					<button class="fba-btn fba-btn-outline-light fba-btn-sm" type="button" data-share-send><i class="ph ph-share-network" aria-hidden="true"></i> <?php esc_html_e( 'Share', 'faithbridgeacademy' ); ?></button>
+				</p>
 				<div class="fba-bank-box">
 					<strong><?php esc_html_e( 'Bank transfer only', 'faithbridgeacademy' ); ?></strong>
 					<span><?php echo esc_html( fba_get_option( 'bank_name' ) . ' · ' . fba_get_option( 'bank_number' ) . ' · ' . fba_get_option( 'bank_bank' ) ); ?></span>

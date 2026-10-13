@@ -619,10 +619,25 @@ body.fba-cur-ngn .fba-fee-usd { display: none; }
 
 /* ---------- Sponsorship cards + calculator ---------- */
 .fba-sp-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin: 0 0 2.5rem; }
-.fba-sp-card { background: var(--fba-paper); border: 1px solid var(--fba-line); border-radius: 18px; padding: 1.8rem 1.6rem; }
-.fba-sp-card h3 { margin: 0.8rem 0 0.5rem; font-size: 1.15rem; }
-.fba-sp-card p { font-size: 0.93rem; margin: 0 0 0.8rem; }
-.fba-sp-card .fba-fee-line { color: var(--fba-green-deep); font-weight: 800; margin-bottom: 0; }
+.fba-sp-card { background: var(--fba-paper); border: 1px solid var(--fba-line); border-radius: 18px; padding: 1.8rem 1.6rem; position: relative; overflow: hidden; }
+.fba-sp-icon { position: absolute; top: 0.6rem; right: 0.4rem; color: var(--fba-green); opacity: 0.16; line-height: 1; pointer-events: none; }
+.fba-sp-icon .ph { font-size: 7.5rem; }
+.fba-sp-card h3 { margin: 0 0 0.5rem; font-size: 1.15rem; max-width: 78%; }
+.fba-sp-card p { font-size: 0.93rem; margin: 0 0 1rem; max-width: 82%; }
+.fba-sp-rates { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; }
+.fba-sp-rates li { display: flex; align-items: baseline; justify-content: space-between; gap: 0.8rem; background: var(--fba-bg); border: 1px solid var(--fba-line); border-radius: 10px; padding: 0.7rem 0.9rem; }
+.fba-sp-rates li span { font-size: 0.82rem; font-weight: 600; color: var(--fba-muted); }
+.fba-sp-rates li strong { font-size: 1.05rem; color: var(--fba-navy); white-space: nowrap; font-family: "Figtree", -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
+.fba-sp-rate-best { border-color: var(--fba-green-deep); background: var(--fba-cream-soft); }
+.fba-sp-rate-best strong { color: var(--fba-green-deep); }
+.fba-sp-amount-wrap { display: flex; align-items: center; gap: 0.6rem; background: #fff; border: 1.5px solid var(--fba-line); border-radius: 10px; padding: 0 1rem; margin-bottom: 0.4rem; }
+.fba-sp-amount-wrap:focus-within { outline: 2px solid var(--fba-green); border-color: var(--fba-green); }
+.fba-sp-amount-wrap > span { font-weight: 800; color: var(--fba-navy); font-size: 1.1rem; }
+.fba-sp-amount-wrap input { border: 0 !important; background: none !important; padding: 0.8rem 0 !important; margin: 0 !important; font-size: 1.15rem; font-weight: 700; color: var(--fba-navy); width: 100%; }
+.fba-sp-amount-wrap input:focus { outline: none !important; }
+.fba-sp-amount-hint { display: block; font-size: 0.85rem; font-weight: 700; color: var(--fba-green-deep); min-height: 1.2em; }
+.fba-share-row { display: flex; gap: 0.7rem; flex-wrap: wrap; margin: 0 0 1rem; }
+.fba-share-row .fba-btn { margin-top: 0; width: auto; flex: 1; white-space: nowrap; }
 .fba-sp-total { display: flex; align-items: center; justify-content: space-between; gap: 1rem; background: var(--fba-navy); color: #fff; border-radius: 12px; padding: 1rem 1.3rem; margin: 1.4rem 0; font-weight: 700; }
 .fba-sp-total strong { font-size: 1.5rem; color: var(--fba-green); font-family: "Figtree", -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
 @media (max-width: 900px) { .fba-sp-cards { grid-template-columns: 1fr; } }
@@ -660,7 +675,7 @@ body.fba-cur-ngn .fba-fee-usd { display: none; }
 	background: var(--fba-green); color: var(--fba-deep);
 }
 .wpcf7-response-output { border-radius: 10px; }
-.fba-form input[type="text"], .fba-form input[type="tel"], .fba-form input[type="email"], .fba-form input[type="date"], .fba-form select {
+.fba-form input[type="text"], .fba-form input[type="tel"], .fba-form input[type="email"], .fba-form input[type="date"], .fba-form input[type="number"], .fba-form select {
 	width: 100%; padding: 0.8rem 1rem; border: 1.5px solid var(--fba-line); border-radius: 10px;
 	font: inherit; color: var(--fba-ink); background: #fff; margin-bottom: 1.1rem;
 }

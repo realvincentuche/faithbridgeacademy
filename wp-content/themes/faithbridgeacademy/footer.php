@@ -81,8 +81,6 @@ $testimonials = get_posts(
 				<li><a href="<?php echo esc_url( home_url( '/partner/' ) ); ?>"><?php esc_html_e( 'Partner', 'faithbridgeacademy' ); ?></a></li>
 				<li><a href="<?php echo esc_url( home_url( '/about/' ) ); ?>"><?php esc_html_e( 'About', 'faithbridgeacademy' ); ?></a></li>
 				<li><a href="<?php echo esc_url( home_url( '/blog/' ) ); ?>"><?php esc_html_e( 'Blog', 'faithbridgeacademy' ); ?></a></li>
-				<li><a href="<?php echo esc_url( home_url( '/faq/' ) ); ?>"><?php esc_html_e( 'FAQs', 'faithbridgeacademy' ); ?></a></li>
-				<li><a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>"><?php esc_html_e( 'Contact', 'faithbridgeacademy' ); ?></a></li>
 			</ul>
 		</div>
 		<div class="fba-footer-col">
