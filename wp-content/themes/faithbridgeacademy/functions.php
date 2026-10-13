@@ -417,9 +417,9 @@ function fba_menu_fallback() {
 	echo '<li class="menu-item-has-children"><a href="' . esc_url( home_url( '/programmes/' ) ) . '" aria-haspopup="true" aria-expanded="false">' . esc_html__( 'Programmes', 'faithbridgeacademy' ) . '</a>';
 	echo '<ul class="sub-menu">';
 	echo '<li><a href="' . esc_url( home_url( '/programmes/' ) ) . '">' . esc_html__( 'All Programmes', 'faithbridgeacademy' ) . '</a></li>';
-	echo '<li><a href="' . esc_url( home_url( '/programmes/' ) ) . '">' . esc_html__( 'Bible Study', 'faithbridgeacademy' ) . '</a></li>';
-	echo '<li><a href="' . esc_url( home_url( '/programmes/' ) ) . '">' . esc_html__( 'Languages', 'faithbridgeacademy' ) . '</a></li>';
-	echo '<li><a href="' . esc_url( home_url( '/programmes/' ) ) . '">' . esc_html__( 'Sciences & Others', 'faithbridgeacademy' ) . '</a></li>';
+	echo '<li><a href="' . esc_url( add_query_arg( 'group', 'bible', home_url( '/programmes/' ) ) ) . '">' . esc_html__( 'Bible Study', 'faithbridgeacademy' ) . '</a></li>';
+	echo '<li><a href="' . esc_url( add_query_arg( 'group', 'languages', home_url( '/programmes/' ) ) ) . '">' . esc_html__( 'Languages', 'faithbridgeacademy' ) . '</a></li>';
+	echo '<li><a href="' . esc_url( add_query_arg( 'group', 'others', home_url( '/programmes/' ) ) ) . '">' . esc_html__( 'Sciences & Others', 'faithbridgeacademy' ) . '</a></li>';
 	echo '</ul></li>';
 	echo '<li class="menu-item-has-children"><a href="' . esc_url( home_url( '/apply/' ) ) . '" aria-haspopup="true" aria-expanded="false">' . esc_html__( 'Admissions', 'faithbridgeacademy' ) . '</a>';
 	echo '<ul class="sub-menu">';
@@ -430,6 +430,12 @@ function fba_menu_fallback() {
 	echo '<li><a href="' . esc_url( home_url( '/about/' ) ) . '">' . esc_html__( 'About', 'faithbridgeacademy' ) . '</a></li>';
 	echo '<li><a href="' . esc_url( home_url( '/blog/' ) ) . '">' . esc_html__( 'Blog', 'faithbridgeacademy' ) . '</a></li>';
 	echo '<li><a href="' . esc_url( home_url( '/contact/' ) ) . '">' . esc_html__( 'Contact', 'faithbridgeacademy' ) . '</a></li>';
+	// Visitors need an account door even before a real menu exists.
+	if ( is_user_logged_in() ) {
+		echo '<li><a href="' . esc_url( wp_logout_url( home_url( '/' ) ) ) . '">' . esc_html__( 'Logout', 'faithbridgeacademy' ) . '</a></li>';
+	} else {
+		echo '<li><a href="' . esc_url( wp_login_url( home_url( '/programmes/' ) ) ) . '">' . esc_html__( 'Login', 'faithbridgeacademy' ) . '</a></li>';
+	}
 	echo '</ul>';
 }
 
@@ -442,6 +448,143 @@ function fba_footer_fallback() {
 	echo '<li><a href="' . esc_url( home_url( '/faq/' ) ) . '">' . esc_html__( 'FAQ', 'faithbridgeacademy' ) . '</a></li>';
 	echo '<li><a href="' . esc_url( home_url( '/contact/' ) ) . '">' . esc_html__( 'Contact', 'faithbridgeacademy' ) . '</a></li>';
 	echo '</ul>';
+}
+
+/**
+ * Canonical nav structure (mirrors fba_menu_fallback). Used by the seeder so
+ * local == live without hand-building menus in wp-admin.
+ *
+ * @return array
+ */
+function fba_primary_menu_items() {
+	return array(
+		array( 'title' => __( 'Home', 'faithbridgeacademy' ), 'url' => home_url( '/' ) ),
+		array(
+			'title' => __( 'Programmes', 'faithbridgeacademy' ), 'url' => home_url( '/programmes/' ),
+			'children' => array(
+				array( 'title' => __( 'All Programmes', 'faithbridgeacademy' ), 'url' => home_url( '/programmes/' ) ),
+				array( 'title' => __( 'Bible Study', 'faithbridgeacademy' ), 'url' => add_query_arg( 'group', 'bible', home_url( '/programmes/' ) ) ),
+				array( 'title' => __( 'Languages', 'faithbridgeacademy' ), 'url' => add_query_arg( 'group', 'languages', home_url( '/programmes/' ) ) ),
+				array( 'title' => __( 'Sciences & Others', 'faithbridgeacademy' ), 'url' => add_query_arg( 'group', 'others', home_url( '/programmes/' ) ) ),
+			),
+		),
+		array(
+			'title' => __( 'Admissions', 'faithbridgeacademy' ), 'url' => home_url( '/apply/' ),
+			'children' => array(
+				array( 'title' => __( 'How to Apply', 'faithbridgeacademy' ), 'url' => home_url( '/apply/' ) ),
+				array( 'title' => __( 'FAQs', 'faithbridgeacademy' ), 'url' => home_url( '/faq/' ) ),
+			),
+		),
+		array( 'title' => __( 'Bible Club', 'faithbridgeacademy' ), 'url' => home_url( '/bible-club/' ) ),
+		array( 'title' => __( 'About', 'faithbridgeacademy' ), 'url' => home_url( '/about/' ) ),
+		array( 'title' => __( 'Blog', 'faithbridgeacademy' ), 'url' => home_url( '/blog/' ) ),
+		array( 'title' => __( 'Contact', 'faithbridgeacademy' ), 'url' => home_url( '/contact/' ) ),
+	);
+}
+
+/**
+ * Seed Primary + Footer nav menus and assign theme locations.
+ * Idempotent: never duplicates; repairs stale /fees/ + #group links.
+ *
+ * @return array {primary, footer} menu IDs.
+ */
+function fba_seed_menus() {
+	$out = array( 'primary' => 0, 'footer' => 0 );
+
+	$primary = wp_get_nav_menu_object( 'Primary' );
+	if ( ! $primary ) {
+		$mid     = wp_create_nav_menu( 'Primary' );
+		$primary = $mid && ! is_wp_error( $mid ) ? wp_get_nav_menu_object( $mid ) : false;
+	}
+	if ( $primary ) {
+		$out['primary'] = (int) $primary->term_id;
+		$items          = wp_get_nav_menu_items( $primary->term_id );
+		// Repair stale links on existing menus (dead /fees/, #group anchors).
+		if ( is_array( $items ) && $items ) {
+			foreach ( $items as $it ) {
+				if ( false !== strpos( (string) $it->url, '/fees' ) ) {
+					wp_delete_post( (int) $it->ID, true );
+					continue;
+				}
+				foreach ( array( '#bible' => 'bible', '#languages' => 'languages', '#others' => 'others' ) as $hash => $group ) {
+					if ( false !== strpos( (string) $it->url, $hash ) ) {
+						wp_update_nav_menu_item(
+							$primary->term_id, (int) $it->ID,
+							array(
+								'menu-item-title'  => $it->title,
+								'menu-item-url'    => add_query_arg( 'group', $group, home_url( '/programmes/' ) ),
+								'menu-item-status' => 'publish',
+							)
+						);
+					}
+				}
+			}
+			$items = wp_get_nav_menu_items( $primary->term_id );
+		}
+		if ( ! is_array( $items ) || ! count( $items ) ) {
+			foreach ( fba_primary_menu_items() as $order => $top ) {
+				$top_id = wp_update_nav_menu_item(
+					$primary->term_id, 0,
+					array(
+						'menu-item-title'    => $top['title'],
+						'menu-item-url'      => $top['url'],
+						'menu-item-status'   => 'publish',
+						'menu-item-position' => $order + 1,
+					)
+				);
+				if ( $top_id && ! is_wp_error( $top_id ) && ! empty( $top['children'] ) ) {
+					foreach ( $top['children'] as $ci => $child ) {
+						wp_update_nav_menu_item(
+							$primary->term_id, 0,
+							array(
+								'menu-item-title'     => $child['title'],
+								'menu-item-url'       => $child['url'],
+								'menu-item-status'    => 'publish',
+								'menu-item-parent-id' => $top_id,
+								'menu-item-position'  => $ci + 1,
+							)
+						);
+					}
+				}
+			}
+		}
+	}
+
+	$footer = wp_get_nav_menu_object( 'Footer' );
+	if ( ! $footer ) {
+		$mid    = wp_create_nav_menu( 'Footer' );
+		$footer = $mid && ! is_wp_error( $mid ) ? wp_get_nav_menu_object( $mid ) : false;
+	}
+	if ( $footer ) {
+		$out['footer'] = (int) $footer->term_id;
+		$fitems        = wp_get_nav_menu_items( $footer->term_id );
+		if ( ! is_array( $fitems ) || ! count( $fitems ) ) {
+			$defs = array(
+				__( 'Apply Now', 'faithbridgeacademy' ) => home_url( '/apply/' ),
+				__( 'FAQ', 'faithbridgeacademy' )       => home_url( '/faq/' ),
+				__( 'Contact', 'faithbridgeacademy' )   => home_url( '/contact/' ),
+			);
+			$pos  = 1;
+			foreach ( $defs as $title => $url ) {
+				wp_update_nav_menu_item(
+					$footer->term_id, 0,
+					array(
+						'menu-item-title'    => $title,
+						'menu-item-url'      => $url,
+						'menu-item-status'   => 'publish',
+						'menu-item-position' => $pos++,
+					)
+				);
+			}
+		}
+	}
+
+	$locs                = get_theme_mod( 'nav_menu_locations', array() );
+	$locs['primary']     = $out['primary'] ? $out['primary'] : ( isset( $locs['primary'] ) ? $locs['primary'] : 0 );
+	$locs['footer']      = $out['footer'] ? $out['footer'] : ( isset( $locs['footer'] ) ? $locs['footer'] : 0 );
+	set_theme_mod( 'nav_menu_locations', $locs );
+
+	return $out;
 }
 
 /* -------------------------------------------------------------------------
@@ -567,6 +710,8 @@ function fba_seed_on_activate() {
 		update_option( 'page_for_posts', $ids['blog'] );
 	}
 
+	fba_seed_menus();
+
 	flush_rewrite_rules();
 }
 add_action( 'after_switch_theme', 'fba_seed_on_activate' );
@@ -604,6 +749,10 @@ function fba_setup_notice() {
 			$missing[] = 'faqs(' . $faq_count . '/7)';
 		}
 	}
+	$locs = get_theme_mod( 'nav_menu_locations', array() );
+	if ( empty( $locs['primary'] ) ) {
+		$missing[] = 'primary-menu(unassigned)';
+	}
 	if ( ! $missing ) {
 		return;
 	}
@@ -625,8 +774,12 @@ function fba_setup_pages_handler() {
 	fba_seed_on_activate();
 	$prog = function_exists( 'fba_seed_programmes' ) ? fba_seed_programmes() : array();
 	$faqs = function_exists( 'fba_seed_faqs' ) ? fba_seed_faqs() : array();
+	$menus = function_exists( 'fba_seed_menus' ) ? fba_seed_menus() : array();
 	flush_rewrite_rules();
 	$msg = array();
+	if ( $menus ) {
+		$msg[] = 'menus: Primary(' . (int) $menus['primary'] . ') Footer(' . (int) $menus['footer'] . ') ready';
+	}
 	if ( $prog ) {
 		$msg[] = 'programmes: ' . (int) $prog['created'] . ' created';
 	}

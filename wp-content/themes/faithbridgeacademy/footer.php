@@ -110,10 +110,22 @@ $testimonials = get_posts(
 	<div class="fba-footer-bottom">
 		<div class="fba-wrap fba-footer-bottom-inner">
 			<p>&copy; <?php echo esc_html( gmdate( 'Y' ) ); ?> <?php esc_html_e( 'FaithBridge Academy. All rights reserved.', 'faithbridgeacademy' ); ?></p>
-			<div class="fba-currency" role="group" aria-label="<?php esc_attr_e( 'Currency', 'faithbridgeacademy' ); ?>">
-				<button type="button" data-cur="usd" class="<?php echo 'ngn' === fba_currency() ? '' : 'active'; ?>" aria-pressed="<?php echo 'ngn' === fba_currency() ? 'false' : 'true'; ?>">USD</button>
-				<button type="button" data-cur="ngn" class="<?php echo 'ngn' === fba_currency() ? 'active' : ''; ?>" aria-pressed="<?php echo 'ngn' === fba_currency() ? 'true' : 'false'; ?>">NGN</button>
-			</div>
+			<?php
+			wp_nav_menu(
+				array(
+					'theme_location' => 'footer',
+					'container'      => false,
+					'fallback_cb'    => 'fba_footer_fallback',
+				)
+			);
+			?>
+			<label class="fba-currency">
+				<span class="fba-sr-only"><?php esc_html_e( 'Currency', 'faithbridgeacademy' ); ?></span>
+				<select id="fbaCurrency" aria-label="<?php esc_attr_e( 'Currency', 'faithbridgeacademy' ); ?>">
+					<option value="usd"<?php selected( fba_currency(), 'usd' ); ?>>USD $</option>
+					<option value="ngn"<?php selected( fba_currency(), 'ngn' ); ?>>NGN ₦</option>
+				</select>
+			</label>
 			<p class="fba-powered"><?php esc_html_e( 'powered with love', 'faithbridgeacademy' ); ?> <i class="ph ph-heart" aria-hidden="true"></i> <?php esc_html_e( 'by', 'faithbridgeacademy' ); ?> <a href="https://octravo.com" target="_blank" rel="noopener">octravo</a></p>
 		</div>
 	</div>

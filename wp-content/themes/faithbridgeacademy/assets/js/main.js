@@ -362,16 +362,15 @@
 		} );
 	}
 
-	/* Currency switcher: usd|ngn, persisted in a cookie. */
-	var curBtns = document.querySelectorAll( '.fba-currency button' );
+	/* Currency switcher: usd|ngn select, persisted in a cookie. */
+	var curSel = document.getElementById( 'fbaCurrency' );
 	function setCurrency( cur ) {
+		cur = 'ngn' === cur ? 'ngn' : 'usd';
 		document.body.classList.toggle( 'fba-cur-ngn', 'ngn' === cur );
 		document.body.classList.toggle( 'fba-cur-usd', 'ngn' !== cur );
-		curBtns.forEach( function ( b ) {
-			var on = b.getAttribute( 'data-cur' ) === cur;
-			b.classList.toggle( 'active', on );
-			b.setAttribute( 'aria-pressed', on ? 'true' : 'false' );
-		} );
+		if ( curSel && curSel.value !== cur ) {
+			curSel.value = cur;
+		}
 		document.querySelectorAll( '.fba-check-fee' ).forEach( function ( el ) {
 			el.textContent = 'ngn' === cur ? el.getAttribute( 'data-fee-ngn' ) : el.getAttribute( 'data-fee-usd' );
 		} );
@@ -382,9 +381,9 @@
 			document.cookie = 'fba_currency=' + cur + '; path=/; max-age=31536000; SameSite=Lax';
 		} catch ( e ) {}
 	}
-	curBtns.forEach( function ( b ) {
-		b.addEventListener( 'click', function () { setCurrency( b.getAttribute( 'data-cur' ) ); } );
-	} );
+	if ( curSel ) {
+		curSel.addEventListener( 'change', function () { setCurrency( curSel.value ); } );
+	}
 
 	/* FAQ accordion. */
 	document.querySelectorAll( '.fba-faq-item' ).forEach( function ( item ) {
