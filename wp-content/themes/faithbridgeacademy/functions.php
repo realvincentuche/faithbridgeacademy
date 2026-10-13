@@ -426,7 +426,6 @@ function fba_settings_page() {
  */
 function fba_menu_fallback() {
 	echo '<ul class="menu">';
-	echo '<li><a href="' . esc_url( home_url( '/' ) ) . '">' . esc_html__( 'Home', 'faithbridgeacademy' ) . '</a></li>';
 	echo '<li class="menu-item-has-children"><a href="' . esc_url( home_url( '/programmes/' ) ) . '" aria-haspopup="true" aria-expanded="false">' . esc_html__( 'Programmes', 'faithbridgeacademy' ) . '</a>';
 	echo '<ul class="sub-menu">';
 	echo '<li><a href="' . esc_url( home_url( '/programmes/' ) ) . '">' . esc_html__( 'All Programmes', 'faithbridgeacademy' ) . '</a></li>';
@@ -440,9 +439,8 @@ function fba_menu_fallback() {
 	echo '<li><a href="' . esc_url( home_url( '/faq/' ) ) . '">' . esc_html__( 'FAQs', 'faithbridgeacademy' ) . '</a></li>';
 	echo '</ul></li>';
 	echo '<li><a href="' . esc_url( home_url( '/bible-club/' ) ) . '">' . esc_html__( 'Bible Club', 'faithbridgeacademy' ) . '</a></li>';
-	echo '<li><a href="' . esc_url( home_url( '/partner/' ) ) . '">' . esc_html__( 'Partner With Us', 'faithbridgeacademy' ) . '</a></li>';
+	echo '<li><a href="' . esc_url( home_url( '/partner/' ) ) . '">' . esc_html__( 'Partner', 'faithbridgeacademy' ) . '</a></li>';
 	echo '<li><a href="' . esc_url( home_url( '/about/' ) ) . '">' . esc_html__( 'About', 'faithbridgeacademy' ) . '</a></li>';
-	echo '<li><a href="' . esc_url( home_url( '/blog/' ) ) . '">' . esc_html__( 'Blog', 'faithbridgeacademy' ) . '</a></li>';
 	echo '<li><a href="' . esc_url( home_url( '/contact/' ) ) . '">' . esc_html__( 'Contact', 'faithbridgeacademy' ) . '</a></li>';
 	// Visitors need an account door even before a real menu exists.
 	if ( is_user_logged_in() ) {
@@ -472,7 +470,6 @@ function fba_footer_fallback() {
  */
 function fba_primary_menu_items() {
 	return array(
-		array( 'title' => __( 'Home', 'faithbridgeacademy' ), 'url' => home_url( '/' ) ),
 		array(
 			'title' => __( 'Programmes', 'faithbridgeacademy' ), 'url' => home_url( '/programmes/' ),
 			'children' => array(
@@ -490,9 +487,8 @@ function fba_primary_menu_items() {
 			),
 		),
 		array( 'title' => __( 'Bible Club', 'faithbridgeacademy' ), 'url' => home_url( '/bible-club/' ) ),
-		array( 'title' => __( 'Partner With Us', 'faithbridgeacademy' ), 'url' => home_url( '/partner/' ) ),
+		array( 'title' => __( 'Partner', 'faithbridgeacademy' ), 'url' => home_url( '/partner/' ) ),
 		array( 'title' => __( 'About', 'faithbridgeacademy' ), 'url' => home_url( '/about/' ) ),
-		array( 'title' => __( 'Blog', 'faithbridgeacademy' ), 'url' => home_url( '/blog/' ) ),
 		array( 'title' => __( 'Contact', 'faithbridgeacademy' ), 'url' => home_url( '/contact/' ) ),
 	);
 }
@@ -515,11 +511,32 @@ function fba_seed_menus() {
 		$out['primary'] = (int) $primary->term_id;
 		$items          = wp_get_nav_menu_items( $primary->term_id );
 		// Repair stale links on existing menus (dead /fees/, #group anchors).
+		// Trim to 6 top-level items: drop Home + Blog, shorten Partner.
 		// Append the Partner link when missing (pre-menu-seed installs).
 		if ( is_array( $items ) && $items ) {
 			foreach ( $items as $it ) {
 				if ( false !== strpos( (string) $it->url, '/fees' ) ) {
 					wp_delete_post( (int) $it->ID, true );
+					continue;
+				}
+				$is_top = empty( (int) $it->menu_item_parent );
+				if ( $is_top && ( untrailingslashit( (string) $it->url ) === untrailingslashit( home_url() ) || untrailingslashit( (string) $it->url ) === untrailingslashit( home_url( '/' ) ) ) ) {
+					wp_delete_post( (int) $it->ID, true );
+					continue;
+				}
+				if ( $is_top && false !== strpos( (string) $it->url, '/blog' ) ) {
+					wp_delete_post( (int) $it->ID, true );
+					continue;
+				}
+				if ( false !== strpos( (string) $it->url, '/partner' ) && 'Partner' !== $it->title ) {
+					wp_update_nav_menu_item(
+						$primary->term_id, (int) $it->ID,
+						array(
+							'menu-item-title'  => __( 'Partner', 'faithbridgeacademy' ),
+							'menu-item-url'    => home_url( '/partner/' ),
+							'menu-item-status' => 'publish',
+						)
+					);
 					continue;
 				}
 				foreach ( array( '#bible' => 'bible', '#languages' => 'languages', '#others' => 'others' ) as $hash => $group ) {
@@ -553,7 +570,7 @@ function fba_seed_menus() {
 				wp_update_nav_menu_item(
 					$primary->term_id, 0,
 					array(
-						'menu-item-title'    => __( 'Partner With Us', 'faithbridgeacademy' ),
+						'menu-item-title'    => __( 'Partner', 'faithbridgeacademy' ),
 						'menu-item-url'      => home_url( '/partner/' ),
 						'menu-item-status'   => 'publish',
 						'menu-item-position' => $max + 1,
