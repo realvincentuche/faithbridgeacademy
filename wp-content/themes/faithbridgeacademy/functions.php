@@ -644,8 +644,100 @@ function fba_seed_menus() {
 	$locs['footer']      = $out['footer'] ? $out['footer'] : ( isset( $locs['footer'] ) ? $locs['footer'] : 0 );
 	set_theme_mod( 'nav_menu_locations', $locs );
 
+	// Normalize top-level order: our 6 first, anything else (e.g. Login) after.
+	if ( $out['primary'] ) {
+		fba_normalize_menu_order( $out['primary'] );
+	}
+
 	return $out;
 }
+
+/**
+ * Order Primary top-level items: Programmes, Admissions, Bible Club,
+ * Partner, About, Contact — anything else (e.g. Masteriyo Login) after.
+ *
+ * @param int $menu_id Nav menu ID.
+ */
+function fba_normalize_menu_order( $menu_id ) {
+	$items = wp_get_nav_menu_items( $menu_id );
+	if ( ! is_array( $items ) || ! $items ) {
+		return;
+	}
+	$rank = array(
+		'/programmes/' => 1,
+		'/apply/'      => 2,
+		'/bible-club/' => 3,
+		'/partner/'    => 4,
+		'/about/'      => 5,
+		'/contact/'    => 6,
+	);
+	foreach ( $items as $it ) {
+		if ( ! empty( (int) $it->menu_item_parent ) ) {
+			continue;
+		}
+		$path = (string) parse_url( (string) $it->url, PHP_URL_PATH );
+		$pos  = 0;
+		foreach ( $rank as $needle => $r ) {
+			if ( false !== strpos( $path . '/', $needle ) ) {
+				$pos = $r;
+				break;
+			}
+		}
+		if ( ! $pos ) {
+			continue; // Never touch foreign items (e.g. Masteriyo Login placeholder).
+		}
+		wp_update_nav_menu_item(
+			$menu_id, (int) $it->ID,
+			array(
+				'menu-item-title'    => $it->title,
+				'menu-item-url'      => $it->url,
+				'menu-item-status'   => 'publish',
+				'menu-item-position' => $pos,
+			)
+		);
+	}
+}
+
+/**
+ * Auto-repair stale Primary menus on admin loads (no button click needed).
+ * Deploys never touch the DB, so live keeps old Home/Blog/Partner-With-Us
+ * rows until something rewrites them — this is that something.
+ */
+function fba_maybe_repair_menus() {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+	if ( get_transient( 'fba_menu_repair_check' ) ) {
+		return;
+	}
+	set_transient( 'fba_menu_repair_check', 1, 12 * HOUR_IN_SECONDS );
+	$locs = get_theme_mod( 'nav_menu_locations', array() );
+	if ( empty( $locs['primary'] ) ) {
+		return;
+	}
+	$items = wp_get_nav_menu_items( (int) $locs['primary'] );
+	if ( ! is_array( $items ) || ! $items ) {
+		return;
+	}
+	$needs = false;
+	foreach ( $items as $it ) {
+		$url  = (string) $it->url;
+		$top  = empty( (int) $it->menu_item_parent );
+		$path = (string) parse_url( $url, PHP_URL_PATH );
+		if ( $top && ( untrailingslashit( $path ) === '' || '/blog' === untrailingslashit( $path ) ) ) {
+			$needs = true;
+			break;
+		}
+		if ( false !== strpos( $url, '/partner' ) && 'Partner' !== $it->title ) {
+			$needs = true;
+			break;
+		}
+	}
+	if ( $needs ) {
+		fba_seed_menus();
+	}
+}
+add_action( 'admin_init', 'fba_maybe_repair_menus' );
 
 /* -------------------------------------------------------------------------
  * Testimonials + newsletter subscribers (private CPTs)
