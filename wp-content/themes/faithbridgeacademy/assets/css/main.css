@@ -82,8 +82,8 @@ p { margin: 0 0 1rem; }
 .fba-btn-green:hover { background: #d3cf06; }
 .fba-btn-navy { background: var(--fba-navy); color: #fff; }
 .fba-btn-navy:hover { background: var(--fba-navy-2); }
-.fba-btn-outline-light { border-color: rgba(255, 255, 255, 0.75); color: #fff; }
-.fba-btn-outline-light:hover { background: rgba(255, 255, 255, 0.14); }
+.fba-btn-outline-light { border-color: rgba(255, 255, 255, 0.75); color: #fff; background: transparent; }
+.fba-btn-outline-light:hover { background: rgba(255, 255, 255, 0.14); color: #fff; }
 .fba-btn-sm { padding: 0.6rem 1.2rem; font-size: 0.88rem; }
 
 .fba-link-arrow { font-weight: 700; text-decoration: none; color: var(--fba-navy); white-space: nowrap; }
@@ -609,6 +609,8 @@ body.fba-cur-ngn .fba-fee-usd { display: none; }
 .fba-side-card h3 { color: #fff; margin-top: 0; }
 .fba-side-card .fba-fee-line { color: var(--fba-green); font-weight: 800; font-size: 1.05rem; }
 .fba-side-card p { font-size: 0.92rem; }
+.fba-side-card a:not(.fba-btn) { color: #fff; text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
+.fba-side-card a:not(.fba-btn):hover { color: var(--fba-green); }
 .fba-side-card .fba-btn { width: 100%; justify-content: center; margin-top: 1rem; }
 .fba-bank-box { background: var(--fba-cream-soft); border: 1px solid var(--fba-line); border-radius: 12px; padding: 1.2rem 1.4rem; margin-top: 1.5rem; color: var(--fba-ink); }
 .fba-bank-box strong { display: block; color: var(--fba-navy); }
@@ -625,7 +627,7 @@ body.fba-cur-ngn .fba-fee-usd { display: none; }
 .fba-sp-card h3 { margin: 0 0 0.5rem; font-size: 1.15rem; max-width: 78%; }
 .fba-sp-card p { font-size: 0.93rem; margin: 0 0 1rem; max-width: 82%; }
 .fba-sp-rates { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; }
-.fba-sp-rates li { display: flex; align-items: baseline; justify-content: space-between; gap: 0.8rem; background: var(--fba-bg); border: 1px solid var(--fba-line); border-radius: 10px; padding: 0.7rem 0.9rem; }
+.fba-sp-rates li { display: flex; align-items: center; justify-content: space-between; gap: 0.8rem; background: var(--fba-bg); border: 1px solid var(--fba-line); border-radius: 10px; padding: 0.7rem 0.9rem; }
 .fba-sp-rates li span { font-size: 0.82rem; font-weight: 600; color: var(--fba-muted); }
 .fba-sp-rates li strong { font-size: 1.05rem; color: var(--fba-navy); white-space: nowrap; font-family: "Figtree", -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
 .fba-sp-rate-best { border-color: var(--fba-green-deep); background: var(--fba-cream-soft); }
@@ -637,7 +639,7 @@ body.fba-cur-ngn .fba-fee-usd { display: none; }
 .fba-sp-amount-wrap input:focus { outline: none !important; }
 .fba-sp-amount-hint { display: block; font-size: 0.85rem; font-weight: 700; color: var(--fba-green-deep); min-height: 1.2em; }
 .fba-share-row { display: flex; gap: 0.7rem; flex-wrap: wrap; margin: 0 0 1rem; }
-.fba-share-row .fba-btn { margin-top: 0; width: auto; flex: 1; white-space: nowrap; }
+.fba-side-card .fba-share-row .fba-btn { margin-top: 0; width: auto; flex: 1 1 0; white-space: nowrap; }
 .fba-sp-total { display: flex; align-items: center; justify-content: space-between; gap: 1rem; background: var(--fba-navy); color: #fff; border-radius: 12px; padding: 1rem 1.3rem; margin: 1.4rem 0; font-weight: 700; }
 .fba-sp-total strong { font-size: 1.5rem; color: var(--fba-green); font-family: "Figtree", -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
 @media (max-width: 900px) { .fba-sp-cards { grid-template-columns: 1fr; } }
