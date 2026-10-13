@@ -396,6 +396,10 @@ function fba_settings_page() {
 			</table>
 			<?php submit_button(); ?>
 		</form>
+		<hr>
+		<h2><?php esc_html_e( 'Catalogue setup', 'faithbridgeacademy' ); ?></h2>
+		<p><?php esc_html_e( 'Seed the 16 programmes and 7 FAQs (never overwrites existing items).', 'faithbridgeacademy' ); ?></p>
+		<p><a class="button button-secondary" href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=fba_setup_pages' ), 'fba_setup_pages' ) ); ?>"><?php esc_html_e( 'Seed programmes & FAQs now', 'faithbridgeacademy' ); ?></a></p>
 	</div>
 	<?php
 }
@@ -577,6 +581,11 @@ function fba_setup_notice() {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		return;
 	}
+	if ( isset( $_GET['fba_seeded'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- result display.
+		echo '<div class="notice notice-success"><p>';
+		echo esc_html__( 'FaithBridge Academy setup complete: ', 'faithbridgeacademy' ) . esc_html( sanitize_text_field( wp_unslash( $_GET['fba_seeded'] ) ) ) . '.'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- result display.
+		echo '</p></div>';
+	}
 	$missing = array();
 	foreach ( array( 'home', 'about', 'programmes', 'bible-club', 'fees', 'faq', 'apply', 'contact', 'blog', 'resources' ) as $slug ) {
 		if ( ! get_page_by_path( $slug ) ) {
@@ -588,6 +597,13 @@ function fba_setup_notice() {
 		$prog_count = $c ? (int) $c->publish : 0;
 		if ( $prog_count < 16 ) {
 			$missing[] = 'programmes-catalogue(' . $prog_count . '/16)';
+		}
+	}
+	if ( post_type_exists( 'faq' ) ) {
+		$c = wp_count_posts( 'faq' );
+		$faq_count = $c ? (int) $c->publish : 0;
+		if ( $faq_count < 7 ) {
+			$missing[] = 'faqs(' . $faq_count . '/7)';
 		}
 	}
 	if ( ! $missing ) {
@@ -609,10 +625,17 @@ function fba_setup_pages_handler() {
 		wp_die( esc_html__( 'Not allowed.', 'faithbridgeacademy' ) );
 	}
 	fba_seed_on_activate();
-	fba_seed_programmes();
-	fba_seed_faqs();
+	$prog = function_exists( 'fba_seed_programmes' ) ? fba_seed_programmes() : array();
+	$faqs = function_exists( 'fba_seed_faqs' ) ? fba_seed_faqs() : array();
 	flush_rewrite_rules();
-	wp_safe_redirect( admin_url( 'edit.php?post_type=programme' ) );
+	$msg = array();
+	if ( $prog ) {
+		$msg[] = 'programmes: ' . (int) $prog['created'] . ' created';
+	}
+	if ( $faqs ) {
+		$msg[] = 'faqs: ' . (int) $faqs['created'] . ' created';
+	}
+	wp_safe_redirect( add_query_arg( 'fba_seeded', rawurlencode( implode( ', ', $msg ) ), admin_url( 'edit.php?post_type=programme' ) ) );
 	exit;
 }
 add_action( 'admin_post_fba_setup_pages', 'fba_setup_pages_handler' );
