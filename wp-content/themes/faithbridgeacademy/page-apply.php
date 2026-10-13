@@ -16,7 +16,7 @@ get_template_part(
 	'banner',
 	array(
 		'title' => __( 'Apply Now', 'faithbridgeacademy' ),
-		'sub'   => fba_get_option( 'session_label' ) . ' · ' . fba_get_option( 'session_period' ),
+		'sub'   => fba_current_session()['label'] . ' · ' . fba_current_session()['period'],
 		'img'   => $uri . '/assets/images/slide-3.jpg',
 	)
 );
@@ -146,9 +146,9 @@ $sessions = fba_open_sessions();
 		</form>
 
 		<aside class="fba-side-card">
-			<h3><?php echo esc_html( fba_get_option( 'session_label' ) ); ?></h3>
-			<p><?php echo esc_html( fba_get_option( 'session_period' ) . ' · ' . fba_get_option( 'class_days' ) . ' · ' . fba_get_option( 'class_time' ) ); ?></p>
-			<p class="fba-fee-line"><?php esc_html_e( 'Group', 'faithbridgeacademy' ); ?>: <?php echo fba_fee_label( (float) fba_get_option( 'fee_group' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> · <?php esc_html_e( 'One-on-one', 'faithbridgeacademy' ); ?>: <?php echo fba_fee_label( (float) fba_get_option( 'fee_one_to_one' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
+			<h3><?php echo esc_html( fba_current_session()['label'] ); ?></h3>
+			<p><?php echo esc_html( fba_current_session()['period'] . ' · ' . fba_get_option( 'class_days' ) . ' · ' . fba_get_option( 'class_time' ) ); ?></p>
+			<p class="fba-fee-line"><?php esc_html_e( 'Fees show per programme as you select them — group from $200, one-on-one from $300 per session.', 'faithbridgeacademy' ); ?></p>
 			<p><?php esc_html_e( 'Bank transfer only. No receipt upload — we confirm every application personally.', 'faithbridgeacademy' ); ?></p>
 		</aside>
 	</div>

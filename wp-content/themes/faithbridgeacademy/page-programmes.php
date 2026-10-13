@@ -24,7 +24,7 @@ get_template_part(
 	'banner',
 	array(
 		'title' => __( 'Our Programmes', 'faithbridgeacademy' ),
-		'sub'   => sprintf( __( '%1$d programmes · %2$s', 'faithbridgeacademy' ), fba_programme_count(), fba_get_option( 'session_label' ) . ' · ' . fba_get_option( 'session_period' ) ),
+		'sub'   => sprintf( __( '%1$d programmes · %2$s', 'faithbridgeacademy' ), fba_programme_count(), fba_current_session()['label'] . ' · ' . fba_current_session()['period'] ),
 		'img'   => $uri . '/assets/images/slide-4.jpg',
 	)
 );

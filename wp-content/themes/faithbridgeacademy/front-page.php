@@ -318,7 +318,7 @@ $slides = array(
 				'3' => array( 'Jul–Sep', __( 'Deepening roots', 'faithbridgeacademy' ) ),
 				'4' => array( 'Oct–Dec', __( 'Fruitful finish', 'faithbridgeacademy' ) ),
 			);
-			$current  = (string) fba_get_option( 'session_quarter' );
+			$current  = fba_current_session()['quarter'];
 			foreach ( $quarters as $q => $meta ) :
 				$is_current = ( $q === $current );
 				?>
@@ -331,7 +331,7 @@ $slides = array(
 					<p class="fba-quarter-months"><?php echo esc_html( $meta[0] ); ?></p>
 					<p class="fba-quarter-theme"><?php echo esc_html( $meta[1] ); ?></p>
 					<?php if ( $is_current ) : ?>
-						<p class="fba-quarter-period"><?php echo esc_html( fba_get_option( 'session_period' ) ); ?></p>
+						<p class="fba-quarter-period"><?php echo esc_html( fba_current_session()['period'] ); ?></p>
 					<?php endif; ?>
 					<a class="fba-link-arrow fba-link-green" href="<?php echo esc_url( home_url( '/apply/' ) ); ?>"><?php esc_html_e( 'Apply', 'faithbridgeacademy' ); ?> <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
 				</article>

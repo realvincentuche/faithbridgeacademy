@@ -41,7 +41,7 @@ get_template_part(
 		<div class="fba-section-head reveal">
 			<div>
 				<h2 class="fba-section-title"><?php esc_html_e( 'How Learning Works', 'faithbridgeacademy' ); ?></h2>
-				<p class="fba-section-desc"><?php echo esc_html( fba_get_option( 'session_label' ) . ' · ' . fba_get_option( 'session_period' ) . ' · ' . fba_get_option( 'class_days' ) . ' · ' . fba_get_option( 'class_time' ) . ' (' . fba_get_option( 'timezone' ) . ')' ); ?></p>
+				<p class="fba-section-desc"><?php echo esc_html( fba_current_session()['label'] . ' · ' . fba_current_session()['period'] . ' · ' . fba_get_option( 'class_days' ) . ' · ' . fba_get_option( 'class_time' ) . ' (' . fba_get_option( 'timezone' ) . ')' ); ?></p>
 			</div>
 		</div>
 		<ul class="fba-why-list">

@@ -96,24 +96,20 @@ add_action( 'wp_enqueue_scripts', 'fba_assets' );
  */
 function fba_option_defaults() {
 	return array(
-		// Session.
-		'session_label'    => 'Session 4',
-		'session_period'   => 'October – December 2026',
-		'session_year'     => '2026',
-		'session_quarter'  => '4',
+		// Session (label/period/year/quarter auto-derived from date; override below only).
+		'session_override' => '0',
+		'session_year'     => '',
+		'session_quarter'  => '',
 		'class_days'       => 'Tuesdays and Saturdays',
 		'class_time'       => '5:00 PM',
 		'timezone'         => 'Africa/Lagos (Nigeria Time)',
-		'platform'         => 'Google Meet',
-		'format_note'      => 'Live online via Google Meet',
+		'platform'         => 'google-meet',
 		'recordings_note'  => 'Class recordings are available to enrolled students for revision and continuity.',
 		'onsite_note'      => 'On-site learning available by arrangement.',
 		'session_alert'    => '',
 		'session_alert_on' => '0',
 		// Money.
 		'exchange_rate'    => '1500',
-		'fee_group'        => '200',
-		'fee_one_to_one'   => '300',
 		'fee_note'         => 'Programme fees are charged per session (per quarter). Switch currency in the footer to see naira equivalents, calculated at the current exchange rate and rounded up to the nearest ₦1,000.',
 		'bank_name'        => 'Faithbridgeacademy Limited',
 		'bank_number'      => '1309301999',
@@ -281,8 +277,8 @@ add_action( 'admin_menu', 'fba_settings_menu' );
 function fba_sanitize_options( $input ) {
 	$out      = array();
 	$urls     = array( 'enrol_url', 'whatsapp', 'social_instagram', 'social_facebook', 'social_tiktok', 'social_youtube', 'social_linkedin', 'social_x' );
-	$ints     = array( 'exchange_rate', 'fee_group', 'fee_one_to_one', 'club_fee', 'group_capacity', 'followup_days', 'max_wards', 'session_year', 'session_quarter' );
-	$checkbox = array( 'session_alert_on' );
+	$ints     = array( 'exchange_rate', 'club_fee', 'group_capacity', 'followup_days', 'max_wards', 'session_year', 'session_quarter' );
+	$checkbox = array( 'session_alert_on', 'session_override' );
 	foreach ( (array) $input as $key => $value ) {
 		if ( 'email' === $key ) {
 			$out[ $key ] = sanitize_email( $value );
@@ -316,30 +312,26 @@ function fba_settings_page() {
 	);
 
 	$fields = array(
-		'session'   => array( 'session_label', 'session_period', 'session_year', 'session_quarter', 'class_days', 'class_time', 'timezone', 'platform', 'format_note', 'recordings_note', 'onsite_note', 'session_alert_on', 'session_alert' ),
-		'fees'      => array( 'exchange_rate', 'fee_group', 'fee_one_to_one', 'fee_note', 'bank_name', 'bank_number', 'bank_bank', 'enrol_url' ),
+		'session'   => array( 'session_override', 'session_year', 'session_quarter', 'class_days', 'class_time', 'timezone', 'platform', 'recordings_note', 'onsite_note', 'session_alert_on', 'session_alert' ),
+		'fees'      => array( 'exchange_rate', 'fee_note', 'bank_name', 'bank_number', 'bank_bank', 'enrol_url' ),
 		'club'      => array( 'club_fee', 'club_rhythm', 'club_year_rule', 'club_welcome' ),
 		'catalogue' => array( 'group_capacity', 'one_to_one_cap', 'followup_days', 'max_wards', 'memory_verses', 'hero_cta_primary', 'hero_cta_secondary', 'footer_tagline' ),
 		'contact'   => array( 'email', 'phone', 'whatsapp', 'online_note', 'social_instagram', 'social_facebook', 'social_tiktok', 'social_youtube', 'social_linkedin', 'social_x' ),
 	);
 
 	$labels = array(
-		'session_label' => __( 'Session label', 'faithbridgeacademy' ),
-		'session_period' => __( 'Session period', 'faithbridgeacademy' ),
-		'session_year' => __( 'Session year', 'faithbridgeacademy' ),
-		'session_quarter' => __( 'Session quarter (1-4)', 'faithbridgeacademy' ),
+		'session_override' => __( 'Override automatic session', 'faithbridgeacademy' ),
+		'session_year' => __( 'Override year', 'faithbridgeacademy' ),
+		'session_quarter' => __( 'Override quarter (1-4)', 'faithbridgeacademy' ),
 		'class_days' => __( 'Class days', 'faithbridgeacademy' ),
 		'class_time' => __( 'Class time', 'faithbridgeacademy' ),
 		'timezone' => __( 'Timezone', 'faithbridgeacademy' ),
 		'platform' => __( 'Online platform', 'faithbridgeacademy' ),
-		'format_note' => __( 'Format note', 'faithbridgeacademy' ),
 		'recordings_note' => __( 'Recordings note', 'faithbridgeacademy' ),
 		'onsite_note' => __( 'On-site note', 'faithbridgeacademy' ),
 		'session_alert_on' => __( 'Show session alert banner', 'faithbridgeacademy' ),
 		'session_alert' => __( 'Session alert text', 'faithbridgeacademy' ),
 		'exchange_rate' => __( 'Naira per $1', 'faithbridgeacademy' ),
-		'fee_group' => __( 'Default group fee ($)', 'faithbridgeacademy' ),
-		'fee_one_to_one' => __( 'Default one-on-one fee ($)', 'faithbridgeacademy' ),
 		'fee_note' => __( 'Fee note', 'faithbridgeacademy' ),
 		'bank_name' => __( 'Account name', 'faithbridgeacademy' ),
 		'bank_number' => __( 'Account number', 'faithbridgeacademy' ),
@@ -383,8 +375,15 @@ function fba_settings_page() {
 					<tr>
 						<th scope="row"><label for="fba-<?php echo esc_attr( $key ); ?>"><?php echo esc_html( isset( $labels[ $key ] ) ? $labels[ $key ] : $key ); ?></label></th>
 						<td>
-							<?php if ( 'session_alert_on' === $key ) : ?>
+							<?php if ( in_array( $key, array( 'session_alert_on', 'session_override' ), true ) ) : ?>
 								<input type="checkbox" id="fba-<?php echo esc_attr( $key ); ?>" name="fba_options[<?php echo esc_attr( $key ); ?>]" value="1" <?php checked( fba_get_option( $key ), '1' ); ?>>
+								<?php if ( 'session_override' === $key ) : ?>
+									<p class="description"><?php $cur = fba_current_session(); echo esc_html( sprintf( __( 'Automatic right now: %s · %s. Tick + set year/quarter below to force a different session.', 'faithbridgeacademy' ), $cur['label'], $cur['period'] ) ); ?></p>
+								<?php endif; ?>
+							<?php elseif ( 'platform' === $key ) : ?>
+								<select id="fba-<?php echo esc_attr( $key ); ?>" name="fba_options[<?php echo esc_attr( $key ); ?>]">
+									<option value="google-meet" selected><?php esc_html_e( 'Google Meet', 'faithbridgeacademy' ); ?></option>
+								</select>
 							<?php elseif ( in_array( $key, array( 'session_alert', 'fee_note', 'club_welcome', 'memory_verses', 'recordings_note' ), true ) ) : ?>
 								<textarea id="fba-<?php echo esc_attr( $key ); ?>" name="fba_options[<?php echo esc_attr( $key ); ?>]" rows="3" class="large-text"><?php echo esc_textarea( fba_get_option( $key ) ); ?></textarea>
 							<?php else : ?>
@@ -752,6 +751,8 @@ function fba_seed_programmes() {
 		if ( $new_id && ! is_wp_error( $new_id ) ) {
 			wp_set_object_terms( $new_id, $p['group'], 'programme_group' );
 			update_post_meta( $new_id, '_fba_status', 'open' );
+			update_post_meta( $new_id, '_fba_fee_group', '200' );
+			update_post_meta( $new_id, '_fba_fee_one_to_one', '300' );
 			$done['created']++;
 		}
 		$order++;
@@ -761,31 +762,53 @@ function fba_seed_programmes() {
 }
 
 /**
- * Current session snapshot from settings.
+ * Current session, derived from today's date unless an override is set.
+ * Q1 = Jan–Mar, Q2 = Apr–Jun, Q3 = Jul–Sep, Q4 = Oct–Dec.
  *
- * @return array
+ * @return array {label, period, year, quarter}
  */
 function fba_current_session() {
+	$override = fba_get_option( 'session_override' );
+	$year     = (int) fba_get_option( 'session_year' );
+	$quarter  = (int) fba_get_option( 'session_quarter' );
+	if ( '1' !== $override || $year < 2020 || $quarter < 1 || $quarter > 4 ) {
+		$now     = current_time( 'timestamp' );
+		$year    = (int) gmdate( 'Y', $now );
+		$quarter = (int) ceil( (int) gmdate( 'n', $now ) / 3 );
+	}
+	$periods = array(
+		1 => __( 'January – March', 'faithbridgeacademy' ),
+		2 => __( 'April – June', 'faithbridgeacademy' ),
+		3 => __( 'July – September', 'faithbridgeacademy' ),
+		4 => __( 'October – December', 'faithbridgeacademy' ),
+	);
 	return array(
-		'label'   => fba_get_option( 'session_label' ),
-		'period'  => fba_get_option( 'session_period' ),
-		'year'    => fba_get_option( 'session_year' ),
-		'quarter' => fba_get_option( 'session_quarter' ),
+		'label'   => sprintf( __( 'Session %d', 'faithbridgeacademy' ), $quarter ),
+		'period'  => $periods[ $quarter ] . ' ' . $year,
+		'year'    => (string) $year,
+		'quarter' => (string) $quarter,
 	);
 }
 
 /**
- * Effective fees for a programme ($), meta override falls back to settings.
+ * Human platform name.
+ *
+ * @return string
+ */
+function fba_platform_name() {
+	return __( 'Google Meet', 'faithbridgeacademy' );
+}
+
+/**
+ * Effective fees for a programme ($), stored per programme (no globals).
  *
  * @param int $post_id Programme ID.
  * @return array {group, one}
  */
 function fba_programme_fees( $post_id ) {
-	$group = get_post_meta( $post_id, '_fba_fee_group', true );
-	$one   = get_post_meta( $post_id, '_fba_fee_one_to_one', true );
 	return array(
-		'group' => '' !== $group ? (float) $group : (float) fba_get_option( 'fee_group' ),
-		'one'   => '' !== $one ? (float) $one : (float) fba_get_option( 'fee_one_to_one' ),
+		'group' => (float) get_post_meta( $post_id, '_fba_fee_group', true ),
+		'one'   => (float) get_post_meta( $post_id, '_fba_fee_one_to_one', true ),
 	);
 }
 
@@ -961,10 +984,10 @@ function fba_programme_metabox_html( $post ) {
 	$course    = get_post_meta( $post->ID, '_fba_course_id', true );
 	$books     = get_post_meta( $post->ID, '_fba_books', true );
 	?>
-	<p><label for="fba-fee-group"><?php esc_html_e( 'Group fee ($) — blank uses settings default', 'faithbridgeacademy' ); ?></label><br>
-	<input type="number" min="0" step="1" id="fba-fee-group" name="fba_fee_group" value="<?php echo esc_attr( $fee_group ); ?>" class="small-text"></p>
-	<p><label for="fba-fee-one"><?php esc_html_e( 'One-on-one fee ($) — blank uses settings default', 'faithbridgeacademy' ); ?></label><br>
-	<input type="number" min="0" step="1" id="fba-fee-one" name="fba_fee_one" value="<?php echo esc_attr( $fee_one ); ?>" class="small-text"></p>
+	<p><label for="fba-fee-group"><?php esc_html_e( 'Group fee ($)', 'faithbridgeacademy' ); ?></label><br>
+	<input type="number" min="0" step="1" id="fba-fee-group" name="fba_fee_group" value="<?php echo esc_attr( $fee_group ); ?>" class="small-text" required></p>
+	<p><label for="fba-fee-one"><?php esc_html_e( 'One-on-one fee ($)', 'faithbridgeacademy' ); ?></label><br>
+	<input type="number" min="0" step="1" id="fba-fee-one" name="fba_fee_one" value="<?php echo esc_attr( $fee_one ); ?>" class="small-text" required></p>
 	<p><label for="fba-status"><?php esc_html_e( 'Enrolment status', 'faithbridgeacademy' ); ?></label><br>
 	<select id="fba-status" name="fba_status">
 		<?php foreach ( array( 'open' => __( 'Open', 'faithbridgeacademy' ), 'coming' => __( 'Coming soon', 'faithbridgeacademy' ), 'closed' => __( 'Closed', 'faithbridgeacademy' ) ) as $val => $label ) : ?>
@@ -1168,9 +1191,9 @@ function fba_faq_seed_data() {
 function fba_faq_seed_answer( $key ) {
 	switch ( $key ) {
 		case 'schedule':
-			return fba_get_option( 'class_days' ) . ' · ' . fba_get_option( 'class_time' ) . ' (' . fba_get_option( 'timezone' ) . '). ' . fba_get_option( 'format_note' ) . '.';
+			return fba_get_option( 'class_days' ) . ' · ' . fba_get_option( 'class_time' ) . ' (' . fba_get_option( 'timezone' ) . '). ' . sprintf( __( 'Live online via %s.', 'faithbridgeacademy' ), fba_platform_name() );
 		case 'fees':
-			return sprintf( __( 'Group classes: $%s per session. One-on-one: $%s per session. Exact fees show on each programme page and during application.', 'faithbridgeacademy' ), number_format( (float) fba_get_option( 'fee_group' ) ), number_format( (float) fba_get_option( 'fee_one_to_one' ) ) );
+			return __( 'Fees vary by programme — exact group and one-on-one fees show on each programme page and during application.', 'faithbridgeacademy' );
 		case 'pay':
 			return sprintf( __( 'By bank transfer to %s · %s · %s. We confirm every application personally — no receipt upload needed.', 'faithbridgeacademy' ), fba_get_option( 'bank_name' ), fba_get_option( 'bank_number' ), fba_get_option( 'bank_bank' ) );
 		case 'capacity':
@@ -1237,24 +1260,6 @@ function fba_seed_faqs() {
 }
 
 	register_post_type(
-		'enquiry',
-		array(
-			'labels'        => array(
-				'name'          => __( 'Enquiries', 'faithbridgeacademy' ),
-				'singular_name' => __( 'Enquiry', 'faithbridgeacademy' ),
-			),
-			'public'        => false,
-			'show_ui'       => true,
-			'show_in_menu'  => true,
-			'supports'      => array( 'title', 'editor' ),
-			'menu_icon'     => 'dashicons-email-alt',
-			'menu_position' => 24,
-			'capabilities'  => array( 'create_posts' => 'manage_options' ),
-			'map_meta_cap'  => true,
-		)
-	);
-
-	register_post_type(
 		'club_member',
 		array(
 			'labels'        => array(
@@ -1296,14 +1301,9 @@ function fba_class_optgroups() {
  * @return array
  */
 function fba_open_sessions() {
-	$q    = (int) fba_get_option( 'session_quarter' );
-	$year = (int) fba_get_option( 'session_year' );
-	if ( $q < 1 || $q > 4 ) {
-		$q = 4;
-	}
-	if ( $year < 2020 ) {
-		$year = (int) gmdate( 'Y' );
-	}
+	$cur   = fba_current_session();
+	$q     = (int) $cur['quarter'];
+	$year  = (int) $cur['year'];
 	$out   = array();
 	$out[] = array( 'year' => $year, 'quarter' => $q );
 	$nq    = $q % 4 + 1;
@@ -1725,41 +1725,6 @@ function fba_save_club_meta( $post_id ) {
 	}
 }
 add_action( 'save_post_club_member', 'fba_save_club_meta' );
-
-/**
- * Enquiry handler (public, nonce-protected). Stores private record for admin.
- */
-function fba_enquiry_handler() {
-	if ( ! isset( $_POST['fba_enquiry_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['fba_enquiry_nonce'] ) ), 'fba_enquiry' ) ) {
-		wp_safe_redirect( add_query_arg( 'sent', 'error', home_url( '/contact/' ) ) );
-		exit;
-	}
-	$name    = isset( $_POST['fba_enquiry_name'] ) ? sanitize_text_field( wp_unslash( $_POST['fba_enquiry_name'] ) ) : '';
-	$phone   = isset( $_POST['fba_enquiry_phone'] ) ? preg_replace( '/[^0-9+]/', '', (string) wp_unslash( $_POST['fba_enquiry_phone'] ) ) : '';
-	$email   = isset( $_POST['fba_enquiry_email'] ) ? sanitize_email( wp_unslash( $_POST['fba_enquiry_email'] ) ) : '';
-	$message = isset( $_POST['fba_enquiry_message'] ) ? sanitize_textarea_field( wp_unslash( $_POST['fba_enquiry_message'] ) ) : '';
-	if ( '' === $name || '' === $message || ( '' === $phone && '' === $email ) ) {
-		wp_safe_redirect( add_query_arg( 'sent', 'missing', home_url( '/contact/' ) ) );
-		exit;
-	}
-	$eid = wp_insert_post(
-		array(
-			'post_title'   => $name . ' — ' . gmdate( 'Y-m-d H:i' ),
-			'post_content' => $message,
-			'post_status'  => 'private',
-			'post_type'    => 'enquiry',
-		)
-	);
-	if ( $eid && ! is_wp_error( $eid ) ) {
-		update_post_meta( $eid, '_fba_enquiry_name', $name );
-		update_post_meta( $eid, '_fba_enquiry_phone', $phone );
-		update_post_meta( $eid, '_fba_enquiry_email', $email );
-	}
-	wp_safe_redirect( add_query_arg( 'sent', 'done', home_url( '/contact/' ) ) );
-	exit;
-}
-add_action( 'admin_post_nopriv_fba_enquiry', 'fba_enquiry_handler' );
-add_action( 'admin_post_fba_enquiry', 'fba_enquiry_handler' );
 
 /**
  * Club member admin columns.

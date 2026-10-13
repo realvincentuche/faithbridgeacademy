@@ -48,8 +48,8 @@ $testimonials = get_posts(
 		</div>
 		<aside class="fba-cta-session">
 			<p class="fba-cta-session-label"><i class="ph ph-calendar-check" aria-hidden="true"></i> <?php esc_html_e( 'Now enrolling', 'faithbridgeacademy' ); ?></p>
-			<p class="fba-cta-session-title"><?php echo esc_html( fba_get_option( 'session_label' ) ); ?></p>
-			<p class="fba-cta-session-period"><?php echo esc_html( fba_get_option( 'session_period' ) ); ?></p>
+			<p class="fba-cta-session-title"><?php echo esc_html( fba_current_session()['label'] ); ?></p>
+			<p class="fba-cta-session-period"><?php echo esc_html( fba_current_session()['period'] ); ?></p>
 			<p class="fba-cta-session-days"><?php echo esc_html( fba_get_option( 'class_days' ) . ' · ' . fba_get_option( 'class_time' ) ); ?></p>
 		</aside>
 	</div>
@@ -87,7 +87,7 @@ $testimonials = get_posts(
 			<ul class="fba-footer-contact">
 				<li><i class="ph ph-envelope-simple" aria-hidden="true"></i><a href="mailto:<?php echo esc_attr( fba_get_option( 'email' ) ); ?>"><?php echo esc_html( fba_get_option( 'email' ) ); ?></a></li>
 				<li><i class="ph ph-phone" aria-hidden="true"></i><a href="<?php echo esc_url( fba_get_option( 'whatsapp' ) ); ?>"><?php echo esc_html( fba_get_option( 'phone' ) ); ?></a></li>
-				<li><i class="ph ph-video-camera" aria-hidden="true"></i><span><?php echo esc_html( fba_get_option( 'format_note' ) ); ?></span></li>
+				<li><i class="ph ph-video-camera" aria-hidden="true"></i><span><?php echo esc_html( sprintf( __( 'Live online via %s', 'faithbridgeacademy' ), fba_platform_name() ) ); ?></span></li>
 				<li><i class="ph ph-globe" aria-hidden="true"></i><span><?php echo esc_html( fba_get_option( 'online_note' ) ); ?></span></li>
 			</ul>
 		</div>
