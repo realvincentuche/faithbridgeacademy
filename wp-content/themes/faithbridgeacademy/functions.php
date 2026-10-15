@@ -1246,7 +1246,10 @@ function fba_programme_count() {
 }
 
 /**
- * Apply-page URL, optionally pre-selecting a programme (Phase 3 reads ?programme=).
+ * Apply-page URL, optionally pre-selecting a programme.
+ * Param is `prog` (NOT `programme`): the latter collides with the programme
+ * CPT rewrite, so WP would 404 trying to show a single programme instead.
+ * page-apply.php reads ?prog=.
  *
  * @param int $post_id Programme ID (0 = plain apply URL).
  * @return string
@@ -1255,7 +1258,7 @@ function fba_apply_url( $post_id = 0 ) {
 	$page = get_page_by_path( 'apply' );
 	$url  = $page ? get_permalink( $page ) : home_url( '/apply/' );
 	if ( $post_id ) {
-		$url = add_query_arg( 'programme', (int) $post_id, $url );
+		$url = add_query_arg( 'prog', (int) $post_id, $url );
 	}
 	return $url;
 }
@@ -1962,6 +1965,10 @@ function fba_application_handler() {
 		wp_safe_redirect( add_query_arg( 'fba', 'missing', fba_apply_url() ) );
 		exit;
 	}
+	if ( '' === $email || ! is_email( $email ) ) {
+		wp_safe_redirect( add_query_arg( 'fba', 'email', fba_apply_url() ) );
+		exit;
+	}
 	if ( strlen( preg_replace( '/[^0-9]/', '', $phone ) ) < 7 ) {
 		wp_safe_redirect( add_query_arg( 'fba', 'phone', fba_apply_url() ) );
 		exit;
@@ -2087,6 +2094,11 @@ function fba_application_handler() {
 	update_post_meta( $app_id, '_fba_total_usd', $totals['usd'] );
 	update_post_meta( $app_id, '_fba_total_ngn', $totals['ngn'] );
 	update_post_meta( $app_id, '_fba_rate', $totals['rate'] );
+	// Link the application to the logged-in learner when present so approval
+	// enrolment is deterministic (not email-guesswork).
+	if ( is_user_logged_in() ) {
+		update_post_meta( $app_id, '_fba_user_id', get_current_user_id() );
+	}
 
 	wp_safe_redirect( add_query_arg( array( 'fba' => 'done', 'ref' => $ref ), fba_apply_url() ) );
 	exit;
@@ -2139,19 +2151,20 @@ function fba_application_metabox_html( $post ) {
 /**
  * Resolve the WP learner account for an application: reuse the stored user,
  * else match by applicant email, else create a subscriber account.
- * Returns 0 when no email is on file (nothing to link).
+ * Returns array( user_id, is_new ). Email is required on the form, so the
+ * 0 case only happens for legacy rows.
  *
  * @param int $post_id Application ID.
- * @return int User ID or 0.
+ * @return array
  */
 function fba_application_learner_id( $post_id ) {
 	$email = sanitize_email( (string) get_post_meta( $post_id, '_fba_email', true ) );
 	if ( '' === $email || ! is_email( $email ) ) {
-		return 0;
+		return array( 0, false );
 	}
 	$existing = get_user_by( 'email', $email );
 	if ( $existing ) {
-		return (int) $existing->ID;
+		return array( (int) $existing->ID, false );
 	}
 	$name = sanitize_user( (string) get_post_meta( $post_id, '_fba_name', true ), true );
 	$base = '' !== $name ? $name : 'learner';
@@ -2169,7 +2182,35 @@ function fba_application_learner_id( $post_id ) {
 			'role'       => 'subscriber',
 		)
 	);
-	return is_wp_error( $uid ) ? 0 : (int) $uid;
+	return is_wp_error( $uid ) ? array( 0, false ) : array( (int) $uid, true );
+}
+
+/**
+ * Welcome email for a newly created learner: set-password link + course note.
+ * Uses core get_password_reset_key() so no password travels by email.
+ *
+ * @param int    $user_id User ID.
+ * @param string $ref     Application reference.
+ */
+function fba_send_learner_welcome( $user_id, $ref ) {
+	$user = get_user_by( 'id', $user_id );
+	if ( ! $user ) {
+		return;
+	}
+	$key = get_password_reset_key( $user );
+	if ( is_wp_error( $key ) ) {
+		return;
+	}
+	$set_url = network_site_url( 'wp-login.php?action=rp&key=' . $key . '&login=' . rawurlencode( $user->user_login ), 'login' );
+	/* translators: 1: name, 2: reference, 3: set-password URL, 4: account URL. */
+	$body = sprintf(
+		__( "Hello %1\$s,\n\nYour application (%2\$s) has been approved — welcome to FaithBridge Academy!\n\nSet your learning-account password here:\n%3\$s\n\nThen sign in at %4\$s to see your courses.\n\nBlessings,\nFaithBridge Academy", 'faithbridgeacademy' ),
+		$user->display_name,
+		$ref,
+		$set_url,
+		home_url( '/account/' )
+	);
+	wp_mail( $user->user_email, sprintf( __( 'Welcome to FaithBridge Academy — your application %s is approved', 'faithbridgeacademy' ), $ref ), $body );
 }
 
 /**
@@ -2194,9 +2235,12 @@ function fba_save_application_meta( $post_id ) {
 		if ( 'approved' === $s ) {
 			$user_id = (int) get_post_meta( $post_id, '_fba_user_id', true );
 			if ( ! $user_id || ! get_user_by( 'id', $user_id ) ) {
-				$user_id = fba_application_learner_id( $post_id );
+				list( $user_id, $is_new ) = fba_application_learner_id( $post_id );
 				if ( $user_id ) {
 					update_post_meta( $post_id, '_fba_user_id', $user_id );
+					if ( $is_new ) {
+						fba_send_learner_welcome( $user_id, (string) get_post_meta( $post_id, '_fba_ref', true ) );
+					}
 				}
 			}
 			foreach ( (array) get_post_meta( $post_id, '_fba_programmes', true ) as $cpid ) {

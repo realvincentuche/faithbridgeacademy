@@ -470,6 +470,92 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 .fba-content--wide .masteriyo-checkout,
 .fba-content--wide .masteriyo-courses { max-width: none; width: 100%; }
 
+/* ---------- Masteriyo skin (theme-matched; markup untouched) ---------- */
+/* Brand vars: Masteriyo reads these for its own components. */
+.fba-content--wide {
+	--masteriyo-color-primary: #0a2a5e;
+	--masteriyo-color-primary-light: #123a7d;
+	--masteriyo-color-primary-dark: #071d44;
+	--masteriyo-color-primary-ink: #071d44;
+	--masteriyo-button-primary: #0a2a5e;
+	--masteriyo-button-primary-hover: #123a7d;
+}
+/* Login: two cards side by side on desktop, stacked on mobile. */
+.fba-content--wide .masteriyo-login-form-wrapper {
+	display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 1.6rem; align-items: stretch;
+}
+.fba-content--wide .masteriyo-login,
+.fba-content--wide .masteriyo-signup { margin: 0; }
+.fba-content--wide .masteriyo-login--wrapper,
+.fba-content--wide .masteriyo-signup--wrapper,
+.fba-content--wide .masteriyo-signup:not(:has(.masteriyo-signup--wrapper)) {
+	background: var(--fba-paper); border: 1px solid var(--fba-line);
+	border-radius: var(--fba-radius); box-shadow: var(--fba-shadow-sm);
+	padding: 2rem; height: 100%;
+}
+/* Register prompt card (login page): vertical rhythm + pinned CTA. */
+.fba-content--wide .masteriyo-login-form-wrapper > .masteriyo-signup:not(:has(.masteriyo-signup--wrapper)) {
+	display: flex; flex-direction: column; gap: 0.6rem;
+	background: var(--fba-navy); border-color: var(--fba-navy); color: #d7deeb;
+}
+.fba-content--wide .masteriyo-login-form-wrapper > .masteriyo-signup:not(:has(.masteriyo-signup--wrapper)) .masteriyo-title { color: #fff; }
+.fba-content--wide .masteriyo-login-form-wrapper > .masteriyo-signup:not(:has(.masteriyo-signup--wrapper)) .masteriyo-btn { margin-top: auto; align-self: flex-start; }
+/* Signup page: centered card, comfortable reading width. */
+.fba-content--wide .masteriyo-signup--wrapper { max-width: 640px; margin: 0 auto; }
+/* Headings use the display font. */
+.fba-content--wide .masteriyo-title,
+.fba-content--wide .masteriyo-signup--title {
+	font-family: var(--fba-font-display); color: var(--fba-navy);
+	letter-spacing: -0.025em; margin: 0 0 1rem;
+}
+/* Labels + inputs match .fba-form styling. */
+.fba-content--wide .masteriyo-label {
+	display: block; font-weight: 700; font-size: 0.9rem;
+	color: var(--fba-navy); margin: 0 0 0.35rem;
+}
+.fba-content--wide .masteriyo-input {
+	width: 100%; padding: 0.8rem 1rem; border-radius: 10px;
+	border: 1.5px solid var(--fba-line); background: #fff;
+	color: var(--fba-ink); font: inherit; font-size: 0.95rem;
+}
+.fba-content--wide .masteriyo-input:focus {
+	outline: 2px solid var(--fba-green); border-color: var(--fba-green);
+}
+.fba-content--wide .masteriyo-login--form > div,
+.fba-content--wide .masteriyo-signup-form > div { margin-bottom: 1rem; }
+/* Buttons: green primary, navy alt — inherit theme shape. */
+.fba-content--wide .masteriyo-btn {
+	display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+	padding: 0.85rem 1.7rem; border-radius: 10px; border: 2px solid transparent;
+	font-weight: 700; font-size: 0.98rem; font-family: var(--fba-font-body);
+	text-decoration: none; cursor: pointer;
+}
+.fba-content--wide .masteriyo-btn-primary,
+.fba-content--wide .masteriyo-login-btn,
+.fba-content--wide .masteriyo-btn-signup {
+	background: var(--fba-green); border-color: var(--fba-green); color: var(--fba-deep);
+}
+.fba-content--wide .masteriyo-btn-primary:hover,
+.fba-content--wide .masteriyo-login-btn:hover,
+.fba-content--wide .masteriyo-btn-signup:hover { background: var(--fba-green-deep); border-color: var(--fba-green-deep); color: #fff; }
+.fba-content--wide .masteriyo-btn-wrapper { margin-top: 1.2rem; }
+/* Links + remember row. */
+.fba-content--wide .masteriyo-link-primary,
+.fba-content--wide .masteriyo-forgot-password a { color: var(--fba-navy-2); font-weight: 700; }
+.fba-content--wide .masteriyo-remember-forgot {
+	display: flex; justify-content: space-between; align-items: center;
+	gap: 1rem; font-size: 0.9rem; margin: 0.6rem 0 0;
+}
+.fba-content--wide .masteriyo-text-red { color: #b3261e; }
+/* Logged-in account dashboard: inherit theme typography. */
+.fba-content--wide .masteriyo-account { font-family: var(--fba-font-body); color: var(--fba-ink); }
+.fba-content--wide .masteriyo-account h1,
+.fba-content--wide .masteriyo-account h2,
+.fba-content--wide .masteriyo-account h3 { font-family: var(--fba-font-display); color: var(--fba-navy); }
+@media (max-width: 860px) {
+	.fba-content--wide .masteriyo-login-form-wrapper { grid-template-columns: 1fr; }
+}
+
 /* ---------- Inner banner ---------- */
 .fba-banner { position: relative; background: #101010; color: #fff; padding: calc(var(--fba-header-h) + 12rem) 0 3.5rem; overflow: clip; }
 .fba-banner-bg { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 1; }
@@ -697,6 +783,12 @@ body.fba-cur-ngn .fba-fee-usd { display: none; }
 .fba-form-nav { display: flex; gap: 0.8rem; margin-top: 1.4rem; }
 .fba-btn-outline-dark { border-color: var(--fba-navy); color: var(--fba-navy); }
 .fba-btn-outline-dark:hover { background: var(--fba-navy); color: #fff; }
+/* Apply-page auth strip (login nudge for guests). */
+.fba-auth-strip {
+	background: var(--fba-cream-soft); border: 1px solid var(--fba-line);
+	border-radius: var(--fba-radius); padding: 1.3rem 1.5rem; margin-bottom: 1.6rem;
+}
+.fba-auth-strip p:last-child { margin: 0; display: flex; gap: 0.7rem; flex-wrap: wrap; }
 .fba-review { background: var(--fba-bg); border: 1px solid var(--fba-line); border-radius: 12px; padding: 1.3rem 1.5rem; margin-bottom: 1.2rem; }
 .fba-review dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 0.3rem 1rem; }
 .fba-review dt { font-weight: 800; color: var(--fba-navy); }

@@ -9,7 +9,7 @@ get_header();
 $uri   = get_template_directory_uri();
 $state = isset( $_GET['fba'] ) ? sanitize_key( wp_unslash( $_GET['fba'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- status display.
 $ref   = isset( $_GET['ref'] ) ? sanitize_text_field( wp_unslash( $_GET['ref'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- status display.
-$pre   = isset( $_GET['programme'] ) ? (int) $_GET['programme'] : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- preselect only.
+$pre   = isset( $_GET['prog'] ) ? (int) $_GET['prog'] : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- preselect only (`prog`, not `programme`: the latter collides with the CPT rewrite and 404s).
 
 get_template_part(
 	'template-parts/page',
@@ -52,6 +52,22 @@ $sessions = fba_open_sessions();
 			</div>
 		<?php endif; ?>
 
+<?php if ( is_user_logged_in() ) : ?>
+			<?php $fba_current = wp_get_current_user(); ?>
+			<div class="fba-notice fba-notice-ok reveal" role="status">
+				<p><?php echo esc_html( sprintf( __( 'Applying as %s (%s). Your application links to your learning account automatically.', 'faithbridgeacademy' ), $fba_current->display_name, $fba_current->user_email ) ); ?></p>
+			</div>
+		<?php else : ?>
+			<div class="fba-auth-strip reveal" role="note">
+				<p><strong><?php esc_html_e( 'Have an account? Log in first.', 'faithbridgeacademy' ); ?></strong>
+				<?php esc_html_e( 'It links your application to your learning dashboard. Guests can still apply below — we create your account when your application is approved.', 'faithbridgeacademy' ); ?></p>
+				<p>
+					<a class="fba-btn fba-btn-navy fba-btn-sm" href="<?php echo esc_url( wp_login_url( fba_apply_url( $pre ) ) ); ?>"><?php esc_html_e( 'Log in', 'faithbridgeacademy' ); ?></a>
+					<a class="fba-btn fba-btn-outline-dark fba-btn-sm" href="<?php echo esc_url( add_query_arg( 'redirect_to', rawurlencode( fba_apply_url( $pre ) ), trailingslashit( home_url( '/account/signup/' ) ) ) ); ?>"><?php esc_html_e( 'Create account', 'faithbridgeacademy' ); ?></a>
+				</p>
+			</div>
+		<?php endif; ?>
+
 		<form class="fba-form reveal" id="fbaApplyForm" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" data-fba-rate="<?php echo esc_attr( fba_get_option( 'exchange_rate' ) ); ?>" novalidate>
 			<input type="hidden" name="action" value="fba_apply">
 			<?php wp_nonce_field( 'fba_apply', 'fba_apply_nonce' ); ?>
@@ -71,8 +87,8 @@ $sessions = fba_open_sessions();
 				<input id="fbaName" name="fba_name" type="text" autocomplete="name" required></p>
 				<p><label for="fbaPhone"><?php esc_html_e( 'Phone / WhatsApp', 'faithbridgeacademy' ); ?></label>
 				<input id="fbaPhone" name="fba_phone" type="tel" autocomplete="tel" required></p>
-				<p><label for="fbaEmail"><?php esc_html_e( 'Email (optional)', 'faithbridgeacademy' ); ?></label>
-				<input id="fbaEmail" name="fba_email" type="email" autocomplete="email"></p>
+			<p><label for="fbaEmail"><?php esc_html_e( 'Email (for your learning account)', 'faithbridgeacademy' ); ?></label>
+			<input id="fbaEmail" name="fba_email" type="email" autocomplete="email" required></p>
 				<p class="fba-sponsor-only" hidden><label for="fbaRelation"><?php esc_html_e( 'Relationship to ward', 'faithbridgeacademy' ); ?></label>
 				<input id="fbaRelation" name="fba_relation" type="text" placeholder="<?php esc_attr_e( 'e.g. Mother, Uncle, Guardian', 'faithbridgeacademy' ); ?>"></p>
 				<p class="fba-form-nav"><button class="fba-btn fba-btn-navy" type="button" data-next><?php esc_html_e( 'Continue', 'faithbridgeacademy' ); ?> →</button></p>
