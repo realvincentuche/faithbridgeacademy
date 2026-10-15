@@ -197,6 +197,80 @@ function fba_usd_to_ngn( $usd ) {
 }
 
 /**
+ * Where should /account send the visitor after login/signup?
+ * Default /account/ — but ?next=/apply/?prog=N (our auth strip + header Login
+ * passthrough) wins, sanitized to a same-site path. Masteriyo reads
+ * ?redirect_to (signup) and the login form's redirect_to field (login).
+ *
+ * @return string
+ */
+function fba_account_success_url() {
+	$next = isset( $_GET['next'] ) ? (string) wp_unslash( $_GET['next'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- redirect target only.
+	if ( '' !== $next ) {
+		$host = (string) parse_url( $next, PHP_URL_HOST );
+		if ( '' === $host || $host === (string) parse_url( home_url(), PHP_URL_HOST ) ) {
+			$path = (string) parse_url( $next, PHP_URL_PATH );
+			$query = (string) parse_url( $next, PHP_URL_QUERY );
+			if ( '' !== $path && 0 === strpos( $path, '/' ) ) {
+				return $path . ( '' !== $query ? '?' . $query : '' );
+			}
+		}
+	}
+	return '/account/';
+}
+
+/**
+ * Force Masteriyo's login form to post back to our success URL.
+ * Masteriyo's redirect_to hidden field = current URL, which drops ?next.
+ * masteriyo_get_current_url() has no filter, so rewrite the field in the
+ * rendered shortcode output instead (update-safe, markup untouched).
+ *
+ * @param string $html Shortcode HTML.
+ * @return string
+ */
+function fba_masteriyo_login_redirect_html( $html ) {
+	if ( false === strpos( $html, 'masteriyo-login--form' ) ) {
+		return $html;
+	}
+	if ( ! isset( $_GET['next'] ) || '' === trim( (string) wp_unslash( $_GET['next'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- redirect target only.
+		return $html;
+	}
+	return preg_replace(
+		'/<input([^>]*name="redirect_to"[^>]*)value="[^"]*"/',
+		'<input$1value="' . esc_url( home_url( fba_account_success_url() ) ) . '"',
+		$html, 1
+	);
+}
+add_filter( 'do_shortcode_tag', 'fba_masteriyo_login_redirect_html', 20, 2 );
+
+/**
+ * Force Masteriyo's "Register as Student" link to carry ?next through as
+ * the signup page's ?redirect_to (its RegistrationFormHandler reads $_GET).
+ *
+ * @param array $args Signup link args.
+ * @return array
+ */
+function fba_masteriyo_signup_args( $args ) {
+	$next = isset( $_GET['next'] ) ? trim( (string) wp_unslash( $_GET['next'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- redirect target only.
+	if ( '' !== $next && empty( $args['redirect_to'] ) ) {
+		$args['redirect_to'] = home_url( fba_account_success_url() );
+	}
+	return $args;
+}
+add_filter( 'masteriyo_signup_args', 'fba_masteriyo_signup_args', 10, 1 );
+
+/**
+ * Belt-and-braces: the signup page reads ?redirect_to from $_GET —
+ * normalize ?next there too in case the link filter ever misses.
+ */
+function fba_masteriyo_signup_next_bridge() {
+	if ( isset( $_GET['next'] ) && ! isset( $_GET['redirect_to'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- redirect passthrough.
+		$_GET['redirect_to'] = home_url( fba_account_success_url() );
+	}
+}
+add_action( 'template_redirect', 'fba_masteriyo_signup_next_bridge', 5 );
+
+/**
  * Is this a plugin-app page (Masteriyo UI) that needs full container width?
  * Text pages stay in narrow .fba-prose (760px); app UI spans .fba-wrap (1180px).
  *

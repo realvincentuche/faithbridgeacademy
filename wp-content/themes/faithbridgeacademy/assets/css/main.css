@@ -480,26 +480,38 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 	--masteriyo-button-primary: #0a2a5e;
 	--masteriyo-button-primary-hover: #123a7d;
 }
-/* Login: two cards side by side on desktop, stacked on mobile. */
+/* Login: two cards side by side on desktop, stacked on mobile.
+   Masteriyo's own layout: wrapper is flex, .masteriyo-login is width:50%
+   and .masteriyo-signup is flex:1. We keep that structure and skin it —
+   overriding display here would collapse widths (seen 2026-10-15). */
 .fba-content--wide .masteriyo-login-form-wrapper {
-	display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 1.6rem; align-items: stretch;
+	gap: 1.6rem; background: transparent; border: none;
+	border-radius: 0; overflow: visible; flex-wrap: nowrap;
 }
 .fba-content--wide .masteriyo-login,
-.fba-content--wide .masteriyo-signup { margin: 0; }
-.fba-content--wide .masteriyo-login--wrapper,
-.fba-content--wide .masteriyo-signup--wrapper,
-.fba-content--wide .masteriyo-signup:not(:has(.masteriyo-signup--wrapper)) {
-	background: var(--fba-paper); border: 1px solid var(--fba-line);
+.fba-content--wide .masteriyo-login-form-wrapper .masteriyo-signup {
+	margin: 0; background: var(--fba-paper); border: 1px solid var(--fba-line);
 	border-radius: var(--fba-radius); box-shadow: var(--fba-shadow-sm);
-	padding: 2rem; height: 100%;
 }
-/* Register prompt card (login page): vertical rhythm + pinned CTA. */
-.fba-content--wide .masteriyo-login-form-wrapper > .masteriyo-signup:not(:has(.masteriyo-signup--wrapper)) {
-	display: flex; flex-direction: column; gap: 0.6rem;
+/* Masteriyo sets .masteriyo-login{width:50%} and its inputs {margin-bottom:24px};
+   keep both — we only add symmetric gutters so cards breathe. */
+.fba-content--wide .masteriyo-login { padding-left: 2rem; padding-right: 2rem; }
+.fba-content--wide .masteriyo-login .masteriyo-input { margin-bottom: 1rem; }
+.fba-content--wide .masteriyo-login-form-wrapper .masteriyo-signup {
+	border-left: 1px solid var(--fba-line); padding: 2rem;
+	gap: 0.6rem; align-items: stretch; justify-content: flex-start;
 	background: var(--fba-navy); border-color: var(--fba-navy); color: #d7deeb;
 }
-.fba-content--wide .masteriyo-login-form-wrapper > .masteriyo-signup:not(:has(.masteriyo-signup--wrapper)) .masteriyo-title { color: #fff; }
-.fba-content--wide .masteriyo-login-form-wrapper > .masteriyo-signup:not(:has(.masteriyo-signup--wrapper)) .masteriyo-btn { margin-top: auto; align-self: flex-start; }
+.fba-content--wide .masteriyo-signup--wrapper {
+	background: var(--fba-paper); border: 1px solid var(--fba-line);
+	border-radius: var(--fba-radius); box-shadow: var(--fba-shadow-sm);
+	padding: 2rem;
+}
+.fba-content--wide .masteriyo-login-form-wrapper > .masteriyo-signup .masteriyo-title { color: #fff; margin: 0; }
+.fba-content--wide .masteriyo-login-form-wrapper > .masteriyo-signup > span { color: #aebdce; }
+.fba-content--wide .masteriyo-login-form-wrapper > .masteriyo-signup a.masteriyo-btn {
+	width: auto; margin-top: auto; align-self: flex-start;
+}
 /* Signup page: centered card, comfortable reading width. */
 .fba-content--wide .masteriyo-signup--wrapper { max-width: 640px; margin: 0 auto; }
 /* Headings use the display font. */
@@ -553,7 +565,9 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 .fba-content--wide .masteriyo-account h2,
 .fba-content--wide .masteriyo-account h3 { font-family: var(--fba-font-display); color: var(--fba-navy); }
 @media (max-width: 860px) {
-	.fba-content--wide .masteriyo-login-form-wrapper { grid-template-columns: 1fr; }
+	.fba-content--wide .masteriyo-login-form-wrapper { flex-wrap: wrap; }
+	.fba-content--wide .masteriyo-login,
+	.fba-content--wide .masteriyo-login-form-wrapper .masteriyo-signup { width: 100%; flex: none; }
 }
 
 /* ---------- Inner banner ---------- */

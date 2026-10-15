@@ -62,8 +62,8 @@ $sessions = fba_open_sessions();
 				<p><strong><?php esc_html_e( 'Have an account? Log in first.', 'faithbridgeacademy' ); ?></strong>
 				<?php esc_html_e( 'It links your application to your learning dashboard. Guests can still apply below — we create your account when your application is approved.', 'faithbridgeacademy' ); ?></p>
 				<p>
-					<a class="fba-btn fba-btn-navy fba-btn-sm" href="<?php echo esc_url( wp_login_url( fba_apply_url( $pre ) ) ); ?>"><?php esc_html_e( 'Log in', 'faithbridgeacademy' ); ?></a>
-					<a class="fba-btn fba-btn-outline-dark fba-btn-sm" href="<?php echo esc_url( add_query_arg( 'redirect_to', rawurlencode( fba_apply_url( $pre ) ), trailingslashit( home_url( '/account/signup/' ) ) ) ); ?>"><?php esc_html_e( 'Create account', 'faithbridgeacademy' ); ?></a>
+					<a class="fba-btn fba-btn-navy fba-btn-sm" href="<?php echo esc_url( add_query_arg( 'next', rawurlencode( fba_apply_url( $pre ) ), trailingslashit( home_url( '/account/' ) ) ) ); ?>"><?php esc_html_e( 'Log in', 'faithbridgeacademy' ); ?></a>
+					<a class="fba-btn fba-btn-outline-dark fba-btn-sm" href="<?php echo esc_url( add_query_arg( 'next', rawurlencode( fba_apply_url( $pre ) ), trailingslashit( home_url( '/account/' ) ) ) ); ?>"><?php esc_html_e( 'Create account', 'faithbridgeacademy' ); ?></a>
 				</p>
 			</div>
 		<?php endif; ?>
