@@ -31,6 +31,16 @@ $programmes = new WP_Query(
 	)
 );
 $sessions = fba_open_sessions();
+
+// Logged-in applicant identity comes from the account (name/email/phone
+// collected at registration). Guests type them in step 1.
+$fba_user        = is_user_logged_in() ? wp_get_current_user() : false;
+$fba_acct_name   = $fba_user ? $fba_user->display_name : '';
+$fba_acct_email  = $fba_user ? $fba_user->user_email : '';
+$fba_acct_phone  = $fba_user ? (string) get_user_meta( $fba_user->ID, 'fba_phone', true ) : '';
+if ( '' === $fba_acct_phone && $fba_user ) {
+	$fba_acct_phone = (string) get_user_meta( $fba_user->ID, 'billing_phone', true );
+}
 ?>
 
 <div class="fba-content">
@@ -40,7 +50,12 @@ $sessions = fba_open_sessions();
 		<?php if ( 'done' === $state ) : ?>
 			<div class="fba-notice fba-notice-ok" role="status">
 				<h2><?php esc_html_e( 'Application received.', 'faithbridgeacademy' ); ?></h2>
+				<?php $ref_list = array_filter( array_map( 'trim', explode( ',', $ref ) ) ); ?>
+				<?php if ( count( $ref_list ) > 1 ) : ?>
+				<p><?php echo esc_html( sprintf( __( 'Your references are %s (one per ward). Transfer fees for each ward to %s · %s · %s, then wait for our confirmation on WhatsApp.', 'faithbridgeacademy' ), implode( ', ', $ref_list ), fba_get_option( 'bank_name' ), fba_get_option( 'bank_number' ), fba_get_option( 'bank_bank' ) ) ); ?></p>
+				<?php else : ?>
 				<p><?php echo esc_html( sprintf( __( 'Your reference is %s. Transfer your fees to %s · %s · %s, then wait for our confirmation on WhatsApp.', 'faithbridgeacademy' ), $ref, fba_get_option( 'bank_name' ), fba_get_option( 'bank_number' ), fba_get_option( 'bank_bank' ) ) ); ?></p>
+				<?php endif; ?>
 			</div>
 		<?php elseif ( 'duplicate' === $state ) : ?>
 			<div class="fba-notice" role="status">
@@ -84,33 +99,45 @@ $sessions = fba_open_sessions();
 				<legend><?php esc_html_e( 'Who is applying?', 'faithbridgeacademy' ); ?></legend>
 				<label class="fba-radio"><input type="radio" name="fba_kind" value="self" checked> <?php esc_html_e( 'Myself', 'faithbridgeacademy' ); ?></label>
 				<label class="fba-radio"><input type="radio" name="fba_kind" value="sponsor"> <?php esc_html_e( 'A sponsor (applying for a ward)', 'faithbridgeacademy' ); ?></label>
+				<?php if ( $fba_user ) : ?>
+				<p class="fba-acct-line"><?php echo esc_html( sprintf( __( 'Applying as %s · %s · %s', 'faithbridgeacademy' ), $fba_acct_name, $fba_acct_email, $fba_acct_phone ) ); ?>
+				<a href="<?php echo esc_url( home_url( '/account/' ) ); ?>"><?php esc_html_e( 'Edit in account', 'faithbridgeacademy' ); ?></a></p>
+				<?php else : ?>
 				<p><label for="fbaName"><?php esc_html_e( 'Full name', 'faithbridgeacademy' ); ?></label>
 				<input id="fbaName" name="fba_name" type="text" autocomplete="name" required></p>
 				<p><label for="fbaPhone"><?php esc_html_e( 'Phone / WhatsApp', 'faithbridgeacademy' ); ?></label>
 				<input id="fbaPhone" name="fba_phone" type="tel" autocomplete="tel" required></p>
 			<p><label for="fbaEmail"><?php esc_html_e( 'Email (for your learning account)', 'faithbridgeacademy' ); ?></label>
 			<input id="fbaEmail" name="fba_email" type="email" autocomplete="email" required></p>
+				<?php endif; ?>
 				<p class="fba-sponsor-only" hidden><label for="fbaRelation"><?php esc_html_e( 'Relationship to ward', 'faithbridgeacademy' ); ?></label>
 				<input id="fbaRelation" name="fba_relation" type="text" placeholder="<?php esc_attr_e( 'e.g. Mother, Uncle, Guardian', 'faithbridgeacademy' ); ?>"></p>
 				<p class="fba-form-nav"><button class="fba-btn fba-btn-navy" type="button" data-next><?php esc_html_e( 'Continue', 'faithbridgeacademy' ); ?> →</button></p>
 			</fieldset>
 
 			<fieldset class="fba-step" data-step="2">
-				<legend><?php esc_html_e( 'Ward details', 'faithbridgeacademy' ); ?></legend>
-				<p><label for="fbaWardName"><?php esc_html_e( "Ward's full name", 'faithbridgeacademy' ); ?></label>
-				<input id="fbaWardName" name="fba_ward_name" type="text" required></p>
-				<p><label for="fbaWardDob"><?php esc_html_e( 'Date of birth', 'faithbridgeacademy' ); ?></label>
-				<input id="fbaWardDob" name="fba_ward_dob" type="date" required></p>
-				<p><label for="fbaWardClass"><?php esc_html_e( 'Current class / grade', 'faithbridgeacademy' ); ?></label>
-				<select id="fbaWardClass" name="fba_ward_class">
-					<?php foreach ( fba_class_optgroups() as $label => $items ) : ?>
-						<optgroup label="<?php echo esc_attr( $label ); ?>">
-							<?php foreach ( $items as $item ) : ?>
-								<option value="<?php echo esc_attr( $item ); ?>"><?php echo esc_html( $item ); ?></option>
+				<legend><?php esc_html_e( 'Wards (add each child)', 'faithbridgeacademy' ); ?></legend>
+				<div id="fbaWards">
+					<div class="fba-ward" data-ward="0">
+						<h3 class="fba-ward-title"><?php esc_html_e( 'Ward 1', 'faithbridgeacademy' ); ?></h3>
+						<p><label><?php esc_html_e( "Ward's full name", 'faithbridgeacademy' ); ?>
+						<input name="fba_wards[0][name]" type="text" required></label></p>
+						<p><label><?php esc_html_e( 'Date of birth', 'faithbridgeacademy' ); ?>
+						<input name="fba_wards[0][dob]" type="date" required></label></p>
+						<p><label><?php esc_html_e( 'Current class / grade', 'faithbridgeacademy' ); ?>
+						<select name="fba_wards[0][class]">
+							<?php foreach ( fba_class_optgroups() as $label => $items ) : ?>
+								<optgroup label="<?php echo esc_attr( $label ); ?>">
+									<?php foreach ( $items as $item ) : ?>
+										<option value="<?php echo esc_attr( $item ); ?>"><?php echo esc_html( $item ); ?></option>
+									<?php endforeach; ?>
+								</optgroup>
 							<?php endforeach; ?>
-						</optgroup>
-					<?php endforeach; ?>
-				</select></p>
+						</select></label></p>
+						<p><button class="fba-btn fba-btn-outline-dark fba-btn-sm fba-ward-remove" type="button" hidden><?php esc_html_e( 'Remove this ward', 'faithbridgeacademy' ); ?></button></p>
+					</div>
+				</div>
+				<p><button class="fba-btn fba-btn-outline-dark fba-btn-sm" type="button" id="fbaWardAdd">+ <?php esc_html_e( 'Add another ward', 'faithbridgeacademy' ); ?></button></p>
 				<p class="fba-form-nav"><button class="fba-btn fba-btn-outline-dark" type="button" data-prev>← <?php esc_html_e( 'Back', 'faithbridgeacademy' ); ?></button>
 				<button class="fba-btn fba-btn-navy" type="button" data-next><?php esc_html_e( 'Continue', 'faithbridgeacademy' ); ?> →</button></p>
 			</fieldset>

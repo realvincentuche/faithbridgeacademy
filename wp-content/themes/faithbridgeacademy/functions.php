@@ -271,6 +271,69 @@ function fba_masteriyo_signup_next_bridge() {
 add_action( 'template_redirect', 'fba_masteriyo_signup_next_bridge', 5 );
 
 /**
+ * Add a required Phone/WhatsApp field to Masteriyo student registration.
+ * Rendered via shortcode-output injection (update-safe); validated + saved here.
+ */
+function fba_masteriyo_signup_fields( $fields ) {
+	if ( ! in_array( 'phone', $fields, true ) ) {
+		$fields[] = 'phone';
+	}
+	return $fields;
+}
+add_filter( 'masteriyo_registration_form_fields', 'fba_masteriyo_signup_fields' );
+
+/**
+ * Validate our extra signup fields.
+ *
+ * @param WP_Error $error Validation errors.
+ * @param array    $data  Submitted form data.
+ * @return WP_Error
+ */
+function fba_masteriyo_signup_validate( $error, $data ) {
+	$phone = isset( $data['phone'] ) ? preg_replace( '/[^0-9+]/', '', (string) $data['phone'] ) : '';
+	if ( '' === $phone || strlen( preg_replace( '/[^0-9]/', '', $phone ) ) < 7 ) {
+		$error->add( 'phone_required', __( 'Phone / WhatsApp number is required (at least 7 digits).', 'faithbridgeacademy' ) );
+	}
+	return $error;
+}
+add_filter( 'masteriyo_validate_registration_form_data', 'fba_masteriyo_signup_validate', 10, 2 );
+
+/**
+ * Persist the phone number on the new WP user (Masteriyo passes unknown
+ * fields through $args but only as model props — belt-and-braces here).
+ *
+ * @param object $user Masteriyo user model.
+ * @param bool   $generated Whether the password was auto-generated.
+ * @param array  $args Registration args (includes our phone field).
+ */
+function fba_masteriyo_signup_save_phone( $user, $generated, $args ) {
+	if ( ! empty( $args['phone'] ) && method_exists( $user, 'get_id' ) ) {
+		$wp_user = get_user_by( 'email', method_exists( $user, 'get_email' ) ? $user->get_email() : '' );
+		if ( $wp_user ) {
+			update_user_meta( $wp_user->ID, 'fba_phone', preg_replace( '/[^0-9+]/', '', (string) $args['phone'] ) );
+			update_user_meta( $wp_user->ID, 'billing_phone', preg_replace( '/[^0-9+]/', '', (string) $args['phone'] ) );
+		}
+	}
+}
+add_action( 'masteriyo_created_customer', 'fba_masteriyo_signup_save_phone', 10, 3 );
+
+/**
+ * Render the phone field inside Masteriyo's signup form (before submit).
+ */
+function fba_masteriyo_signup_phone_html() {
+	?>
+	<div class="masteriyo-phone">
+		<label for="fba-signup-phone" class="masteriyo-label">
+			<?php esc_html_e( 'Phone / WhatsApp', 'faithbridgeacademy' ); ?>
+			<span class="masteriyo-text-red">*</span>
+		</label>
+		<input id="fba-signup-phone" class="masteriyo-input" name="phone" type="tel" autocomplete="tel" required>
+	</div>
+	<?php
+}
+add_action( 'masteriyo_registration_form_before_submit_button', 'fba_masteriyo_signup_phone_html' );
+
+/**
  * Is this a plugin-app page (Masteriyo UI) that needs full container width?
  * Text pages stay in narrow .fba-prose (760px); app UI spans .fba-wrap (1180px).
  *
@@ -2024,18 +2087,48 @@ function fba_application_handler() {
 	$kind      = isset( $_POST['fba_kind'] ) && 'sponsor' === $_POST['fba_kind'] ? 'sponsor' : 'self';
 	$name      = isset( $_POST['fba_name'] ) ? sanitize_text_field( wp_unslash( $_POST['fba_name'] ) ) : '';
 	$phone_raw = isset( $_POST['fba_phone'] ) ? (string) wp_unslash( $_POST['fba_phone'] ) : '';
+	// Logged-in applicants are identified by their account: name/email/phone
+	// come from the profile (the step-1 fields are hidden for them).
+	if ( is_user_logged_in() ) {
+		$current     = wp_get_current_user();
+		$name        = $current->display_name;
+		$phone_raw   = (string) get_user_meta( $current->ID, 'fba_phone', true );
+		if ( '' === $phone_raw ) {
+			$phone_raw = (string) get_user_meta( $current->ID, 'billing_phone', true );
+		}
+		$_POST['fba_email'] = $current->user_email;
+	}
 	$phone     = preg_replace( '/[^0-9+]/', '', $phone_raw );
 	$email     = isset( $_POST['fba_email'] ) ? sanitize_email( wp_unslash( $_POST['fba_email'] ) ) : '';
 	$relation  = isset( $_POST['fba_relation'] ) ? sanitize_text_field( wp_unslash( $_POST['fba_relation'] ) ) : '';
 
-	$ward_name  = isset( $_POST['fba_ward_name'] ) ? sanitize_text_field( wp_unslash( $_POST['fba_ward_name'] ) ) : '';
-	$ward_dob   = isset( $_POST['fba_ward_dob'] ) ? sanitize_text_field( wp_unslash( $_POST['fba_ward_dob'] ) ) : '';
-	$ward_class = isset( $_POST['fba_ward_class'] ) ? sanitize_text_field( wp_unslash( $_POST['fba_ward_class'] ) ) : '';
+	// Wards: repeatable fba_wards[N][name|dob|class], max 6. Legacy single
+	// fields (fba_ward_name/…) map to one ward for old posts/tests.
+	$wards_raw = isset( $_POST['fba_wards'] ) ? (array) wp_unslash( $_POST['fba_wards'] ) : array();
+	$wards     = array();
+	foreach ( $wards_raw as $w ) {
+		if ( ! is_array( $w ) ) {
+			continue;
+		}
+		$wards[] = array(
+			'name'  => isset( $w['name'] ) ? sanitize_text_field( $w['name'] ) : '',
+			'dob'   => isset( $w['dob'] ) ? sanitize_text_field( $w['dob'] ) : '',
+			'class' => isset( $w['class'] ) ? sanitize_text_field( $w['class'] ) : '',
+		);
+	}
+	if ( ! $wards && ( isset( $_POST['fba_ward_name'] ) || isset( $_POST['fba_ward_dob'] ) ) ) {
+		$wards[] = array(
+			'name'  => isset( $_POST['fba_ward_name'] ) ? sanitize_text_field( wp_unslash( $_POST['fba_ward_name'] ) ) : '',
+			'dob'   => isset( $_POST['fba_ward_dob'] ) ? sanitize_text_field( wp_unslash( $_POST['fba_ward_dob'] ) ) : '',
+			'class' => isset( $_POST['fba_ward_class'] ) ? sanitize_text_field( wp_unslash( $_POST['fba_ward_class'] ) ) : '',
+		);
+	}
+	$wards = array_slice( $wards, 0, 6 );
 	$style      = isset( $_POST['fba_style'] ) && 'one' === $_POST['fba_style'] ? 'one' : 'group';
 	$session    = isset( $_POST['fba_session'] ) ? sanitize_text_field( wp_unslash( $_POST['fba_session'] ) ) : '';
 	$pids_raw   = isset( $_POST['fba_programmes'] ) ? (array) wp_unslash( $_POST['fba_programmes'] ) : array();
 
-	if ( '' === $name || '' === $phone || '' === $ward_name || '' === $ward_dob || '' === $session || ! $pids_raw ) {
+	if ( '' === $name || '' === $phone || ! $wards || '' === $session || ! $pids_raw ) {
 		wp_safe_redirect( add_query_arg( 'fba', 'missing', fba_apply_url() ) );
 		exit;
 	}
@@ -2047,18 +2140,24 @@ function fba_application_handler() {
 		wp_safe_redirect( add_query_arg( 'fba', 'phone', fba_apply_url() ) );
 		exit;
 	}
-	if ( ! preg_match( '/^(\d{4})-(\d{2})-(\d{2})$/', $ward_dob, $dob_m ) || ! checkdate( (int) $dob_m[2], (int) $dob_m[3], (int) $dob_m[1] ) || $ward_dob > date( 'Y-m-d', current_time( 'timestamp' ) ) ) {
-		wp_safe_redirect( add_query_arg( 'fba', 'dob', fba_apply_url() ) );
-		exit;
-	}
-	// Class comes from a fixed select: reject anything not in the optgroups.
+	// Class options come from a fixed select: build the allow-list once.
 	$valid_classes = array();
 	foreach ( fba_class_optgroups() as $items ) {
 		$valid_classes = array_merge( $valid_classes, array_values( $items ) );
 	}
-	if ( '' !== $ward_class && ! in_array( $ward_class, $valid_classes, true ) ) {
-		wp_safe_redirect( add_query_arg( 'fba', 'class', fba_apply_url() ) );
-		exit;
+	foreach ( $wards as $w ) {
+		if ( '' === $w['name'] || '' === $w['dob'] ) {
+			wp_safe_redirect( add_query_arg( 'fba', 'missing', fba_apply_url() ) );
+			exit;
+		}
+		if ( ! preg_match( '/^(\d{4})-(\d{2})-(\d{2})$/', $w['dob'], $dob_m ) || ! checkdate( (int) $dob_m[2], (int) $dob_m[3], (int) $dob_m[1] ) || $w['dob'] > date( 'Y-m-d', current_time( 'timestamp' ) ) ) {
+			wp_safe_redirect( add_query_arg( 'fba', 'dob', fba_apply_url() ) );
+			exit;
+		}
+		if ( '' !== $w['class'] && ! in_array( $w['class'], $valid_classes, true ) ) {
+			wp_safe_redirect( add_query_arg( 'fba', 'class', fba_apply_url() ) );
+			exit;
+		}
 	}
 	// Session must be one of the two currently offered (strict YYYYQN shape).
 	if ( ! preg_match( '/^(\d{4})Q([1-4])$/', $session, $sess_m ) ) {
@@ -2107,17 +2206,26 @@ function fba_application_handler() {
 		}
 	}
 
-	$dup = fba_duplicate_application( $phone, $ward_name, $ward_dob, $year, $quarter );
+	$dup = false;
+	$dup_ref = '';
+	foreach ( $wards as $w ) {
+		$found = fba_duplicate_application( $phone, $w['name'], $w['dob'], $year, $quarter );
+		if ( $found ) {
+			$dup = true;
+			$dup_ref = get_post_meta( $found, '_fba_ref', true );
+			break;
+		}
+	}
 	if ( $dup ) {
-		$ref = get_post_meta( $dup, '_fba_ref', true );
-		wp_safe_redirect( add_query_arg( array( 'fba' => 'duplicate', 'ref' => $ref ), fba_apply_url() ) );
+		wp_safe_redirect( add_query_arg( array( 'fba' => 'duplicate', 'ref' => $dup_ref ), fba_apply_url() ) );
 		exit;
 	}
 
 	$totals = fba_application_totals( $pids, $style );
-	// Collision-safe reference (4-char space is small; retry on clash).
-	$ref = '';
-	for ( $i = 0; $i < 5 && '' === $ref; $i++ ) {
+	// One application post per ward (shared programmes/style/session/fee).
+	// Refs share the base ref with a -N suffix so a family files together.
+	$base_ref = '';
+	for ( $i = 0; $i < 5 && '' === $base_ref; $i++ ) {
 		$candidate = fba_application_ref( $year, $quarter );
 		$clash     = new WP_Query(
 			array(
@@ -2126,55 +2234,64 @@ function fba_application_handler() {
 				'posts_per_page' => 1,
 				'fields'         => 'ids',
 				'meta_query'     => array(
-					array( 'key' => '_fba_ref', 'value' => $candidate ),
+					array( 'key' => '_fba_ref', 'value' => $candidate, 'compare' => 'LIKE' ),
 				),
 			)
 		);
 		if ( ! $clash->have_posts() ) {
-			$ref = $candidate;
+			$base_ref = $candidate;
 		}
 	}
-	if ( '' === $ref ) {
+	if ( '' === $base_ref ) {
 		wp_safe_redirect( add_query_arg( 'fba', 'error', fba_apply_url() ) );
 		exit;
 	}
 
-	$app_id = wp_insert_post(
-		array(
-			'post_title'  => $ref . ' — ' . $ward_name,
-			'post_status' => 'private',
-			'post_type'   => 'application',
-		)
-	);
-	if ( ! $app_id || is_wp_error( $app_id ) ) {
+	$made_refs = array();
+	$n = 0;
+	foreach ( $wards as $w ) {
+		$n++;
+		$ref = 1 === count( $wards ) ? $base_ref : $base_ref . '-' . $n;
+		$app_id = wp_insert_post(
+			array(
+				'post_title'  => $ref . ' — ' . $w['name'],
+				'post_status' => 'private',
+				'post_type'   => 'application',
+			)
+		);
+		if ( ! $app_id || is_wp_error( $app_id ) ) {
+			continue;
+		}
+		update_post_meta( $app_id, '_fba_ref', $ref );
+		update_post_meta( $app_id, '_fba_app_status', 'pending' );
+		update_post_meta( $app_id, '_fba_kind', $kind );
+		update_post_meta( $app_id, '_fba_name', $name );
+		update_post_meta( $app_id, '_fba_phone', $phone );
+		update_post_meta( $app_id, '_fba_email', $email );
+		update_post_meta( $app_id, '_fba_relation', $relation );
+		update_post_meta( $app_id, '_fba_ward_name', $w['name'] );
+		update_post_meta( $app_id, '_fba_ward_dob', $w['dob'] );
+		update_post_meta( $app_id, '_fba_ward_class', $w['class'] );
+		update_post_meta( $app_id, '_fba_style', $style );
+		update_post_meta( $app_id, '_fba_year', (string) $year );
+		update_post_meta( $app_id, '_fba_quarter', (string) $quarter );
+		update_post_meta( $app_id, '_fba_programmes', $pids );
+		update_post_meta( $app_id, '_fba_total_usd', $totals['usd'] );
+		update_post_meta( $app_id, '_fba_total_ngn', $totals['ngn'] );
+		update_post_meta( $app_id, '_fba_rate', $totals['rate'] );
+		// Link the application to the logged-in learner when present so approval
+		// enrolment is deterministic (not email-guesswork).
+		if ( is_user_logged_in() ) {
+			update_post_meta( $app_id, '_fba_user_id', get_current_user_id() );
+		}
+		$made_refs[] = $ref;
+	}
+	if ( ! $made_refs ) {
 		wp_safe_redirect( add_query_arg( 'fba', 'error', fba_apply_url() ) );
 		exit;
 	}
 
-	update_post_meta( $app_id, '_fba_ref', $ref );
-	update_post_meta( $app_id, '_fba_app_status', 'pending' );
-	update_post_meta( $app_id, '_fba_kind', $kind );
-	update_post_meta( $app_id, '_fba_name', $name );
-	update_post_meta( $app_id, '_fba_phone', $phone );
-	update_post_meta( $app_id, '_fba_email', $email );
-	update_post_meta( $app_id, '_fba_relation', $relation );
-	update_post_meta( $app_id, '_fba_ward_name', $ward_name );
-	update_post_meta( $app_id, '_fba_ward_dob', $ward_dob );
-	update_post_meta( $app_id, '_fba_ward_class', $ward_class );
-	update_post_meta( $app_id, '_fba_style', $style );
-	update_post_meta( $app_id, '_fba_year', (string) $year );
-	update_post_meta( $app_id, '_fba_quarter', (string) $quarter );
-	update_post_meta( $app_id, '_fba_programmes', $pids );
-	update_post_meta( $app_id, '_fba_total_usd', $totals['usd'] );
-	update_post_meta( $app_id, '_fba_total_ngn', $totals['ngn'] );
-	update_post_meta( $app_id, '_fba_rate', $totals['rate'] );
-	// Link the application to the logged-in learner when present so approval
-	// enrolment is deterministic (not email-guesswork).
-	if ( is_user_logged_in() ) {
-		update_post_meta( $app_id, '_fba_user_id', get_current_user_id() );
-	}
-
-	wp_safe_redirect( add_query_arg( array( 'fba' => 'done', 'ref' => $ref ), fba_apply_url() ) );
+	wp_safe_redirect( add_query_arg( array( 'fba' => 'done', 'ref' => implode( ',', $made_refs ) ), fba_apply_url() ) );
 	exit;
 }
 add_action( 'admin_post_nopriv_fba_apply', 'fba_application_handler' );

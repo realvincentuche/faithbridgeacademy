@@ -318,16 +318,78 @@
 				var label = esc( b.getAttribute( 'data-title' ) || b.value );
 				names.push( label + ' (' + ( ngn ? moneyNgn( fee ) : money( fee ) ) + ')' );
 			} );
+			/* Wards list (repeatable step 2): one line per ward, shared total x wards. */
+			var wardRows = applyForm.querySelectorAll( '.fba-ward' );
+			var wardLines = [];
+			wardRows.forEach( function ( w, i ) {
+				var wn = w.querySelector( 'input[name$="[name]"]' );
+				var wd = w.querySelector( 'input[name$="[dob]"]' );
+				var wc = w.querySelector( 'select[name$="[class]"]' );
+				wardLines.push( 'Ward ' + ( i + 1 ) + ': ' + esc( wn ? wn.value : '' ) + ' · ' + esc( wd ? wd.value : '' ) + ' · ' + esc( wc ? wc.value : '' ) );
+			} );
+			var grand = total * Math.max( wardLines.length, 1 );
 			var sessSel = applyForm.querySelector( '#fbaSession' );
 			var sess = sessSel ? esc( sessSel.options[sessSel.selectedIndex].text ) : '';
 			box.innerHTML = '<dl>'
 				+ '<dt>Applicant</dt><dd>' + val( 'fba_name' ) + ' · ' + val( 'fba_phone' ) + '</dd>'
-				+ '<dt>Ward</dt><dd>' + val( 'fba_ward_name' ) + ' · ' + val( 'fba_ward_dob' ) + ' · ' + val( 'fba_ward_class' ) + '</dd>'
-				+ '<dt>Programmes</dt><dd>' + names.join( ', ' ) + '</dd>'
+				+ '<dt>Wards</dt><dd>' + wardLines.join( '<br>' ) + '</dd>'
+				+ '<dt>Programmes (per ward)</dt><dd>' + names.join( ', ' ) + '</dd>'
 				+ '<dt>Style</dt><dd>' + ( 'one' === style ? 'One-on-one' : 'Group class' ) + '</dd>'
 				+ '<dt>Session</dt><dd>' + sess + '</dd>'
-				+ '<dt>Total</dt><dd class="total">' + ( ngn ? moneyNgn( total ) : money( total ) ) + '</dd>'
+				+ '<dt>Total (' + wardLines.length + ' ward' + ( 1 === wardLines.length ? '' : 's' ) + ')</dt><dd class="total">' + ( ngn ? moneyNgn( grand ) : money( grand ) ) + '</dd>'
 				+ '</dl>';
+		}
+
+		/* Repeatable wards (step 2): clone, reindex names, cap at 6. */
+		var wardWrap = document.getElementById( 'fbaWards' );
+		var wardAdd = document.getElementById( 'fbaWardAdd' );
+		function wardCount() {
+			return wardWrap ? wardWrap.querySelectorAll( '.fba-ward' ).length : 0;
+		}
+		function wardRefresh() {
+			if ( ! wardWrap ) {
+				return;
+			}
+			var rows = wardWrap.querySelectorAll( '.fba-ward' );
+			rows.forEach( function ( w, i ) {
+				w.setAttribute( 'data-ward', String( i ) );
+				var t = w.querySelector( '.fba-ward-title' );
+				if ( t ) {
+					t.textContent = 'Ward ' + ( i + 1 );
+				}
+				w.querySelectorAll( 'input, select' ).forEach( function ( f ) {
+					f.name = f.name.replace( /fba_wards\[\d+\]/, 'fba_wards[' + i + ']' );
+				} );
+				var rm = w.querySelector( '.fba-ward-remove' );
+				if ( rm ) {
+					rm.hidden = rows.length < 2;
+				}
+			} );
+			if ( wardAdd ) {
+				wardAdd.hidden = rows.length >= 6;
+			}
+		}
+		if ( wardAdd && wardWrap ) {
+			wardAdd.addEventListener( 'click', function () {
+				if ( wardCount() >= 6 ) {
+					return;
+				}
+				var first = wardWrap.querySelector( '.fba-ward' );
+				var clone = first.cloneNode( true );
+				clone.querySelectorAll( 'input' ).forEach( function ( f ) { f.value = ''; } );
+				wardWrap.appendChild( clone );
+				wardRefresh();
+			} );
+			wardWrap.addEventListener( 'click', function ( e ) {
+				if ( e.target && e.target.classList.contains( 'fba-ward-remove' ) ) {
+					var row = e.target.closest( '.fba-ward' );
+					if ( row && wardCount() > 1 ) {
+						row.remove();
+						wardRefresh();
+					}
+				}
+			} );
+			wardRefresh();
 		}
 
 		applyForm.querySelectorAll( '[data-next]' ).forEach( function ( b ) {

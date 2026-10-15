@@ -823,6 +823,12 @@ body.fba-cur-ngn .fba-fee-usd { display: none; }
 /* Status notices on the apply grid: same no-shift rule as the auth strip. */
 .fba-apply-main > .fba-notice { opacity: 1; transform: none; }
 .fba-review { background: var(--fba-bg); border: 1px solid var(--fba-line); border-radius: 12px; padding: 1.3rem 1.5rem; margin-bottom: 1.2rem; }
+/* Repeatable wards (apply step 2): card per ward inside the form. */
+.fba-ward { background: var(--fba-bg); border: 1px solid var(--fba-line); border-radius: 12px; padding: 1.2rem 1.3rem; margin-bottom: 1rem; }
+.fba-ward-title { font-size: 1.05rem; margin: 0 0 0.8rem; }
+/* Logged-in applicant identity line (step 1 pulls from the account). */
+.fba-acct-line { background: var(--fba-cream-soft); border: 1px solid var(--fba-line); border-radius: 10px; padding: 0.9rem 1.1rem; }
+.fba-acct-line a { font-weight: 700; margin-left: 0.5rem; white-space: nowrap; }
 .fba-review dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 0.3rem 1rem; }
 .fba-review dt { font-weight: 800; color: var(--fba-navy); }
 .fba-review dd { margin: 0; }
