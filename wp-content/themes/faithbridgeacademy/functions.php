@@ -197,6 +197,30 @@ function fba_usd_to_ngn( $usd ) {
 }
 
 /**
+ * Banner title for generic pages. Masteriyo plugin pages keep whatever
+ * label an admin typed (e.g. "Account"), so map them to friendly titles
+ * here in code — DB edits never deploy, this does.
+ *
+ * @return string
+ */
+function fba_page_banner_title() {
+	$page = get_post();
+	if ( $page && 'page' === $page->post_type ) {
+		$content = (string) $page->post_content;
+		if ( has_shortcode( $content, 'masteriyo_account' ) || 'account' === $page->post_name ) {
+			return __( 'My Account', 'faithbridgeacademy' );
+		}
+		if ( has_shortcode( $content, 'masteriyo_checkout' ) || 'checkout' === $page->post_name ) {
+			return __( 'Checkout', 'faithbridgeacademy' );
+		}
+		if ( has_shortcode( $content, 'masteriyo_courses' ) || has_shortcode( $content, 'masteriyo_course' ) ) {
+			return __( 'My Courses', 'faithbridgeacademy' );
+		}
+	}
+	return get_the_title();
+}
+
+/**
  * Visitpr currency: usd|ngn. Cookie wins, default usd.
  *
  * @return string

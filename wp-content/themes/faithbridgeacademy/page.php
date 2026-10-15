@@ -14,7 +14,7 @@ while ( have_posts() ) :
 		'template-parts/page',
 		'banner',
 		array(
-			'title' => get_the_title(),
+			'title' => fba_page_banner_title(),
 			'sub'   => '',
 			'img'   => $uri . '/assets/images/hero-2.jpg',
 		)
