@@ -28,6 +28,8 @@ while ( have_posts() ) :
 	<?php
 endwhile;
 
-get_template_part( 'template-parts/dynamic', 'content' );
+// No dynamic-content include: the page body already printed above inside
+// .fba-content (see single-programme.php precedent). Including it would render
+// shortcode pages like /account/ ([masteriyo_account]) twice.
 
 get_footer();
