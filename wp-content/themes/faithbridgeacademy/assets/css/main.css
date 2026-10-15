@@ -764,6 +764,7 @@ body.fba-cur-ngn .fba-fee-usd { display: none; }
 
 /* ---------- Application + club forms ---------- */
 .fba-apply-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 2.5rem; align-items: start; }
+.fba-apply-main { min-width: 0; display: grid; gap: 0; align-content: start; }
 .fba-notice { background: var(--fba-paper); border: 1px solid var(--fba-line); border-left: 5px solid var(--fba-green-deep); border-radius: 12px; padding: 1.4rem 1.6rem; margin-bottom: 1.8rem; }
 .fba-notice-ok { border-left-color: var(--fba-green); }
 .fba-notice h2 { margin: 0 0 0.4rem; font-size: 1.4rem; }
@@ -809,12 +810,18 @@ body.fba-cur-ngn .fba-fee-usd { display: none; }
 .fba-form-nav { display: flex; gap: 0.8rem; margin-top: 1.4rem; }
 .fba-btn-outline-dark { border-color: var(--fba-navy); color: var(--fba-navy); }
 .fba-btn-outline-dark:hover { background: var(--fba-navy); color: #fff; }
-/* Apply-page auth strip (login nudge for guests). */
+/* Apply-page auth strip (login nudge for guests). Lives inside the left
+   column (.fba-apply-main) — never a grid item itself. No .reveal transform:
+   translateY on a full-column-width notice reads as a sideways shove and can
+   overlap the sidebar while animating. */
 .fba-auth-strip {
 	background: var(--fba-cream-soft); border: 1px solid var(--fba-line);
 	border-radius: var(--fba-radius); padding: 1.3rem 1.5rem; margin-bottom: 1.6rem;
+	opacity: 1; transform: none;
 }
 .fba-auth-strip p:last-child { margin: 0; display: flex; gap: 0.7rem; flex-wrap: wrap; }
+/* Status notices on the apply grid: same no-shift rule as the auth strip. */
+.fba-apply-main > .fba-notice { opacity: 1; transform: none; }
 .fba-review { background: var(--fba-bg); border: 1px solid var(--fba-line); border-radius: 12px; padding: 1.3rem 1.5rem; margin-bottom: 1.2rem; }
 .fba-review dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 0.3rem 1rem; }
 .fba-review dt { font-weight: 800; color: var(--fba-navy); }

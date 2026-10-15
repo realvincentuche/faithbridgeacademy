@@ -36,29 +36,30 @@ $sessions = fba_open_sessions();
 <div class="fba-content">
 	<div class="fba-wrap fba-apply-grid">
 
+		<div class="fba-apply-main">
 		<?php if ( 'done' === $state ) : ?>
-			<div class="fba-notice fba-notice-ok reveal" role="status">
+			<div class="fba-notice fba-notice-ok" role="status">
 				<h2><?php esc_html_e( 'Application received.', 'faithbridgeacademy' ); ?></h2>
 				<p><?php echo esc_html( sprintf( __( 'Your reference is %s. Transfer your fees to %s · %s · %s, then wait for our confirmation on WhatsApp.', 'faithbridgeacademy' ), $ref, fba_get_option( 'bank_name' ), fba_get_option( 'bank_number' ), fba_get_option( 'bank_bank' ) ) ); ?></p>
 			</div>
 		<?php elseif ( 'duplicate' === $state ) : ?>
-			<div class="fba-notice reveal" role="status">
+			<div class="fba-notice" role="status">
 				<h2><?php esc_html_e( 'Already applied.', 'faithbridgeacademy' ); ?></h2>
 				<p><?php echo esc_html( sprintf( __( 'This ward already has an application for this session (%s). Contact us if anything needs to change.', 'faithbridgeacademy' ), $ref ) ); ?></p>
 			</div>
 		<?php elseif ( $state ) : ?>
-			<div class="fba-notice reveal" role="alert">
+			<div class="fba-notice" role="alert">
 				<p><?php esc_html_e( 'Something is missing or invalid — please check the highlighted fields and try again.', 'faithbridgeacademy' ); ?></p>
 			</div>
 		<?php endif; ?>
 
 <?php if ( is_user_logged_in() ) : ?>
 			<?php $fba_current = wp_get_current_user(); ?>
-			<div class="fba-notice fba-notice-ok reveal" role="status">
+			<div class="fba-notice fba-notice-ok" role="status">
 				<p><?php echo esc_html( sprintf( __( 'Applying as %s (%s). Your application links to your learning account automatically.', 'faithbridgeacademy' ), $fba_current->display_name, $fba_current->user_email ) ); ?></p>
 			</div>
 		<?php else : ?>
-			<div class="fba-auth-strip reveal" role="note">
+			<div class="fba-auth-strip" role="note">
 				<p><strong><?php esc_html_e( 'Have an account? Log in first.', 'faithbridgeacademy' ); ?></strong>
 				<?php esc_html_e( 'It links your application to your learning dashboard. Guests can still apply below — we create your account when your application is approved.', 'faithbridgeacademy' ); ?></p>
 				<p>
@@ -160,6 +161,8 @@ $sessions = fba_open_sessions();
 				<button class="fba-btn fba-btn-green" type="submit"><?php esc_html_e( 'Submit application', 'faithbridgeacademy' ); ?> <i class="ph ph-arrow-right" aria-hidden="true"></i></button></p>
 			</fieldset>
 		</form>
+
+		</div><!-- .fba-apply-main -->
 
 		<aside class="fba-side-card">
 			<h3><?php echo esc_html( fba_current_session()['label'] ); ?></h3>
