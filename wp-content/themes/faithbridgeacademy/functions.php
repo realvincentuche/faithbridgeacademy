@@ -197,6 +197,26 @@ function fba_usd_to_ngn( $usd ) {
 }
 
 /**
+ * Is this a plugin-app page (Masteriyo UI) that needs full container width?
+ * Text pages stay in narrow .fba-prose (760px); app UI spans .fba-wrap (1180px).
+ *
+ * @return bool
+ */
+function fba_is_masteriyo_page() {
+	$page = get_post();
+	if ( ! $page || 'page' !== $page->post_type ) {
+		return false;
+	}
+	$content = (string) $page->post_content;
+	foreach ( array( 'masteriyo_account', 'masteriyo_checkout', 'masteriyo_courses', 'masteriyo_course', 'masteriyo_learn' ) as $tag ) {
+		if ( has_shortcode( $content, $tag ) ) {
+			return true;
+		}
+	}
+	return in_array( $page->post_name, array( 'account', 'checkout', 'learn', 'courses' ), true );
+}
+
+/**
  * Banner title for generic pages. Masteriyo plugin pages keep whatever
  * label an admin typed (e.g. "Account"), so map them to friendly titles
  * here in code — DB edits never deploy, this does.

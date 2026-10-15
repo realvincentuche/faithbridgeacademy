@@ -19,9 +19,10 @@ while ( have_posts() ) :
 			'img'   => $uri . '/assets/images/hero-2.jpg',
 		)
 	);
+	$is_wide = fba_is_masteriyo_page();
 	?>
-	<div class="fba-content">
-		<div class="fba-wrap fba-prose">
+	<div class="fba-content<?php echo $is_wide ? ' fba-content--wide' : ''; ?>">
+		<div class="fba-wrap<?php echo $is_wide ? '' : ' fba-prose'; ?>">
 			<?php the_content(); ?>
 		</div>
 	</div>

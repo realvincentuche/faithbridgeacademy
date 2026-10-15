@@ -463,6 +463,12 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 .fba-content { padding: 3.5rem 0; }
 .fba-prose { max-width: 760px; }
 .fba-prose ul { padding-left: 1.4rem; }
+/* App UI (Masteriyo account/checkout/courses): full .fba-wrap width, no 760px cap. */
+.fba-content--wide .fba-wrap { max-width: 1180px; }
+.fba-content--wide .masteriyo-login-form-wrapper,
+.fba-content--wide .masteriyo-account,
+.fba-content--wide .masteriyo-checkout,
+.fba-content--wide .masteriyo-courses { max-width: none; width: 100%; }
 
 /* ---------- Inner banner ---------- */
 .fba-banner { position: relative; background: #101010; color: #fff; padding: calc(var(--fba-header-h) + 12rem) 0 3.5rem; overflow: clip; }
