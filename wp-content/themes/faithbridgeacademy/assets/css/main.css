@@ -509,8 +509,20 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 }
 .fba-content--wide .masteriyo-login-form-wrapper > .masteriyo-signup .masteriyo-title { color: #fff; margin: 0; }
 .fba-content--wide .masteriyo-login-form-wrapper > .masteriyo-signup > span { color: #aebdce; }
+/* "Register as Student" link: render exactly as .fba-btn.fba-btn-green.fba-btn-sm
+   (can't touch Masteriyo's markup, so mirror the theme button styles 1:1). */
 .fba-content--wide .masteriyo-login-form-wrapper > .masteriyo-signup a.masteriyo-btn {
+	display: inline-flex; align-items: center; gap: 0.5rem;
+	padding: 0.6rem 1.2rem; font-size: 0.88rem;
+	border-radius: 10px; font-weight: 700; text-decoration: none;
+	border: 2px solid transparent; cursor: pointer;
+	background: var(--fba-green); border-color: var(--fba-green); color: var(--fba-deep);
+	box-shadow: 0 12px 26px -12px rgba(192, 186, 2, 0.7);
+	transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
 	width: auto; margin-top: auto; align-self: flex-start;
+}
+.fba-content--wide .masteriyo-login-form-wrapper > .masteriyo-signup a.masteriyo-btn:hover {
+	transform: translateY(-2px); background: #d3cf06; color: var(--fba-deep);
 }
 /* Signup page: centered card, comfortable reading width. */
 .fba-content--wide .masteriyo-signup--wrapper { max-width: 640px; margin: 0 auto; }
