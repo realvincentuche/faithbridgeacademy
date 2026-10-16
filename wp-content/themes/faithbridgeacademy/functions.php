@@ -244,6 +244,76 @@ function fba_masteriyo_login_redirect_html( $html ) {
 add_filter( 'do_shortcode_tag', 'fba_masteriyo_login_redirect_html', 20, 2 );
 
 /**
+ * Masteriyo integration: one-door policy.
+ *
+ * Our flow is apply → pay (bank transfer) → approval enrols → learn.
+ * There is no self-serve course shop, so every Masteriyo "browse courses"
+ * link must land on /programmes/ (fees, seats, apply CTAs) — never on the
+ * plugin's empty /courses/ archive. The classroom (/learn/…) is untouched.
+ */
+
+/**
+ * Point Masteriyo's courses-page ID at our /programmes/ page.
+ * The React dashboard empty-state ("Enrol now"), search/sort forms and all
+ * browse-courses links resolve via masteriyo_get_page_permalink('courses'),
+ * which reads this filter first and only falls back to the /courses/
+ * archive when no page is set.
+ *
+ * @param int $page_id Configured courses page ID.
+ * @return int
+ */
+function fba_masteriyo_courses_page_id( $page_id ) {
+	$programmes = get_page_by_path( 'programmes' );
+	if ( $programmes ) {
+		return (int) $programmes->ID;
+	}
+	return $page_id;
+}
+add_filter( 'masteriyo_get_courses_page_id', 'fba_masteriyo_courses_page_id' );
+
+/**
+ * Redirect the plugin's own shop surfaces to /programmes/:
+ * the /courses/ archive and single mto-course pages. Enrolled students keep
+ * classroom access — /learn/… is never redirected, and single-course pages
+ * remain reachable for users already enrolled (they redirect to learn).
+ */
+function fba_masteriyo_shop_redirect() {
+	if ( is_admin() ) {
+		return;
+	}
+	// Never redirect our own catalogue: the courses-page filter above points
+	// Masteriyo at /programmes/, so is_page(courses) is TRUE there.
+	$programmes = get_page_by_path( 'programmes' );
+	if ( $programmes && is_page( (int) $programmes->ID ) ) {
+		return;
+	}
+	// Course shop archive (/courses/) → programmes catalogue.
+	if ( is_post_type_archive( 'mto-course' ) ) {
+		wp_safe_redirect( home_url( '/programmes/' ), 301 );
+		exit;
+	}
+	// Single course page: enrolled → send to classroom; visitor → programmes.
+	if ( is_singular( 'mto-course' ) ) {
+		$course_id = get_the_ID();
+		$enrolled  = false;
+		if ( is_user_logged_in() && function_exists( 'masteriyo_is_user_enrolled_in_course' ) ) {
+			$enrolled = (bool) masteriyo_is_user_enrolled_in_course( $course_id, get_current_user_id() );
+		}
+		if ( $enrolled ) {
+			$learn = function_exists( 'masteriyo_get_page_permalink' ) ? masteriyo_get_page_permalink( 'learn' ) : '';
+			if ( $learn && trailingslashit( $learn ) !== trailingslashit( home_url( '/' ) ) ) {
+				wp_safe_redirect( $learn, 302 );
+				exit;
+			}
+			return; // No learn page configured — leave the course page alone.
+		}
+		wp_safe_redirect( home_url( '/programmes/' ), 301 );
+		exit;
+	}
+}
+add_action( 'template_redirect', 'fba_masteriyo_shop_redirect', 20 );
+
+/**
  * Force Masteriyo's "Register as Student" link to carry ?next through as
  * the signup page's ?redirect_to (its RegistrationFormHandler reads $_GET).
  *
