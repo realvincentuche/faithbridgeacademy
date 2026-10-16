@@ -2397,7 +2397,9 @@ function fba_application_learner_id( $post_id ) {
 			'user_login' => $login,
 			'user_email' => $email,
 			'user_pass'  => wp_generate_password( 16, true, true ),
-			'role'       => 'subscriber',
+			// Learners are Masteriyo students (not plain subscribers) so the
+			// role model stays coherent; instructors are created manually.
+			'role'       => get_role( 'masteriyo_student' ) ? 'masteriyo_student' : 'subscriber',
 		)
 	);
 	return is_wp_error( $uid ) ? array( 0, false ) : array( (int) $uid, true );
