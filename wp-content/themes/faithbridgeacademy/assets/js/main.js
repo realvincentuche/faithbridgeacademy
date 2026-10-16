@@ -635,4 +635,59 @@
 			el.textContent = el.getAttribute( 'data-count' ) + ( el.getAttribute( 'data-suffix' ) || '+' );
 		} );
 	}
+
+	/* Masteriyo profile trim: detach the Billing block (e-commerce baggage;
+	   bank-transfer school, nothing ships). React-rendered, so observe + remove
+	   the node — CSS-only hides resurrect on re-render. Phone is edited via
+	   our My Wards widget, not here. */
+	function fbaProfileTrim( root ) {
+		var scope = root || document;
+		if ( scope.querySelector && scope.querySelector( '[data-fba-billing-trimmed]' ) ) {
+			return;
+		}
+		var head = null;
+		var heads = scope.querySelectorAll ? scope.querySelectorAll( '.mto-profile-edit-form-billing-heading' ) : [];
+		if ( heads.length ) {
+			head = heads[0];
+		} else if ( scope.querySelectorAll ) {
+			var btns = scope.querySelectorAll( 'button.copy-from' );
+			if ( btns.length ) {
+				head = btns[0].closest( 'div' );
+			}
+		}
+		if ( ! head ) {
+			return;
+		}
+		/* The billing section: heading container + following field groups up
+		   to (not including) the Save button row. */
+		var box = head.closest( 'div' );
+		if ( ! box || ! box.parentNode ) {
+			return;
+		}
+		box.setAttribute( 'data-fba-billing-trimmed', '1' );
+		var sib = box.nextSibling;
+		var guard = 0;
+		while ( sib && guard < 30 ) {
+			guard++;
+			var next = sib.nextSibling;
+			var txt = sib.textContent || '';
+			if ( sib.nodeType === 1 && ( sib.querySelector( 'button[type="submit"]' ) || /Save Changes/.test( txt.slice( 0, 60 ) ) ) ) {
+				break;
+			}
+			if ( sib.nodeType === 1 && /City|Zip Code|Address|Contact Number|Company Name/.test( txt.slice( 0, 200 ) ) ) {
+				sib.remove();
+			} else if ( sib.nodeType === 1 && sib.tagName !== 'BUTTON' ) {
+				break;
+			}
+			sib = next;
+		}
+		box.remove();
+	}
+	if ( document.getElementById( 'masteriyo-account-page' ) ) {
+		fbaProfileTrim( document );
+		if ( 'MutationObserver' in window ) {
+			var fbaProfObs = new MutationObserver( function () { fbaProfileTrim( document ); } );
+			fbaProfObs.observe( document.getElementById( 'masteriyo-account-page' ), { childList: true, subtree: true } );
+		}
+	}
 } )();

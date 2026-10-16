@@ -1922,6 +1922,27 @@ function fba_register_phase3_cpts() {
 			'map_meta_cap'  => true,
 		)
 	);
+
+	// Ward learner profiles: one per child. Sponsor/guardian applications
+	// create these on approval; each ward gets its own login + enrolments,
+	// and the guardian switches between them ("viewing as …").
+	register_post_type(
+		'ward',
+		array(
+			'labels'        => array(
+				'name'          => __( 'Wards', 'faithbridgeacademy' ),
+				'singular_name' => __( 'Ward', 'faithbridgeacademy' ),
+			),
+			'public'        => false,
+			'show_ui'       => true,
+			'show_in_menu'  => true,
+			'supports'      => array( 'title' ),
+			'menu_icon'     => 'dashicons-heart',
+			'menu_position' => 24,
+			'capabilities'  => array( 'create_posts' => 'manage_options' ),
+			'map_meta_cap'  => true,
+		)
+	);
 }
 add_action( 'init', 'fba_register_phase3_cpts' );
 
@@ -2438,9 +2459,12 @@ function fba_application_metabox_html( $post ) {
 
 /**
  * Resolve the WP learner account for an application: reuse the stored user,
- * else match by applicant email, else create a subscriber account.
+ * else match by applicant email, else create a student account.
  * Returns array( user_id, is_new ). Email is required on the form, so the
  * 0 case only happens for legacy rows.
+ *
+ * NOTE: for sponsor-kind applications this resolves the GUARDIAN (applicant).
+ * Ward learner accounts are created separately by fba_approval_ward_id().
  *
  * @param int $post_id Application ID.
  * @return array
@@ -2475,6 +2499,231 @@ function fba_application_learner_id( $post_id ) {
 	return is_wp_error( $uid ) ? array( 0, false ) : array( (int) $uid, true );
 }
 
+/**
+ * Create (or reuse) the ward learner account for a sponsor application:
+ * one login per child, named after the ward, linked to the guardian.
+ * Self applications need no ward user (applicant IS the learner).
+ * Returns array( ward_post_id, ward_user_id ).
+ *
+ * @param int $post_id Application ID.
+ * @return array
+ */
+function fba_approval_ward_id( $post_id ) {
+	$kind = get_post_meta( $post_id, '_fba_kind', true );
+	if ( 'sponsor' !== $kind ) {
+		return array( 0, 0 );
+	}
+	// Reuse an existing ward post for this application.
+	$existing = get_posts(
+		array(
+			'post_type'      => 'ward',
+			'post_status'    => 'any',
+			'posts_per_page' => 1,
+			'fields'         => 'ids',
+			'meta_query'     => array(
+				array( 'key' => '_fba_application_id', 'value' => (string) $post_id ),
+			),
+		)
+	);
+	if ( $existing ) {
+		$wid = (int) $existing[0];
+		return array( $wid, (int) get_post_meta( $wid, '_fba_ward_user_id', true ) );
+	}
+	$ward_name  = sanitize_text_field( (string) get_post_meta( $post_id, '_fba_ward_name', true ) );
+	$ward_dob   = sanitize_text_field( (string) get_post_meta( $post_id, '_fba_ward_dob', true ) );
+	$ward_class = sanitize_text_field( (string) get_post_meta( $post_id, '_fba_ward_class', true ) );
+	$guardian   = (int) get_post_meta( $post_id, '_fba_user_id', true );
+	if ( '' === $ward_name ) {
+		return array( 0, 0 );
+	}
+	$wid = wp_insert_post(
+		array(
+			'post_title'  => $ward_name,
+			'post_status' => 'private',
+			'post_type'   => 'ward',
+		)
+	);
+	if ( ! $wid || is_wp_error( $wid ) ) {
+		return array( 0, 0 );
+	}
+	update_post_meta( $wid, '_fba_application_id', (string) $post_id );
+	update_post_meta( $wid, '_fba_ward_dob', $ward_dob );
+	update_post_meta( $wid, '_fba_ward_class', $ward_class );
+	update_post_meta( $wid, '_fba_guardian_id', $guardian );
+	// Ward login: slug of ward name, unique; email is guardian's + tag so
+	// password resets route to the parent while the login stays the child's.
+	$guardian_user = $guardian ? get_user_by( 'id', $guardian ) : false;
+	$base  = sanitize_user( $ward_name, true );
+	$base  = '' !== $base ? $base : 'ward';
+	$login = $base;
+	$suffix = 2;
+	while ( username_exists( $login ) ) {
+		$login = $base . $suffix;
+		$suffix++;
+	}
+	$gmail = $guardian_user ? $guardian_user->user_email : '';
+	$wmail = '';
+	if ( $gmail && is_email( $gmail ) ) {
+		// Plus-addressing keeps resets routable to the parent while giving
+		// the ward a distinct login identity (some providers reject it —
+		// then the ward account simply has no email; guardian manages it).
+		$tag   = sanitize_user( strtolower( preg_replace( '/[^a-z0-9]/i', '', $login ) ), true );
+		if ( '' !== $tag ) {
+			$candidate = preg_replace( '/@/', '+' . $tag . '@', $gmail );
+			if ( is_email( $candidate ) && ! email_exists( $candidate ) ) {
+				$wmail = $candidate;
+			}
+		}
+	}
+	$wuid = wp_insert_user(
+		array(
+			'user_login'   => $login,
+			'user_email'   => $wmail,
+			'user_pass'    => wp_generate_password( 16, true, true ),
+			'display_name' => $ward_name,
+			'role'         => get_role( 'masteriyo_student' ) ? 'masteriyo_student' : 'subscriber',
+		)
+	);
+	if ( ! is_wp_error( $wuid ) ) {
+		update_post_meta( $wid, '_fba_ward_user_id', (int) $wuid );
+		update_user_meta( $wuid, '_fba_guardian_id', $guardian );
+		update_user_meta( $wuid, '_fba_ward_post_id', (int) $wid );
+		$wards = $guardian ? (array) get_user_meta( $guardian, '_fba_wards', true ) : array();
+		$wards[] = (int) $wuid;
+		$wards = array_values( array_unique( array_map( 'intval', $wards ) ) );
+		if ( $guardian ) {
+			update_user_meta( $guardian, '_fba_wards', $wards );
+		}
+		return array( (int) $wid, (int) $wuid );
+	}
+	return array( (int) $wid, 0 );
+}
+
+/**
+ * Guardian's ward list: ward user IDs linked to this account.
+ *
+ * @param int $user_id Guardian user ID.
+ * @return array
+ */
+function fba_guardian_wards( $user_id ) {
+	$wards = (array) get_user_meta( (int) $user_id, '_fba_wards', true );
+	$wards = array_values( array_filter( array_map( 'intval', $wards ) ) );
+	$live  = array();
+	foreach ( $wards as $wuid ) {
+		if ( get_user_by( 'id', $wuid ) ) {
+			$live[] = $wuid;
+		}
+	}
+	return $live;
+}
+
+/**
+ * Currently viewed ward user ID (guardian "viewing as" switch).
+ * Stored per guardian; falls back to 0 = own dashboard.
+ *
+ * @param int $guardian_id Guardian user ID.
+ * @return int
+ */
+function fba_current_view_ward( $guardian_id ) {
+	$vid = (int) get_user_meta( (int) $guardian_id, '_fba_view_ward', true );
+	if ( $vid && in_array( $vid, fba_guardian_wards( $guardian_id ), true ) ) {
+		return $vid;
+	}
+	return 0;
+}
+
+/**
+ * Guardian "My Wards" widget + "viewing as" switcher, injected above the
+ * Masteriyo dashboard for accounts that have linked wards. Self learners
+ * (no wards) see nothing — their dashboard is unchanged.
+ *
+ * @param string $html Shortcode HTML.
+ * @param string $tag  Shortcode tag.
+ * @return string
+ */
+function fba_guardian_widget_html( $html, $tag ) {
+	if ( 'masteriyo_account' !== $tag || ! is_user_logged_in() ) {
+		return $html;
+	}
+	if ( false === strpos( $html, 'masteriyo-account-page' ) ) {
+		return $html; // Login/signup forms, not the dashboard.
+	}
+	$uid   = get_current_user_id();
+	$wards = fba_guardian_wards( $uid );
+	if ( ! $wards ) {
+		return $html;
+	}
+	$viewing = fba_current_view_ward( $uid );
+	ob_start();
+	?>
+	<div class="fba-wards-widget">
+		<h2><?php esc_html_e( 'My Wards', 'faithbridgeacademy' ); ?></h2>
+		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="fba-wards-switch">
+			<input type="hidden" name="action" value="fba_ward_switch">
+			<?php wp_nonce_field( 'fba_ward_switch', 'fba_ward_nonce' ); ?>
+			<label for="fbaViewWard"><?php esc_html_e( 'Viewing as', 'faithbridgeacademy' ); ?></label>
+			<select id="fbaViewWard" name="fba_view_ward" onchange="this.form.submit()">
+				<option value="0"<?php selected( 0, $viewing ); ?>><?php esc_html_e( 'Myself (guardian)', 'faithbridgeacademy' ); ?></option>
+				<?php foreach ( $wards as $wuid ) : ?>
+					<?php $wu = get_user_by( 'id', $wuid ); ?>
+					<?php if ( ! $wu ) { continue; } ?>
+					<option value="<?php echo esc_attr( (string) $wuid ); ?>"<?php selected( $wuid, $viewing ); ?>><?php echo esc_html( $wu->display_name ); ?></option>
+				<?php endforeach; ?>
+			</select>
+			<noscript><button class="fba-btn fba-btn-navy fba-btn-sm" type="submit"><?php esc_html_e( 'Switch', 'faithbridgeacademy' ); ?></button></noscript>
+		</form>
+		<ul class="fba-wards-list">
+			<?php foreach ( $wards as $wuid ) : ?>
+				<?php
+				$wu = get_user_by( 'id', $wuid );
+				if ( ! $wu ) {
+					continue;
+				}
+				$courses = function_exists( 'masteriyo_get_user_enrolled_courses' ) ? (array) masteriyo_get_user_enrolled_courses( $wuid ) : array();
+				?>
+				<li<?php echo $wuid === $viewing ? ' class="active"' : ''; ?>>
+					<strong><?php echo esc_html( $wu->display_name ); ?></strong>
+					<span><?php echo esc_html( sprintf( _n( '%d course', '%d courses', count( $courses ), 'faithbridgeacademy' ), count( $courses ) ) ); ?></span>
+				</li>
+			<?php endforeach; ?>
+		</ul>
+		<?php if ( $viewing ) : ?>
+			<?php $vu = get_user_by( 'id', $viewing ); ?>
+			<p class="fba-wards-note"><?php echo esc_html( sprintf( __( 'Showing %s’s enrolments below. Switch back to yourself anytime.', 'faithbridgeacademy' ), $vu ? $vu->display_name : '' ) ); ?></p>
+		<?php endif; ?>
+	</div>
+	<?php
+	$widget = ob_get_clean();
+	return $widget . $html;
+}
+add_filter( 'do_shortcode_tag', 'fba_guardian_widget_html', 30, 2 );
+function fba_ward_switch_handler() {
+	if ( ! is_user_logged_in() ) {
+		wp_safe_redirect( home_url( '/account/' ) );
+		exit;
+	}
+	if ( ! isset( $_POST['fba_ward_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['fba_ward_nonce'] ) ), 'fba_ward_switch' ) ) {
+		wp_safe_redirect( home_url( '/account/' ) );
+		exit;
+	}
+	$uid  = get_current_user_id();
+	$ward = isset( $_POST['fba_view_ward'] ) ? (int) $_POST['fba_view_ward'] : 0;
+	if ( 0 === $ward || in_array( $ward, fba_guardian_wards( $uid ), true ) ) {
+		update_user_meta( $uid, '_fba_view_ward', $ward );
+	}
+	wp_safe_redirect( home_url( '/account/' ) );
+	exit;
+}
+add_action( 'admin_post_nopriv_fba_ward_switch', 'fba_ward_switch_handler' );
+add_action( 'admin_post_fba_ward_switch', 'fba_ward_switch_handler' );
+
+/**
+ * Welcome email for a newly created learner: set-password link + course note.
+ * Uses core get_password_reset_key() so no password travels by email.
+ *
+ * @param int    $user_id User ID.
+ * @param string $ref     Application reference.
+ */
 /**
  * Welcome email for a newly created learner: set-password link + course note.
  * Uses core get_password_reset_key() so no password travels by email.
@@ -2533,8 +2782,24 @@ function fba_save_application_meta( $post_id ) {
 					}
 				}
 			}
-			foreach ( (array) get_post_meta( $post_id, '_fba_programmes', true ) as $cpid ) {
-				fba_masteriyo_enrol( $user_id, (int) get_post_meta( (int) $cpid, '_fba_course_id', true ) );
+			// Sponsor applications: the guardian holds the account; the ward
+			// gets its own learner login + enrolments (guardian switches views).
+			$kind = get_post_meta( $post_id, '_fba_kind', true );
+			if ( 'sponsor' === $kind ) {
+				list( $ward_post, $ward_user ) = fba_approval_ward_id( $post_id );
+				if ( $ward_post ) {
+					update_post_meta( $post_id, '_fba_ward_post_id', (int) $ward_post );
+				}
+				if ( $ward_user ) {
+					update_post_meta( $post_id, '_fba_ward_user_id', (int) $ward_user );
+					foreach ( (array) get_post_meta( $post_id, '_fba_programmes', true ) as $cpid ) {
+						fba_masteriyo_enrol( (int) $ward_user, (int) get_post_meta( (int) $cpid, '_fba_course_id', true ) );
+					}
+				}
+			} else {
+				foreach ( (array) get_post_meta( $post_id, '_fba_programmes', true ) as $cpid ) {
+					fba_masteriyo_enrol( $user_id, (int) get_post_meta( (int) $cpid, '_fba_course_id', true ) );
+				}
 			}
 		}
 	}
