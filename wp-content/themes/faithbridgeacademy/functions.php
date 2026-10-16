@@ -633,6 +633,33 @@ function fba_menu_fallback() {
 }
 
 /**
+ * Make the "Login" menu item dynamic: logged-in visitors see "My Account",
+ * guests see "Login". The menu stores a static item pointing at /account/ —
+ * this rewrites its label at render (works for header, drawer, cached DB item).
+ *
+ * @param array  $items Menu items.
+ * @param object $args  Menu args.
+ * @return array
+ */
+function fba_dynamic_login_label( $items, $args ) {
+	if ( ! is_array( $items ) || ! $items ) {
+		return $items;
+	}
+	foreach ( $items as $item ) {
+		$url = isset( $item->url ) ? (string) $item->url : '';
+		if ( '' !== $url && false !== strpos( $url, '/account' ) && empty( $item->menu_item_parent ) ) {
+			if ( is_user_logged_in() ) {
+				$item->title = __( 'My Account', 'faithbridgeacademy' );
+			} else {
+				$item->title = __( 'Login', 'faithbridgeacademy' );
+			}
+		}
+	}
+	return $items;
+}
+add_filter( 'wp_nav_menu_objects', 'fba_dynamic_login_label', 10, 2 );
+
+/**
  * Fallback footer menu (keeps bottom bar populated before a menu exists).
  */
 function fba_footer_fallback() {
