@@ -198,7 +198,7 @@ function fba_usd_to_ngn( $usd ) {
 
 /**
  * Where should /account send the visitor after login/signup?
- * Default /account/ — but ?next=/apply/?prog=N (our auth strip + header Login
+ * Default /account/, but ?next=/apply/?prog=N (our auth strip + header Login
  * passthrough) wins, sanitized to a same-site path. Masteriyo reads
  * ?redirect_to (signup) and the login form's redirect_to field (login).
  *
@@ -248,7 +248,7 @@ add_filter( 'do_shortcode_tag', 'fba_masteriyo_login_redirect_html', 20, 2 );
  *
  * Our flow is apply → pay (bank transfer) → approval enrols → learn.
  * There is no self-serve course shop, so every Masteriyo "browse courses"
- * link must land on /programmes/ (fees, seats, apply CTAs) — never on the
+ * link must land on /programmes/ (fees, seats, apply CTAs) and never on the
  * plugin's empty /courses/ archive. The classroom (/learn/…) is untouched.
  */
 
@@ -274,7 +274,7 @@ add_filter( 'masteriyo_get_courses_page_id', 'fba_masteriyo_courses_page_id' );
 /**
  * Redirect the plugin's own shop surfaces to /programmes/:
  * the /courses/ archive and single mto-course pages. Enrolled students keep
- * classroom access — /learn/… is never redirected, and single-course pages
+ * classroom access. /learn/… is never redirected, and single-course pages
  * remain reachable for users already enrolled (they redirect to learn).
  */
 function fba_masteriyo_shop_redirect() {
@@ -305,7 +305,7 @@ function fba_masteriyo_shop_redirect() {
 				wp_safe_redirect( $learn, 302 );
 				exit;
 			}
-			return; // No learn page configured — leave the course page alone.
+			return; // No learn page configured, so leave the course page alone.
 		}
 		wp_safe_redirect( home_url( '/programmes/' ), 301 );
 		exit;
@@ -330,7 +330,7 @@ function fba_masteriyo_signup_args( $args ) {
 add_filter( 'masteriyo_signup_args', 'fba_masteriyo_signup_args', 10, 1 );
 
 /**
- * Belt-and-braces: the signup page reads ?redirect_to from $_GET —
+ * Belt-and-braces: the signup page reads ?redirect_to from $_GET, so
  * normalize ?next there too in case the link filter ever misses.
  */
 function fba_masteriyo_signup_next_bridge() {
@@ -370,7 +370,7 @@ add_filter( 'masteriyo_validate_registration_form_data', 'fba_masteriyo_signup_v
 
 /**
  * Persist the phone number on the new WP user (Masteriyo passes unknown
- * fields through $args but only as model props — belt-and-braces here).
+ * fields through $args but only as model props, so we persist it here).
  *
  * @param object $user Masteriyo user model.
  * @param bool   $generated Whether the password was auto-generated.
@@ -426,7 +426,7 @@ function fba_is_masteriyo_page() {
 /**
  * Banner title for generic pages. Masteriyo plugin pages keep whatever
  * label an admin typed (e.g. "Account"), so map them to friendly titles
- * here in code — DB edits never deploy, this does.
+ * here in code. DB edits never deploy, this does.
  *
  * @return string
  */
@@ -704,7 +704,7 @@ function fba_menu_fallback() {
 
 /**
  * Make the "Login" menu item dynamic: logged-in visitors see "My Account",
- * guests see "Login". The menu stores a static item pointing at /account/ —
+ * guests see "Login". The menu stores a static item pointing at /account/, and
  * this rewrites its label at render (works for header, drawer, cached DB item).
  *
  * @param array  $items Menu items.
@@ -932,7 +932,7 @@ function fba_seed_menus() {
 
 /**
  * Order Primary top-level items: Programmes, Admissions, Bible Club,
- * Partner, About, Contact — anything else (e.g. Masteriyo Login) after.
+ * Partner, About, Contact. Anything else (e.g. Masteriyo Login) comes after.
  *
  * @param int $menu_id Nav menu ID.
  */
@@ -979,7 +979,7 @@ function fba_normalize_menu_order( $menu_id ) {
 /**
  * Auto-repair stale Primary menus on admin loads (no button click needed).
  * Deploys never touch the DB, so live keeps old Home/Blog/Partner-With-Us
- * rows until something rewrites them — this is that something.
+ * rows until something rewrites them. This is that something.
  */
 function fba_maybe_repair_menus() {
 	if ( ! current_user_can( 'manage_options' ) ) {
@@ -1106,7 +1106,7 @@ function fba_seed_on_activate() {
 		'bible-club' => __( 'Bible Club', 'faithbridgeacademy' ),
 		'faq'        => __( 'FAQs', 'faithbridgeacademy' ),
 		'apply'      => __( 'Apply Now', 'faithbridgeacademy' ),
-		'partner'    => __( 'Partner With FaithBridge Academy — Sponsor a Child, Support a Future', 'faithbridgeacademy' ),
+		'partner'    => __( 'Partner With FaithBridge Academy: Sponsor a Child, Support a Future', 'faithbridgeacademy' ),
 		'contact'    => __( 'Contact Us', 'faithbridgeacademy' ),
 		'blog'       => __( 'Blog', 'faithbridgeacademy' ),
 		'resources'  => __( 'Resources', 'faithbridgeacademy' ),
@@ -1233,22 +1233,22 @@ add_action( 'admin_post_fba_setup_pages', 'fba_setup_pages_handler' );
  */
 function fba_programme_seed_data() {
 	return array(
-		array( 'slug' => 'bible-study', 'title' => 'Bible Study', 'group' => 'bible', 'desc' => 'Know God deeply through Scripture — memory verses, character lessons and practical faith, taught live with recordings for revision.' ),
-		array( 'slug' => 'english', 'title' => 'English', 'group' => 'languages', 'desc' => 'Read widely, write clearly and speak with poise — from phonics to essay writing, built on great books and godly speech.' ),
-		array( 'slug' => 'french', 'title' => 'French', 'group' => 'languages', 'desc' => 'A second language learned joyfully — speak, sing and shine en français, from first greetings to confident conversation.' ),
-		array( 'slug' => 'igbo', 'title' => 'Igbo', 'group' => 'languages', 'desc' => 'Asụsụ Igbo learned with pride — speak, read and write the language of home, guided by fluent facilitators.' ),
-		array( 'slug' => 'hausa', 'title' => 'Hausa', 'group' => 'languages', 'desc' => 'Hausa learned step by step — conversation, reading and writing, rooted in respect for culture and community.' ),
-		array( 'slug' => 'yoruba', 'title' => 'Yoruba', 'group' => 'languages', 'desc' => 'Èdè Yorùbá with confidence — proverbs, stories and sound structure, from first words to fluent expression.' ),
-		array( 'slug' => 'mathematics', 'title' => 'Mathematics', 'group' => 'others', 'desc' => 'Strong foundations and fearless problem-solving — from number basics to exam brilliance, no fear, just method.' ),
-		array( 'slug' => 'physics', 'title' => 'Physics', 'group' => 'others', 'desc' => "Understand how God's ordered world works — motion, energy and matter explained clearly with worked examples." ),
-		array( 'slug' => 'chemistry', 'title' => 'Chemistry', 'group' => 'others', 'desc' => 'Matter, reactions and the order in creation — theory plus diagrams that make abstract ideas stick.' ),
-		array( 'slug' => 'biology', 'title' => 'Biology', 'group' => 'others', 'desc' => 'Life in all its wonder — cells, systems and the environment, studied with awe and exam precision.' ),
-		array( 'slug' => 'government', 'title' => 'Government', 'group' => 'others', 'desc' => 'Power, citizenship and the Nigerian state — understand governance and your place in it.' ),
-		array( 'slug' => 'literature', 'title' => 'Literature', 'group' => 'others', 'desc' => 'Stories that shape the soul — prose, poetry and drama, read deeply and answered with insight.' ),
-		array( 'slug' => 'economics', 'title' => 'Economics', 'group' => 'others', 'desc' => 'Choice, markets and stewardship — grasp the principles that explain everyday life and exams alike.' ),
-		array( 'slug' => 'ict', 'title' => 'ICT', 'group' => 'others', 'desc' => 'Confident with computers — from computing basics to practical digital skills for school and life online.' ),
-		array( 'slug' => 'agriculture', 'title' => 'Agriculture', 'group' => 'others', 'desc' => 'The soil, the seed and the harvest — crop and animal husbandry taught plainly for school and real life.' ),
-		array( 'slug' => 'basic-science-technology', 'title' => 'Basic Science & Technology', 'group' => 'others', 'desc' => 'Curiosity first — explore living things, materials and simple machines the hands-on way.' ),
+		array( 'slug' => 'bible-study', 'title' => 'Bible Study', 'group' => 'bible', 'desc' => 'Know God deeply through Scripture: memory verses, character lessons and practical faith, taught live with recordings for revision.' ),
+		array( 'slug' => 'english', 'title' => 'English', 'group' => 'languages', 'desc' => 'Read widely, write clearly and speak with poise. From phonics to essay writing, built on great books and godly speech.' ),
+		array( 'slug' => 'french', 'title' => 'French', 'group' => 'languages', 'desc' => 'A second language learned joyfully. Speak, sing and shine en français, from first greetings to confident conversation.' ),
+		array( 'slug' => 'igbo', 'title' => 'Igbo', 'group' => 'languages', 'desc' => 'Asụsụ Igbo learned with pride. Speak, read and write the language of home, guided by fluent facilitators.' ),
+		array( 'slug' => 'hausa', 'title' => 'Hausa', 'group' => 'languages', 'desc' => 'Hausa learned step by step: conversation, reading and writing, rooted in respect for culture and community.' ),
+		array( 'slug' => 'yoruba', 'title' => 'Yoruba', 'group' => 'languages', 'desc' => 'Èdè Yorùbá with confidence: proverbs, stories and sound structure, from first words to fluent expression.' ),
+		array( 'slug' => 'mathematics', 'title' => 'Mathematics', 'group' => 'others', 'desc' => 'Strong foundations and fearless problem-solving, from number basics to exam brilliance. No fear, just method.' ),
+		array( 'slug' => 'physics', 'title' => 'Physics', 'group' => 'others', 'desc' => "Understand how God's ordered world works: motion, energy and matter explained clearly with worked examples." ),
+		array( 'slug' => 'chemistry', 'title' => 'Chemistry', 'group' => 'others', 'desc' => 'Matter, reactions and the order in creation. Theory plus diagrams that make abstract ideas stick.' ),
+		array( 'slug' => 'biology', 'title' => 'Biology', 'group' => 'others', 'desc' => 'Life in all its wonder: cells, systems and the environment, studied with awe and exam precision.' ),
+		array( 'slug' => 'government', 'title' => 'Government', 'group' => 'others', 'desc' => 'Power, citizenship and the Nigerian state. Understand governance and your place in it.' ),
+		array( 'slug' => 'literature', 'title' => 'Literature', 'group' => 'others', 'desc' => 'Stories that shape the soul: prose, poetry and drama, read deeply and answered with insight.' ),
+		array( 'slug' => 'economics', 'title' => 'Economics', 'group' => 'others', 'desc' => 'Choice, markets and stewardship. Grasp the principles that explain everyday life and exams alike.' ),
+		array( 'slug' => 'ict', 'title' => 'ICT', 'group' => 'others', 'desc' => 'Confident with computers. From computing basics to practical digital skills for school and life online.' ),
+		array( 'slug' => 'agriculture', 'title' => 'Agriculture', 'group' => 'others', 'desc' => 'The soil, the seed and the harvest: crop and animal husbandry taught plainly for school and real life.' ),
+		array( 'slug' => 'basic-science-technology', 'title' => 'Basic Science & Technology', 'group' => 'others', 'desc' => 'Curiosity first: explore living things, materials and simple machines the hands-on way.' ),
 	);
 }
 
@@ -1510,7 +1510,7 @@ function fba_programme_course_url( $post_id ) {
 		return '';
 	}
 	if ( post_type_exists( 'mto-course' ) && 'mto-course' === get_post_type( $course_id ) ) {
-		// Draft shells must never leak to visitors — link only published courses.
+		// Draft shells must never leak to visitors. Link only published courses.
 		return 'publish' === get_post_status( $course_id ) ? get_permalink( $course_id ) : '';
 	}
 	if ( 'publish' === get_post_status( $course_id ) ) {
@@ -1530,7 +1530,7 @@ function fba_masteriyo_active() {
 
 /**
  * Create + link Masteriyo course shells for every programme.
- * Drafts only — you fill lessons/quizzes inside Masteriyo, then publish.
+ * Drafts only. You fill lessons/quizzes inside Masteriyo, then publish.
  * Safe to re-run: skips programmes already linked to an existing course.
  *
  * @return array {created, linked, skipped}
@@ -1977,9 +1977,9 @@ function fba_faq_seed_answer( $key ) {
 		case 'schedule':
 			return fba_get_option( 'class_days' ) . ' · ' . fba_get_option( 'class_time' ) . ' (' . fba_get_option( 'timezone' ) . '). ' . sprintf( __( 'Live online via %s.', 'faithbridgeacademy' ), fba_platform_name() );
 		case 'fees':
-			return __( 'Fees vary by programme — exact group and one-on-one fees show on each programme page and during application.', 'faithbridgeacademy' );
+			return __( 'Fees vary by programme. Exact group and one-on-one fees show on each programme page and during application.', 'faithbridgeacademy' );
 		case 'pay':
-			return sprintf( __( 'By bank transfer to %s · %s · %s. We confirm every application personally — no receipt upload needed.', 'faithbridgeacademy' ), fba_get_option( 'bank_name' ), fba_get_option( 'bank_number' ), fba_get_option( 'bank_bank' ) );
+			return sprintf( __( 'By bank transfer to %s · %s · %s. We confirm every application personally, no receipt upload needed.', 'faithbridgeacademy' ), fba_get_option( 'bank_name' ), fba_get_option( 'bank_number' ), fba_get_option( 'bank_bank' ) );
 		case 'capacity':
 			return sprintf( __( 'At most %s learners per group class. One-on-one places are uncapped.', 'faithbridgeacademy' ), fba_get_option( 'group_capacity' ) );
 		case 'recordings':
@@ -1987,7 +1987,7 @@ function fba_faq_seed_answer( $key ) {
 		case 'programmes':
 			return __( 'Bible Study, English, French, Igbo, Hausa, Yoruba, Mathematics, Physics, Chemistry, Biology, Government, Literature, Economics, ICT, Agriculture and Basic Science & Technology.', 'faithbridgeacademy' );
 		case 'club':
-			return sprintf( __( 'A separate annual membership (₦%s) for monthly gatherings — worship, Scripture memory and service, January to December.', 'faithbridgeacademy' ), number_format( (float) fba_get_option( 'club_fee' ) ) );
+			return sprintf( __( 'A separate annual membership (₦%s) for monthly gatherings: worship, Scripture memory and service, January to December.', 'faithbridgeacademy' ), number_format( (float) fba_get_option( 'club_fee' ) ) );
 		default:
 			return '';
 	}
@@ -2372,7 +2372,7 @@ function fba_application_handler() {
 		$ref = 1 === count( $wards ) ? $base_ref : $base_ref . '-' . $n;
 		$app_id = wp_insert_post(
 			array(
-				'post_title'  => $ref . ' — ' . $w['name'],
+				'post_title'  => $ref . ' · ' . $w['name'],
 				'post_status' => 'private',
 				'post_type'   => 'application',
 			)
@@ -2565,7 +2565,7 @@ function fba_approval_ward_id( $post_id ) {
 	$wmail = '';
 	if ( $gmail && is_email( $gmail ) ) {
 		// Plus-addressing keeps resets routable to the parent while giving
-		// the ward a distinct login identity (some providers reject it —
+		// the ward a distinct login identity (some providers reject it,
 		// then the ward account simply has no email; guardian manages it).
 		$tag   = sanitize_user( strtolower( preg_replace( '/[^a-z0-9]/i', '', $login ) ), true );
 		if ( '' !== $tag ) {
@@ -2635,7 +2635,7 @@ function fba_current_view_ward( $guardian_id ) {
 /**
  * Guardian "My Wards" widget + "viewing as" switcher, injected above the
  * Masteriyo dashboard for accounts that have linked wards. Self learners
- * (no wards) see nothing — their dashboard is unchanged.
+ * (no wards) see nothing; their dashboard is unchanged.
  *
  * @param string $html Shortcode HTML.
  * @param string $tag  Shortcode tag.
@@ -2743,13 +2743,13 @@ function fba_send_learner_welcome( $user_id, $ref ) {
 	$set_url = network_site_url( 'wp-login.php?action=rp&key=' . $key . '&login=' . rawurlencode( $user->user_login ), 'login' );
 	/* translators: 1: name, 2: reference, 3: set-password URL, 4: account URL. */
 	$body = sprintf(
-		__( "Hello %1\$s,\n\nYour application (%2\$s) has been approved — welcome to FaithBridge Academy!\n\nSet your learning-account password here:\n%3\$s\n\nThen sign in at %4\$s to see your courses.\n\nBlessings,\nFaithBridge Academy", 'faithbridgeacademy' ),
+		__( "Hello %1\$s,\n\nYour application (%2\$s) has been approved. Welcome to FaithBridge Academy!\n\nSet your learning-account password here:\n%3\$s\n\nThen sign in at %4\$s to see your courses.\n\nBlessings,\nFaithBridge Academy", 'faithbridgeacademy' ),
 		$user->display_name,
 		$ref,
 		$set_url,
 		home_url( '/account/' )
 	);
-	wp_mail( $user->user_email, sprintf( __( 'Welcome to FaithBridge Academy — your application %s is approved', 'faithbridgeacademy' ), $ref ), $body );
+	wp_mail( $user->user_email, sprintf( __( 'Welcome to FaithBridge Academy, your application %s is approved', 'faithbridgeacademy' ), $ref ), $body );
 }
 
 /**
@@ -2891,7 +2891,7 @@ function fba_club_handler() {
 
 	$mid = wp_insert_post(
 		array(
-			'post_title'  => $name . ' — ' . $year,
+			'post_title'  => $name . ' · ' . $year,
 			'post_status' => 'private',
 			'post_type'   => 'club_member',
 		)
@@ -3139,7 +3139,7 @@ function fba_sponsor_handler() {
 			wp_safe_redirect( add_query_arg( 'sp', 'amount', home_url( '/partner/' ) ) );
 			exit;
 		}
-		$designation = __( 'General support — where most needed', 'faithbridgeacademy' );
+		$designation = __( 'General support, where most needed', 'faithbridgeacademy' );
 		$duration = '';
 		$children = 0;
 	} else {
@@ -3152,7 +3152,7 @@ function fba_sponsor_handler() {
 		} else {
 			// Academic designation: a published programme or "where most needed".
 			if ( 'needed' === $programme || '' === $programme ) {
-				$designation = __( 'Academic — where most needed', 'faithbridgeacademy' );
+				$designation = __( 'Academic, where most needed', 'faithbridgeacademy' );
 			} else {
 				$apid = (int) $programme;
 				if ( ! $apid || 'programme' !== get_post_type( $apid ) || 'publish' !== get_post_status( $apid ) ) {
@@ -3195,7 +3195,7 @@ function fba_sponsor_handler() {
 
 	$sid = wp_insert_post(
 		array(
-			'post_title'  => $ref . ' — ' . $name,
+			'post_title'  => $ref . ' · ' . $name,
 			'post_status' => 'private',
 			'post_type'   => 'sponsor',
 		)
@@ -3245,7 +3245,7 @@ function fba_sponsor_metabox_html( $post ) {
 	?>
 	<p><strong><?php esc_html_e( 'Reference', 'faithbridgeacademy' ); ?>:</strong> <?php echo esc_html( $get( '_fba_sp_ref' ) ); ?></p>
 	<p><strong><?php esc_html_e( 'Sponsor', 'faithbridgeacademy' ); ?>:</strong> <?php echo esc_html( $get( '_fba_sp_name' ) . ' · ' . $get( '_fba_sp_phone' ) . ' · ' . $get( '_fba_sp_email' ) ); ?></p>
-	<p><strong><?php esc_html_e( 'Gift', 'faithbridgeacademy' ); ?>:</strong> <?php echo esc_html( isset( $cats[ $cat ] ) ? $cats[ $cat ] : $cat ); ?><?php echo $get( '_fba_sp_designation' ) ? ' — ' . esc_html( $get( '_fba_sp_designation' ) ) : ''; ?><?php echo $get( '_fba_sp_duration' ) ? ' · ' . esc_html( $get( '_fba_sp_duration' ) ) : ''; ?><?php echo (int) $get( '_fba_sp_children' ) > 0 ? ' · ' . esc_html( sprintf( __( '%d child(ren)', 'faithbridgeacademy' ), (int) $get( '_fba_sp_children' ) ) ) : ''; ?></p>
+	<p><strong><?php esc_html_e( 'Gift', 'faithbridgeacademy' ); ?>:</strong> <?php echo esc_html( isset( $cats[ $cat ] ) ? $cats[ $cat ] : $cat ); ?><?php echo $get( '_fba_sp_designation' ) ? ' · ' . esc_html( $get( '_fba_sp_designation' ) ) : ''; ?><?php echo $get( '_fba_sp_duration' ) ? ' · ' . esc_html( $get( '_fba_sp_duration' ) ) : ''; ?><?php echo (int) $get( '_fba_sp_children' ) > 0 ? ' · ' . esc_html( sprintf( __( '%d child(ren)', 'faithbridgeacademy' ), (int) $get( '_fba_sp_children' ) ) ) : ''; ?></p>
 	<p><strong><?php esc_html_e( 'Total (₦ snapshot)', 'faithbridgeacademy' ); ?>:</strong> <?php echo esc_html( '₦' . number_format( (float) $get( '_fba_sp_total' ) ) ); ?></p>
 	<p><label for="fba-sp-status"><?php esc_html_e( 'Status', 'faithbridgeacademy' ); ?></label><br>
 	<select id="fba-sp-status" name="fba_sp_status">

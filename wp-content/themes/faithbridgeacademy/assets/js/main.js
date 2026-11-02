@@ -1,4 +1,4 @@
-/* FaithBridge Academy — slider, header, drawer, reveal, counters. */
+/* FaithBridge Academy: slider, header, drawer, reveal, counters. */
 (function () {
 	'use strict';
 
@@ -453,7 +453,7 @@
 				if ( spHint ) {
 					spHint.textContent = total > 0 && total < genMin
 						? 'Minimum is ' + ngn( genMin )
-						: ( total >= genMin ? ngn( total ) + ' — thank you!' : '' );
+						: ( total >= genMin ? ngn( total ) + ', thank you!' : '' );
 				}
 			} else {
 				if ( plan ) { plan.hidden = false; }
@@ -638,7 +638,7 @@
 
 	/* Masteriyo profile trim: detach the Billing block (e-commerce baggage;
 	   bank-transfer school, nothing ships). React-rendered, so observe + remove
-	   the node — CSS-only hides resurrect on re-render. Phone is edited via
+	   the node, because CSS-only hides resurrect on re-render. Phone is edited via
 	   our My Wards widget, not here. */
 	function fbaProfileTrim( root ) {
 		var scope = root || document;

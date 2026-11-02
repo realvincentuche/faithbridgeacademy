@@ -13,7 +13,7 @@ get_template_part(
 	'banner',
 	array(
 		'title' => __( 'About FaithBridge Academy', 'faithbridgeacademy' ),
-		'sub'   => __( 'Faith, learning and character — built together, on purpose.', 'faithbridgeacademy' ),
+		'sub'   => __( 'Faith, learning and character, built together on purpose.', 'faithbridgeacademy' ),
 		'img'   => $uri . '/assets/images/why-1.jpg',
 	)
 );
@@ -24,11 +24,11 @@ get_template_part(
 		<img class="reveal" src="<?php echo esc_url( $uri . '/assets/images/slide-1.jpg' ); ?>" alt="<?php esc_attr_e( 'Children learning in class', 'faithbridgeacademy' ); ?>" loading="lazy">
 		<div class="reveal">
 			<h2 class="fba-section-title"><?php esc_html_e( 'Who We Are', 'faithbridgeacademy' ); ?></h2>
-			<p class="fba-lead"><?php esc_html_e( 'FaithBridge Academy is a live online academy where children grow in faith, knowledge and character — in partnership with their parents.', 'faithbridgeacademy' ); ?></p>
+			<p class="fba-lead"><?php esc_html_e( 'FaithBridge Academy is a live online academy where children grow in faith, knowledge and character, in partnership with their parents.', 'faithbridgeacademy' ); ?></p>
 			<p><?php echo esc_html( fba_get_option( 'footer_tagline' ) ); ?></p>
 			<ul class="fba-checklist">
 				<li><?php esc_html_e( 'Faith-rooted teaching in every lesson', 'faithbridgeacademy' ); ?></li>
-				<li><?php esc_html_e( 'Whole-child development — spirit, mind, character', 'faithbridgeacademy' ); ?></li>
+				<li><?php esc_html_e( 'Whole-child development in spirit, mind and character', 'faithbridgeacademy' ); ?></li>
 				<li><?php esc_html_e( 'Small live classes on Google Meet, with recordings', 'faithbridgeacademy' ); ?></li>
 				<li><?php esc_html_e( 'Parents carried along every step', 'faithbridgeacademy' ); ?></li>
 			</ul>
@@ -49,7 +49,7 @@ get_template_part(
 				<span class="fba-why-icon" aria-hidden="true"><i class="ph ph-book-open"></i></span>
 				<div>
 					<strong><?php esc_html_e( 'Pick programmes', 'faithbridgeacademy' ); ?></strong>
-					<span><?php esc_html_e( 'Choose from 16 programmes — Bible Study, languages, sciences and more.', 'faithbridgeacademy' ); ?></span>
+					<span><?php esc_html_e( 'Choose from 16 programmes: Bible Study, languages, sciences and more.', 'faithbridgeacademy' ); ?></span>
 				</div>
 			</li>
 			<li class="reveal">

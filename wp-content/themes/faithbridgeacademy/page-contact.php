@@ -13,7 +13,7 @@ get_template_part(
 	'banner',
 	array(
 		'title' => __( 'Contact Us', 'faithbridgeacademy' ),
-		'sub'   => __( 'We reply fast — usually within a day.', 'faithbridgeacademy' ),
+		'sub'   => __( 'We reply fast, usually within a day.', 'faithbridgeacademy' ),
 		'img'   => $uri . '/assets/images/slide-2.jpg',
 	)
 );
@@ -60,14 +60,14 @@ get_template_part(
 				} else {
 					?>
 					<div class="fba-notice" role="status">
-						<p><?php esc_html_e( 'The contact form is being set up — please reach us by email, phone or WhatsApp for now.', 'faithbridgeacademy' ); ?></p>
+						<p><?php esc_html_e( 'The contact form is being set up. Please reach us by email, phone or WhatsApp for now.', 'faithbridgeacademy' ); ?></p>
 					</div>
 					<?php
 				}
 			} else {
 				?>
 				<div class="fba-notice" role="status">
-					<p><?php esc_html_e( 'Prefer email or WhatsApp? Our details are on this page — the contact form appears here once Contact Form 7 is installed.', 'faithbridgeacademy' ); ?></p>
+					<p><?php esc_html_e( 'Prefer email or WhatsApp? Our details are on this page. The contact form appears here once Contact Form 7 is installed.', 'faithbridgeacademy' ); ?></p>
 				</div>
 				<?php
 			}

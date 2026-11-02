@@ -1,6 +1,6 @@
 <?php
 /**
- * Homepage — FaithBridge Academy.
+ * Homepage for FaithBridge Academy.
  *
  * @package FaithBridgeAcademy
  */
@@ -19,7 +19,7 @@ $slides = array(
 		'img'   => $uri . '/assets/images/slide-1.jpg',
 		'eye'   => '',
 		'title' => __( 'Intentional Faith, Strong Minds.<br><span class="hl">Confident Children for Life.</span>', 'faithbridgeacademy' ),
-		'text'  => __( 'Nurturing the whole child — spirit, mind<br>and character — in partnership with parents.', 'faithbridgeacademy' ),
+		'text'  => __( 'Nurturing the whole child in spirit, mind<br>and character, in partnership with parents.', 'faithbridgeacademy' ),
 		'cta1'  => array( __( 'Explore Programmes', 'faithbridgeacademy' ), home_url( '/programmes/' ) ),
 		'cta2'  => array( __( 'Apply Now', 'faithbridgeacademy' ), home_url( '/apply/' ) ),
 	),
@@ -28,7 +28,7 @@ $slides = array(
 		'img'   => $uri . '/assets/images/slide-2.jpg',
 		'eye'   => '',
 		'title' => __( 'Bible Study That Shapes Character.<br><span class="hl">Rooted Deeply in Christ.</span>', 'faithbridgeacademy' ),
-		'text'  => __( 'Scripture, memory verses and practical faith —<br>taught live on Google Meet, with recordings.', 'faithbridgeacademy' ),
+		'text'  => __( 'Scripture, memory verses and practical faith,<br>taught live on Google Meet, with recordings.', 'faithbridgeacademy' ),
 		'cta1'  => array( __( 'Discover Bible Study', 'faithbridgeacademy' ), home_url( '/programmes/' ) ),
 		'cta2'  => array( __( 'Apply Now', 'faithbridgeacademy' ), home_url( '/apply/' ) ),
 	),
@@ -37,7 +37,7 @@ $slides = array(
 		'img'   => $uri . '/assets/images/slide-3.jpg',
 		'eye'   => '',
 		'title' => __( 'A Stronger Academic Foundation.<br><span class="hl">Built Quarter by Quarter.</span>', 'faithbridgeacademy' ),
-		'text'  => __( 'Live classes Tuesdays and Saturdays, 5 PM —<br>small groups of fifteen, plus one-on-one.', 'faithbridgeacademy' ),
+		'text'  => __( 'Live classes Tuesdays and Saturdays, 5 PM,<br>small groups of fifteen, plus one-on-one.', 'faithbridgeacademy' ),
 		'cta1'  => array( __( 'Apply Now', 'faithbridgeacademy' ), home_url( '/apply/' ) ),
 		'cta2'  => array( __( 'Talk to Us', 'faithbridgeacademy' ), home_url( '/contact/' ) ),
 	),
@@ -46,7 +46,7 @@ $slides = array(
 		'img'   => $uri . '/assets/images/slide-4.jpg',
 		'eye'   => '',
 		'title' => __( 'Seventeen Programmes, One Method.<br><span class="hl">Every Child Thrives Here.</span>', 'faithbridgeacademy' ),
-		'text'  => __( 'Bible Study, languages, sciences and more —<br>one intentional method, every single session.', 'faithbridgeacademy' ),
+		'text'  => __( 'Bible Study, languages, sciences and more.<br>One intentional method, every single session.', 'faithbridgeacademy' ),
 		'cta1'  => array( __( 'View Programmes', 'faithbridgeacademy' ), home_url( '/programmes/' ) ),
 		'cta2'  => array( __( 'Apply Now', 'faithbridgeacademy' ), home_url( '/apply/' ) ),
 	),
@@ -64,7 +64,7 @@ $slides = array(
 		'img'   => $uri . '/assets/images/slide-6.jpg',
 		'eye'   => '',
 		'title' => __( 'A Family of Faith Beyond Classrooms.<br><span class="hl">Belong, Participate, Grow.</span>', 'faithbridgeacademy' ),
-		'text'  => __( 'Monthly Bible Club — worship, Scripture, service;<br>where lasting friendships and faith take root.', 'faithbridgeacademy' ),
+		'text'  => __( 'Monthly Bible Club: worship, Scripture, service.<br>Lasting friendships and faith take root here.', 'faithbridgeacademy' ),
 		'cta1'  => array( __( 'Join the Bible Club', 'faithbridgeacademy' ), home_url( '/bible-club/' ) ),
 		'cta2'  => array( __( 'Apply Now', 'faithbridgeacademy' ), home_url( '/apply/' ) ),
 	),
@@ -129,8 +129,8 @@ $slides = array(
 	<div class="fba-wrap fba-why-grid">
 		<div class="reveal">
 			<p class="fba-kicker"><?php esc_html_e( 'Why FaithBridge Academy?', 'faithbridgeacademy' ); ?></p>
-			<h2 class="fba-section-title"><?php esc_html_e( 'Education That Empowers You For Life', 'faithbridgeacademy' ); ?></h2>
-			<p class="fba-lead"><?php esc_html_e( 'We bring together faith, learning and character so children develop as whole individuals — spirit, mind and character.', 'faithbridgeacademy' ); ?></p>
+			<h2 class="fba-section-title"><?php esc_html_e( 'Education That Prepares You For Life', 'faithbridgeacademy' ); ?></h2>
+			<p class="fba-lead"><?php esc_html_e( 'We bring together faith, learning and character so children grow whole in spirit, mind and character.', 'faithbridgeacademy' ); ?></p>
 			<ul class="fba-why-list">
 				<li>
 					<span class="fba-why-icon" aria-hidden="true"><i class="ph ph-cross"></i></span>
@@ -143,14 +143,14 @@ $slides = array(
 					<span class="fba-why-icon" aria-hidden="true"><i class="ph ph-heart"></i></span>
 					<div>
 						<strong><?php esc_html_e( 'Whole-Child Development', 'faithbridgeacademy' ); ?></strong>
-						<span><?php esc_html_e( 'Spiritual, intellectual, moral and personal growth — never academics alone.', 'faithbridgeacademy' ); ?></span>
+						<span><?php esc_html_e( 'Spiritual, intellectual, moral and personal growth. Never academics alone.', 'faithbridgeacademy' ); ?></span>
 					</div>
 				</li>
 				<li>
 					<span class="fba-why-icon" aria-hidden="true"><i class="ph ph-chalkboard-teacher"></i></span>
 					<div>
 						<strong><?php esc_html_e( 'Intentional, Child-Centred Classes', 'faithbridgeacademy' ); ?></strong>
-						<span><?php esc_html_e( 'Structured curriculum, small groups of 15 or fewer, and one-on-one options — online and personal.', 'faithbridgeacademy' ); ?></span>
+						<span><?php esc_html_e( 'Structured curriculum, small groups of 15 or fewer, and one-on-one options. Online and personal.', 'faithbridgeacademy' ); ?></span>
 					</div>
 				</li>
 			</ul>
@@ -166,7 +166,7 @@ $slides = array(
 		<div class="fba-section-head reveal">
 			<div>
 				<h2 class="fba-section-title"><?php esc_html_e( 'Popular Programmes', 'faithbridgeacademy' ); ?></h2>
-				<p class="fba-section-desc"><?php esc_html_e( 'Explore our top-rated programmes designed to shape your future.', 'faithbridgeacademy' ); ?></p>
+				<p class="fba-section-desc"><?php esc_html_e( 'Explore the programmes families choose most, for every stage of school.', 'faithbridgeacademy' ); ?></p>
 			</div>
 			<a class="fba-link-arrow" href="<?php echo esc_url( home_url( '/programmes/' ) ); ?>"><?php esc_html_e( 'View All Programmes', 'faithbridgeacademy' ); ?> <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
 		</div>
@@ -219,7 +219,7 @@ $slides = array(
 	<div class="fba-wrap fba-life-grid">
 		<div class="fba-life-inner reveal">
 			<h2><?php esc_html_e( 'Beyond Classrooms: A Family of Faith', 'faithbridgeacademy' ); ?></h2>
-			<p><?php esc_html_e( 'Monthly Bible Club gatherings, Scripture memory, worship and service — where children belong, participate and grow in community.', 'faithbridgeacademy' ); ?></p>
+			<p><?php esc_html_e( 'Monthly Bible Club gatherings, Scripture memory, worship and service. A community where children belong, participate and grow.', 'faithbridgeacademy' ); ?></p>
 			<p class="fba-life-actions">
 				<a class="fba-btn fba-btn-green" href="<?php echo esc_url( home_url( '/bible-club/' ) ); ?>"><?php esc_html_e( 'Discover More', 'faithbridgeacademy' ); ?> <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
 			</p>
@@ -352,9 +352,9 @@ $slides = array(
 		<img class="reveal" src="<?php echo esc_url( $uri . '/assets/images/home-feel.jpg' ); ?>" alt="<?php esc_attr_e( 'A child learning at home', 'faithbridgeacademy' ); ?>" loading="lazy">
 		<div class="reveal">
 			<h2 class="fba-section-title"><?php esc_html_e( 'Learning That Feels Like Home', 'faithbridgeacademy' ); ?></h2>
-			<p class="fba-lead"><?php esc_html_e( 'Calm, structured, personal — an online academy where your child is known, guided and celebrated.', 'faithbridgeacademy' ); ?></p>
+			<p class="fba-lead"><?php esc_html_e( 'Calm, structured, personal. An online academy where your child is known, guided and celebrated.', 'faithbridgeacademy' ); ?></p>
 			<ul class="fba-checklist">
-				<li><?php esc_html_e( 'Small group classes — 15 learners or fewer', 'faithbridgeacademy' ); ?></li>
+				<li><?php esc_html_e( 'Small group classes, 15 learners or fewer', 'faithbridgeacademy' ); ?></li>
 				<li><?php esc_html_e( 'One-on-one options for focused support', 'faithbridgeacademy' ); ?></li>
 				<li><?php esc_html_e( 'Caring facilitators who know your child', 'faithbridgeacademy' ); ?></li>
 				<li><?php esc_html_e( 'Parents carried along every step', 'faithbridgeacademy' ); ?></li>

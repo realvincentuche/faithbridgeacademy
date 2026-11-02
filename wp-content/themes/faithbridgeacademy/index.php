@@ -13,7 +13,7 @@ get_template_part(
 	'banner',
 	array(
 		'title' => __( 'Blog', 'faithbridgeacademy' ),
-		'sub'   => __( 'Faith, parenting, and learning — stories and wisdom for the journey.', 'faithbridgeacademy' ),
+		'sub'   => __( 'Faith, parenting and learning. Stories and practical wisdom from the academy.', 'faithbridgeacademy' ),
 		'img'   => $uri . '/assets/images/news-2.jpg',
 	)
 );
@@ -50,7 +50,7 @@ get_template_part(
 			</div>
 		<?php else : ?>
 			<div class="fba-prose">
-				<p><?php esc_html_e( 'No posts yet — check back soon.', 'faithbridgeacademy' ); ?></p>
+				<p><?php esc_html_e( 'No posts yet. Check back soon.', 'faithbridgeacademy' ); ?></p>
 			</div>
 		<?php endif; ?>
 	</div>

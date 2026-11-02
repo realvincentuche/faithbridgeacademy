@@ -1,5 +1,5 @@
 /* ============================================================
-   FaithBridge Academy — main stylesheet
+   FaithBridge Academy main stylesheet
    Navy #0A2A5E · Green #C0BA02 (logo olive) · Cream olive tints
    Display: Raleway · Body: Figtree
    ============================================================ */
@@ -482,8 +482,8 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 }
 /* Login: two cards side by side on desktop, stacked on mobile.
    Masteriyo's own layout: wrapper is flex, .masteriyo-login is width:50%
-   and .masteriyo-signup is flex:1. We keep that structure and skin it —
-   overriding display here would collapse widths (seen 2026-10-15). */
+   and .masteriyo-signup is flex:1. We keep that structure and skin it.
+   Overriding display here would collapse widths (seen 2026-10-15). */
 .fba-content--wide .masteriyo-login-form-wrapper {
 	gap: 1.6rem; background: transparent; border: none;
 	border-radius: 0; overflow: visible; flex-wrap: nowrap;
@@ -494,7 +494,7 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 	border-radius: var(--fba-radius); box-shadow: var(--fba-shadow-sm);
 }
 /* Masteriyo sets .masteriyo-login{width:50%} and its inputs {margin-bottom:24px};
-   keep both — we only add symmetric gutters so cards breathe. */
+   keep both, and we only add symmetric gutters so cards breathe. */
 .fba-content--wide .masteriyo-login { padding-left: 2rem; padding-right: 2rem; }
 .fba-content--wide .masteriyo-login .masteriyo-input { margin-bottom: 1rem; }
 .fba-content--wide .masteriyo-login-form-wrapper .masteriyo-signup {
@@ -547,7 +547,7 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 }
 .fba-content--wide .masteriyo-login--form > div,
 .fba-content--wide .masteriyo-signup-form > div { margin-bottom: 1rem; }
-/* Buttons: green primary, navy alt — inherit theme shape. */
+/* Buttons: green primary, navy alt, inheriting the theme shape. */
 .fba-content--wide .masteriyo-btn {
 	display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
 	padding: 0.85rem 1.7rem; border-radius: 10px; border: 2px solid transparent;
@@ -577,7 +577,7 @@ body.fba-drawer-open .fba-drawer-overlay { opacity: 1; pointer-events: auto; }
 .fba-content--wide .masteriyo-account h2,
 .fba-content--wide .masteriyo-account h3 { font-family: var(--fba-font-display); color: var(--fba-navy); }
 /* Profile edit form: billing is e-commerce baggage (bank-transfer school,
-   nothing ships) — hide it. Phone stays via our account-page widget.
+   nothing ships), so hide it. Phone stays via our account-page widget.
    Masteriyo class hooks (stable): .mto-profile-edit-form-{firstname,lastname,
    username,email} kept; billing heading + copy + fields hidden. */
 .fba-content--wide .mto-profile-edit-form-billing-heading,
@@ -842,7 +842,7 @@ body.fba-cur-ngn .fba-fee-usd { display: none; }
 .fba-btn-outline-dark { border-color: var(--fba-navy); color: var(--fba-navy); }
 .fba-btn-outline-dark:hover { background: var(--fba-navy); color: #fff; }
 /* Apply-page auth strip (login nudge for guests). Lives inside the left
-   column (.fba-apply-main) — never a grid item itself. No .reveal transform:
+   column (.fba-apply-main), never a grid item itself. No .reveal transform:
    translateY on a full-column-width notice reads as a sideways shove and can
    overlap the sidebar while animating. */
 .fba-auth-strip {

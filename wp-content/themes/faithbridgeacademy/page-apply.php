@@ -64,7 +64,7 @@ if ( '' === $fba_acct_phone && $fba_user ) {
 			</div>
 		<?php elseif ( $state ) : ?>
 			<div class="fba-notice" role="alert">
-				<p><?php esc_html_e( 'Something is missing or invalid — please check the highlighted fields and try again.', 'faithbridgeacademy' ); ?></p>
+				<p><?php esc_html_e( 'Something is missing or invalid. Please check the highlighted fields and try again.', 'faithbridgeacademy' ); ?></p>
 			</div>
 		<?php endif; ?>
 
@@ -76,7 +76,7 @@ if ( '' === $fba_acct_phone && $fba_user ) {
 		<?php else : ?>
 			<div class="fba-auth-strip" role="note">
 				<p><strong><?php esc_html_e( 'Have an account? Log in first.', 'faithbridgeacademy' ); ?></strong>
-				<?php esc_html_e( 'It links your application to your learning dashboard. Guests can still apply below — we create your account when your application is approved.', 'faithbridgeacademy' ); ?></p>
+				<?php esc_html_e( 'It links your application to your learning dashboard. Guests can still apply below, and we create your account when your application is approved.', 'faithbridgeacademy' ); ?></p>
 				<p>
 					<a class="fba-btn fba-btn-navy fba-btn-sm" href="<?php echo esc_url( add_query_arg( 'next', rawurlencode( fba_apply_url( $pre ) ), trailingslashit( home_url( '/account/' ) ) ) ); ?>"><?php esc_html_e( 'Log in', 'faithbridgeacademy' ); ?></a>
 					<a class="fba-btn fba-btn-outline-dark fba-btn-sm" href="<?php echo esc_url( add_query_arg( 'redirect_to', rawurlencode( fba_apply_url( $pre ) ), trailingslashit( home_url( '/account/signup/' ) ) ) ); ?>"><?php esc_html_e( 'Create account', 'faithbridgeacademy' ); ?></a>
@@ -195,8 +195,8 @@ if ( '' === $fba_acct_phone && $fba_user ) {
 			<h3><?php echo esc_html( fba_current_session()['label'] ); ?></h3>
 			<p><?php echo esc_html( fba_current_session()['period'] . ' · ' . fba_get_option( 'class_days' ) . ' · ' . fba_get_option( 'class_time' ) ); ?></p>
 			<?php $min_fees = fba_min_fees(); ?>
-			<p class="fba-fee-line"><?php echo esc_html( sprintf( __( 'Fees show per programme as you select them — group from %1$s, one-on-one from %2$s per session.', 'faithbridgeacademy' ), fba_fee_text( $min_fees['group'] ), fba_fee_text( $min_fees['one'] ) ) ); ?></p>
-			<p><?php esc_html_e( 'Bank transfer only. No receipt upload — we confirm every application personally.', 'faithbridgeacademy' ); ?></p>
+			<p class="fba-fee-line"><?php echo esc_html( sprintf( __( 'Fees show per programme as you select them. Group from %1$s, one-on-one from %2$s per session.', 'faithbridgeacademy' ), fba_fee_text( $min_fees['group'] ), fba_fee_text( $min_fees['one'] ) ) ); ?></p>
+			<p><?php esc_html_e( 'Bank transfer only. No receipt upload. We confirm every application personally.', 'faithbridgeacademy' ); ?></p>
 		</aside>
 	</div>
 </div>

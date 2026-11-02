@@ -1,4 +1,4 @@
-# Faith Bridge Academy — classic WordPress theme + auto-deploy to Namecheap
+# Faith Bridge Academy: classic WordPress theme + auto-deploy to Namecheap
 
 Classic (non-block) custom theme. Full marketing homepage (hero slider,
 stats, catalogue, life band, sessions), optional live DB content section per
@@ -6,8 +6,8 @@ template, blog fully DB-driven.
 
 ## Local dev (Herd)
 
-Site: https://faithbridgeacademy.test (SQLite file DB — no MySQL needed locally).
-Live Namecheap uses its own MySQL `wp-config.php` — never committed.
+Site: https://faithbridgeacademy.test (SQLite file DB, no MySQL needed locally).
+Live Namecheap uses its own MySQL `wp-config.php`, never committed.
 
 ## Push to GitHub (first time)
 
@@ -32,6 +32,6 @@ Only `wp-content/themes/faithbridgeacademy/` + `.github/` are tracked (see `.git
 ## Rules
 
 - Edit theme code here, push, let Actions deploy. Never edit theme PHP in
-  cPanel File Manager — the next push overwrites it.
+  cPanel File Manager. The next push overwrites it.
 - Page text/shortcodes/Contact Form 7/chat plugins live in the DB on
-  Namecheap — deploys never touch them.
+  Namecheap. Deploys never touch them.

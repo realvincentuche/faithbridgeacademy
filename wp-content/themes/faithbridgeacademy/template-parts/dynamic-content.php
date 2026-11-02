@@ -3,7 +3,7 @@
  * Conditional dynamic-content section.
  *
  * Prints the live DB page content (pasted text, shortcodes like
- * Contact Form 7) in a centered container — only when the page
+ * Contact Form 7) in a centered container, only when the page
  * actually has content. Baked-in template design always renders above it.
  *
  * @package FaithBridgeAcademy

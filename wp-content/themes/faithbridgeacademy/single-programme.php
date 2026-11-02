@@ -40,7 +40,7 @@ while ( have_posts() ) :
 				<?php elseif ( 'coming' === $status ) : ?>
 					<p class="fba-cat-status"><?php esc_html_e( 'Enrolment opens soon for this programme.', 'faithbridgeacademy' ); ?></p>
 				<?php else : ?>
-					<p class="fba-cat-status closed"><?php esc_html_e( 'The group class is full for this session. One-on-one places may still be available — talk to us.', 'faithbridgeacademy' ); ?></p>
+					<p class="fba-cat-status closed"><?php esc_html_e( 'The group class is full for this session. One-on-one places may still be available. Talk to us.', 'faithbridgeacademy' ); ?></p>
 				<?php endif; ?>
 
 				<h2><?php esc_html_e( 'Fees for this session', 'faithbridgeacademy' ); ?></h2>

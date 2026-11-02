@@ -70,12 +70,12 @@ $loop   = new WP_Query(
 				wp_reset_postdata();
 				if ( ! $shown ) :
 					?>
-					<p><?php esc_html_e( 'Book lists are being compiled — check back soon, or ask us on WhatsApp.', 'faithbridgeacademy' ); ?></p>
+					<p><?php esc_html_e( 'Book lists are being compiled. Check back soon, or ask us on WhatsApp.', 'faithbridgeacademy' ); ?></p>
 					<?php
 				endif;
 				?>
 			<?php else : ?>
-				<p><?php esc_html_e( 'Book lists are being compiled — check back soon.', 'faithbridgeacademy' ); ?></p>
+				<p><?php esc_html_e( 'Book lists are being compiled. Check back soon.', 'faithbridgeacademy' ); ?></p>
 			<?php endif; ?>
 		</div>
 		<aside class="fba-side-card reveal">

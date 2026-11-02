@@ -40,7 +40,7 @@ $testimonials = get_posts(
 	<div class="fba-wrap fba-footer-cta-inner reveal">
 		<div class="fba-footer-cta-copy">
 			<h2><?php esc_html_e( 'Give Your Child a Stronger Foundation.', 'faithbridgeacademy' ); ?></h2>
-			<p><?php esc_html_e( 'Faith, values, knowledge and character are built over time. Start intentionally — applications take minutes.', 'faithbridgeacademy' ); ?></p>
+			<p><?php esc_html_e( 'Faith, values and knowledge are built over time. Start intentionally. Applications take minutes.', 'faithbridgeacademy' ); ?></p>
 			<p class="fba-cta-actions">
 				<a class="fba-btn fba-btn-green" href="<?php echo esc_url( home_url( '/apply/' ) ); ?>"><?php esc_html_e( 'Apply Now', 'faithbridgeacademy' ); ?> <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
 				<a class="fba-btn fba-btn-outline-light" href="<?php echo esc_url( home_url( '/programmes/' ) ); ?>"><?php esc_html_e( 'Explore Programmes', 'faithbridgeacademy' ); ?></a>
@@ -94,9 +94,9 @@ $testimonials = get_posts(
 		</div>
 		<div class="fba-footer-col fba-footer-news">
 			<h3><?php esc_html_e( 'Stay Connected', 'faithbridgeacademy' ); ?></h3>
-			<p><?php esc_html_e( 'Session openings and academy stories — once a month, no noise.', 'faithbridgeacademy' ); ?></p>
+			<p><?php esc_html_e( 'Session openings and academy stories, once a month, no noise.', 'faithbridgeacademy' ); ?></p>
 			<?php if ( isset( $_GET['subscribed'] ) && 'done' === $_GET['subscribed'] ) : ?>
-				<p class="fba-newsletter-done" role="status"><?php esc_html_e( 'Thank you — you are subscribed.', 'faithbridgeacademy' ); ?></p>
+				<p class="fba-newsletter-done" role="status"><?php esc_html_e( 'Thank you. You are subscribed.', 'faithbridgeacademy' ); ?></p>
 			<?php else : ?>
 			<form class="fba-footer-news-form" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 				<input type="hidden" name="action" value="fba_subscribe">

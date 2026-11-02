@@ -1,6 +1,6 @@
 <?php
 /**
- * Partner page (slug: partner). Standalone sponsorship flow —
+ * Partner page (slug: partner). Standalone sponsorship flow,
  * separate from student registration. Bank transfer only.
  *
  * @package FaithBridgeAcademy
@@ -17,7 +17,7 @@ get_template_part(
 	'template-parts/page',
 	'banner',
 	array(
-		'title' => __( 'Partner With FaithBridge Academy — Sponsor a Child, Support a Future.', 'faithbridgeacademy' ),
+		'title' => __( 'Partner With FaithBridge Academy: Sponsor a Child, Support a Future.', 'faithbridgeacademy' ),
 		'sub'   => __( 'No child to register? You can still raise one.', 'faithbridgeacademy' ),
 		'img'   => $uri . '/assets/images/slide-4.jpg',
 	)
@@ -39,25 +39,25 @@ $programmes = new WP_Query(
 
 		<?php if ( 'done' === $state ) : ?>
 			<div class="fba-notice fba-notice-ok reveal" role="status">
-				<h2><?php esc_html_e( 'Thank you — your pledge is recorded.', 'faithbridgeacademy' ); ?></h2>
+				<h2><?php esc_html_e( 'Thank you. Your pledge is recorded.', 'faithbridgeacademy' ); ?></h2>
 				<p><?php echo esc_html( sprintf( __( 'Your reference is %s. Please transfer your gift to %s · %s · %s, then message us on WhatsApp so we can confirm it personally.', 'faithbridgeacademy' ), $ref, fba_get_option( 'bank_name' ), fba_get_option( 'bank_number' ), fba_get_option( 'bank_bank' ) ) ); ?></p>
 			</div>
 		<?php elseif ( $state ) : ?>
 			<div class="fba-notice reveal" role="alert">
-				<p><?php esc_html_e( 'Something is missing or below the minimum — please check the form and try again.', 'faithbridgeacademy' ); ?></p>
+				<p><?php esc_html_e( 'Something is missing or below the minimum. Please check the form and try again.', 'faithbridgeacademy' ); ?></p>
 			</div>
 		<?php endif; ?>
 
 		<div class="fba-prose reveal">
 			<h2><?php esc_html_e( 'Where your gift goes', 'faithbridgeacademy' ); ?></h2>
-			<p><?php esc_html_e( 'Every naira is tied to a child or a classroom — never overhead first. Sponsorship fees pay facilitators, learning materials and class recordings for the sponsored children; general gifts fund learning resources, programme development and the faith-based initiatives that keep the academy growing.', 'faithbridgeacademy' ); ?></p>
+			<p><?php esc_html_e( 'Every naira is tied to a child or a classroom, never overhead first. Sponsorship fees pay facilitators, learning materials and class recordings for the sponsored children; general gifts fund learning resources, programme development and the faith-based initiatives that keep the academy growing.', 'faithbridgeacademy' ); ?></p>
 		</div>
 
 		<div class="fba-sp-cards">
 			<article class="fba-sp-card reveal">
 				<span class="fba-sp-icon" aria-hidden="true"><i class="ph ph-book-open-text"></i></span>
 				<h3><?php echo esc_html( $cats['bible'] ); ?></h3>
-				<p><?php esc_html_e( 'Cover fees for a child whose family cannot afford them — Scripture, memory verses, character lessons and spiritual growth.', 'faithbridgeacademy' ); ?></p>
+				<p><?php esc_html_e( 'Cover fees for a child whose family cannot afford them: Scripture, memory verses, character lessons and spiritual growth.', 'faithbridgeacademy' ); ?></p>
 				<ul class="fba-sp-rates">
 					<li><span><?php esc_html_e( 'One session · 3 months · per child', 'faithbridgeacademy' ); ?></span><strong>₦<?php echo esc_html( number_format( $rates['bible_session'] ) ); ?></strong></li>
 					<li class="fba-sp-rate-best"><span><?php esc_html_e( 'One full year · 4 sessions · per child', 'faithbridgeacademy' ); ?></span><strong>₦<?php echo esc_html( number_format( $rates['bible_year'] ) ); ?></strong></li>
@@ -66,7 +66,7 @@ $programmes = new WP_Query(
 			<article class="fba-sp-card reveal">
 				<span class="fba-sp-icon" aria-hidden="true"><i class="ph ph-graduation-cap"></i></span>
 				<h3><?php echo esc_html( $cats['academic'] ); ?></h3>
-				<p><?php esc_html_e( 'Fund tutoring for a child who needs financial help — pick a programme or let us place your gift where most needed.', 'faithbridgeacademy' ); ?></p>
+				<p><?php esc_html_e( 'Fund tutoring for a child who needs financial help. Pick a programme, or let us place your gift where most needed.', 'faithbridgeacademy' ); ?></p>
 				<ul class="fba-sp-rates">
 					<li><span><?php esc_html_e( 'One session · 3 months · per child', 'faithbridgeacademy' ); ?></span><strong>₦<?php echo esc_html( number_format( $rates['academic_session'] ) ); ?></strong></li>
 					<li class="fba-sp-rate-best"><span><?php esc_html_e( 'One full year · 4 sessions · per child', 'faithbridgeacademy' ); ?></span><strong>₦<?php echo esc_html( number_format( $rates['academic_year'] ) ); ?></strong></li>
